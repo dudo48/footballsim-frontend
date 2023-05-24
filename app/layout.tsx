@@ -15,17 +15,11 @@ function Layout({ children }: PropsWithChildren) {
     <html lang="en">
       <body>
         <Providers>
-          <Flex
-            direction={'column'}
-            p={'2'}
-            gap={'2'}
-            backgroundColor={'footballsim.900'}
-            color={'footballsim.50'}
-          >
-            <Box rounded={'md'} backgroundColor={'footballsim.800'}>
+          <Flex direction={'column'} p={'2'} gap={'2'}>
+            <Box rounded={'md'} backgroundColor={'footballsim.700'}>
               <NavBar />
             </Box>
-            <Box rounded={'md'} backgroundColor={'footballsim.800'} p={'2'}>
+            <Box rounded={'md'} backgroundColor={'footballsim.700'} p={'2'}>
               {children}
             </Box>
           </Flex>

@@ -2,23 +2,33 @@ import { extendTheme, withDefaultColorScheme } from '@chakra-ui/react';
 
 const colors = {
   footballsim: {
-    '50': '#f2f5f8',
-    '100': '#d3d8e4',
-    '200': '#a7b2c8',
-    '300': '#8c9cb5',
-    '400': '#5f7191',
-    '500': '#404a5e',
-    '600': '#2b3646',
-    '700': '#212b3b',
-    '800': '#111a27',
-    '900': '#0a111e',
-    '950': '#020612',
+    '50': '#dae9f6',
+    '100': '#c9deed',
+    '200': '#4994c5',
+    '300': '#3278a4',
+    '400': '#286080',
+    '500': '#1f465c',
+    '600': '#112a3b',
+    '700': '#102737',
+    '800': '#0f222e',
+    '900': '#11202d',
+    '950': '#0a121a',
+  },
+};
+
+const styles = {
+  global: {
+    body: {
+      backgroundColor: 'footballsim.900',
+      color: 'footballsim.50',
+    },
   },
 };
 
 const theme = extendTheme(
   {
     colors,
+    styles,
   },
   withDefaultColorScheme({ colorScheme: 'footballsim' })
 );
