@@ -19,7 +19,7 @@ const colors = {
 const styles = {
   global: {
     body: {
-      backgroundColor: 'footballsim.900',
+      bg: 'footballsim.900',
       color: 'footballsim.50',
     },
   },

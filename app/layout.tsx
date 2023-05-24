@@ -2,8 +2,8 @@
 import { PropsWithChildren } from 'react';
 import './globals.css';
 import NavBar from './navbar';
-import { Providers } from './providers';
 import { Box, Flex } from '@chakra-ui/react';
+import Providers from './providers';
 
 export const metadata = {
   title: 'Footballsim',
@@ -16,10 +16,10 @@ function Layout({ children }: PropsWithChildren) {
       <body>
         <Providers>
           <Flex direction={'column'} p={'2'} gap={'2'}>
-            <Box rounded={'md'} backgroundColor={'footballsim.700'}>
+            <Box rounded={'md'} bg={'footballsim.700'}>
               <NavBar />
             </Box>
-            <Box rounded={'md'} backgroundColor={'footballsim.700'} p={'2'}>
+            <Box rounded={'md'} bg={'footballsim.700'} p={'2'}>
               {children}
             </Box>
           </Flex>
