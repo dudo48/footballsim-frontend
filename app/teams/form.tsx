@@ -9,7 +9,9 @@ function CreateTeamForm() {
         <Input placeholder="Defense strength" type="number" />
         <Input placeholder="Home advantage" type="number" />
         <Input placeholder="Team color" type="color" />
-        <Button type="submit">Create</Button>
+        <Button type="submit">
+          Create
+        </Button>
       </Stack>
     </form>
   );
