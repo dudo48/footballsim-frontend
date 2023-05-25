@@ -82,6 +82,12 @@ function CreateTeamForm({ mutateTeams }: Props) {
           fieldHandler={register('name')}
           error={errors?.name}
         />
+        <FormInput
+          label="Team Color"
+          fieldHandler={register('color')}
+          type="color"
+          error={errors?.color}
+        />
         <Controller
           control={control}
           name={'attack'}
@@ -118,12 +124,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
             />
           )}
         />
-        <FormInput
-          label="Team Color"
-          fieldHandler={register('color')}
-          type="color"
-          error={errors?.color}
-        />
+
         <Center>
           <Button isLoading={isSubmitting} type="submit">
             Create

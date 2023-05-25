@@ -1,8 +1,9 @@
 'use client';
-import { useTeams } from '@/services/team-service';
-import { Button, HStack, Heading, useDisclosure } from '@chakra-ui/react';
-import CreateTeamForm from './create-team-form';
 import FormModal from '@/components/form-modal';
+import { useTeams } from '@/services/team-service';
+import { Button, ButtonGroup, Heading, useDisclosure } from '@chakra-ui/react';
+import { BsGear, BsPlusLg } from 'react-icons/bs';
+import CreateTeamForm from './create-team-form';
 
 function Page() {
   const { teams, mutate } = useTeams();
@@ -17,10 +18,12 @@ function Page() {
       <Heading textAlign={'center'} mb={'6'}>
         Teams
       </Heading>
-      <HStack>
-        <Button onClick={createTeamOnOpen}>Create a Team</Button>
-        <Button>Quick Teams Generator</Button>
-      </HStack>
+      <ButtonGroup colorScheme="cyan" variant={'outline'}>
+        <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>
+          Create a Team
+        </Button>
+        <Button leftIcon={<BsGear />}>Random Teams Generator</Button>
+      </ButtonGroup>
       <FormModal
         title="Create a Team"
         onClose={createTeamOnClose}

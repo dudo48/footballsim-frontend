@@ -1,20 +1,21 @@
 'use client';
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
-interface Props {
+type Props = ButtonProps & {
   href: string;
-}
+};
 
-function NavBarItem({ href, children }: PropsWithChildren<Props>) {
+function NavBarItem({ href, children, ...props }: PropsWithChildren<Props>) {
   const pathName = usePathname();
-  const onThisPage = pathName.startsWith(href);
+  const onThisPage =
+    href === '/' ? href === pathName : pathName.startsWith(href);
 
   return (
     <Link href={href}>
-      <Button variant={'ghost'} isActive={onThisPage}>
+      <Button variant={'ghost'} isActive={onThisPage} {...props}>
         {children}
       </Button>
     </Link>
