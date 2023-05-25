@@ -16,7 +16,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
-import { FieldError } from 'react-hook-form';
+import { FieldError, RefCallBack } from 'react-hook-form';
 
 type Props = SliderProps &
   NumberInputProps & {
@@ -26,20 +26,29 @@ type Props = SliderProps &
     error?: FieldError;
   };
 
-function FormSlider({ label, helper, error, fieldHandler, ...props }: Props) {
+function FormSlider({
+  label,
+  helper,
+  error,
+  fieldHandler: { ref, ...restFieldHandler },
+  ...props
+}: Props) {
   return (
     <FormControl isInvalid={!!error}>
       <FormLabel>{label}</FormLabel>
       {helper && <FormHelperText>{helper}</FormHelperText>}
       <Flex gap={4}>
-        <Slider focusThumbOnChange={false} {...fieldHandler} {...props}>
+        <Slider focusThumbOnChange={false} {...restFieldHandler} {...props}>
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
           <SliderThumb />
         </Slider>
-        <NumberInput w={32} {...fieldHandler} {...props}>
-          <NumberInputField />
+        <NumberInput w={'32'} {...restFieldHandler} {...props}>
+          <NumberInputField
+            ref={ref as RefCallBack}
+            name={restFieldHandler.name as string}
+          />
           <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />

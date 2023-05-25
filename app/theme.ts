@@ -1,6 +1,8 @@
 import {
   NumberInput,
+  RangeSlider,
   Slider,
+  Textarea,
   extendTheme,
   withDefaultColorScheme,
 } from '@chakra-ui/react';
@@ -36,11 +38,21 @@ Slider.defaultProps = {
   step: 0.1,
 };
 
+RangeSlider.defaultProps = {
+  min: 0.1,
+  max: 10,
+  step: 0.1,
+};
+
 NumberInput.defaultProps = {
   min: 0.1,
   max: 10,
   step: 0.1,
   allowMouseWheel: true,
+};
+
+Textarea.defaultProps = {
+  h: 32,
 };
 
 const theme = extendTheme(

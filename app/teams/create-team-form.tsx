@@ -16,19 +16,19 @@ const schema = yup
       .required('Please enter a name with a length of at least 3 characters.'),
     attack: yup
       .number()
-      .positive('Please enter a valid number greater than 0.')
-      .typeError('Please enter a valid number greater than 0.')
-      .required('Please enter a valid number greater than 0'),
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
     defense: yup
       .number()
-      .positive('Please enter a valid number greater than 0.')
-      .typeError('Please enter a valid number greater than 0.')
-      .required('Please enter a valid number greater than 0'),
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
     homeAdvantage: yup
       .number()
-      .positive('Please enter a valid number greater than 0.')
-      .typeError('Please enter a valid number greater than 0.')
-      .required('Please enter a valid number greater than 0'),
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
     color: yup
       .string()
       .typeError('Please select a color.')
@@ -116,7 +116,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
           render={({ field }) => (
             <FormSlider
               label="Home Advantage"
-              helper="The strength multiplier of the team when playing on home ground"
+              helper="The strength multiplier of the team when playing on home ground."
               fieldHandler={field}
               error={errors.homeAdvantage}
               min={1}
