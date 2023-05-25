@@ -1,4 +1,9 @@
-import { extendTheme, withDefaultColorScheme } from '@chakra-ui/react';
+import {
+  NumberInput,
+  Slider,
+  extendTheme,
+  withDefaultColorScheme,
+} from '@chakra-ui/react';
 
 const colors = {
   footballsim: {
@@ -23,6 +28,19 @@ const styles = {
       color: 'footballsim.50',
     },
   },
+};
+
+Slider.defaultProps = {
+  min: 0.01,
+  max: 10,
+  step: 0.01,
+};
+
+NumberInput.defaultProps = {
+  min: 0.01,
+  max: 10,
+  step: 0.5,
+  allowMouseWheel: true,
 };
 
 const theme = extendTheme(

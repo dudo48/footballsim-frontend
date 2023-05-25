@@ -8,7 +8,10 @@ import theme from './theme';
 function Providers({ children }: PropsWithChildren) {
   return (
     <CacheProvider>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider
+        theme={theme}
+        toastOptions={{ defaultOptions: { duration: 5000 } }}
+      >
         <DarkMode>{children}</DarkMode>
       </ChakraProvider>
     </CacheProvider>
