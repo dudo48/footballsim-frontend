@@ -4,27 +4,24 @@ import Team from '@/interfaces/team.interface';
 import { useTeamActions } from '@/services/team-service';
 import { Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import random from 'random';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 const schema = yup
   .object({
     names: yup
-      .array()
-      .transform((s) => s.split('\n'))
-      .of(
-        yup
-          .string()
-          .min(
-            3,
-            'Please enter all names with a length of at least 3 characters.'
-          )
-          .typeError(
-            'Please enter all names with a length of at least 3 characters.'
-          )
-          .required(
-            'Please enter all names with a length of at least 3 characters.'
-          )
+      .string()
+      .test(
+        'is-min-length-3',
+        'Please enter all names with a length of at least 3 characters.',
+        (value?: string) => value?.split(/\n+/).every((n) => n.length >= 3)
+      )
+      .typeError(
+        'Please enter all names with a length of at least 3 characters.'
+      )
+      .required(
+        'Please enter all names with a length of at least 3 characters.'
       ),
     attack: yup.object({
       low: yup
@@ -79,24 +76,43 @@ function GenerateTeamForm({ mutateTeams }: Props) {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      attack: { low: 1, high: 4 },
-      defense: { low: 1, high: 4 },
+      names: '',
+      attack: { low: 5, high: 12 },
+      defense: { low: 5, high: 12 },
       homeAdvantage: { low: 1, high: 1.5 },
     },
   });
 
-  const { createTeam } = useTeamActions();
+  const { createTeams } = useTeamActions();
   const toast = useToast();
 
+  function generateTeams(data: Omit<FormData, 'names'> & { names: string[] }) {
+    const getAttack = random.logNormal(Math.log(10), 0.5);
+    const getDefense = random.logNormal(Math.log(10), 0.5);
+
+    const teams = data.names.map((name) => ({
+      name,
+      attack: getAttack(),
+      defense: getDefense(),
+      homeAdvantage: +random
+        .float(data.homeAdvantage.low, data.homeAdvantage.high)
+        .toFixed(1),
+      color: `#${random.int(0, 16777215).toString(16)}`,
+    }));
+
+    return teams;
+  }
+
   async function onSubmit(data: FormData) {
-    // const result = await createTeam(data);
-    // if (!result.error) {
-    //   toast({ status: 'success', description: 'Teams created successfully.' });
-    //   mutateTeams(result);
-    // } else {
-    //   toast({ status: 'error', description: 'Failed to create teams.' });
-    // }
-    console.log(data);
+    const teams = generateTeams({ ...data, names: data.names.split(/\n+/) });
+    const result = await createTeams(teams);
+    if (!result.error) {
+      toast({ status: 'success', description: 'Teams created successfully.' });
+      mutateTeams(result);
+    } else {
+      toast({ status: 'error', description: 'Failed to create teams.' });
+    }
+    console.log(teams);
   }
 
   return (
@@ -107,7 +123,7 @@ function GenerateTeamForm({ mutateTeams }: Props) {
           helper="Separated by a new line. This specifies the number of generated teams."
           placeholder="Zamalek, Al Ahly, etc..."
           fieldHandler={register('names')}
-          error={errors.names?.find?.((err) => err)}
+          error={errors.names}
         />
         <Controller
           control={control}
@@ -144,6 +160,7 @@ function GenerateTeamForm({ mutateTeams }: Props) {
               error={errors.homeAdvantage}
               min={1}
               max={2}
+              step={0.1}
             />
           )}
         />

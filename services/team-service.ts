@@ -32,6 +32,8 @@ export function useTeamActions() {
   return {
     createTeam: (payload: { [key: string]: string | number }) =>
       postRequest(baseUrl, payload),
+    createTeams: (payload: { [key: string]: string | number }[]) =>
+      postRequest(`${baseUrl}/multiple`, payload),
     updateTeam: (id: number, payload: { [key: string]: string | number }) =>
       putRequest(`${baseUrl}/${id}`, payload),
     deleteTeam: (id: number) => deleteRequest(`${baseUrl}/${id}`),

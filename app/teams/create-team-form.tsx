@@ -52,8 +52,8 @@ function CreateTeamForm({ mutateTeams }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
-      attack: 1.0,
-      defense: 1.0,
+      attack: 10,
+      defense: 10,
       homeAdvantage: 1.2,
       color: '#ffffff',
     },
@@ -121,6 +121,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
               error={errors.homeAdvantage}
               min={1}
               max={2}
+              step={0.1}
             />
           )}
         />

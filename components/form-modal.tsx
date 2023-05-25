@@ -15,7 +15,7 @@ type Props = ModalProps & {
 
 function FormModal({ title, children, ...props }: PropsWithChildren<Props>) {
   return (
-    <Modal size={'xl'} {...props}>
+    <Modal size={'3xl'} {...props}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>

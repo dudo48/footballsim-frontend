@@ -6,7 +6,9 @@ export async function getRequest(url: string) {
 
 export async function postRequest(
   url: string,
-  payload?: { [key: string]: string | number }
+  payload?:
+    | { [key: string]: string | number }
+    | { [key: string]: string | number }[]
 ) {
   const response = await fetch(url, {
     method: 'POST',

@@ -20,7 +20,7 @@ function FormTextarea({ label, helper, error, fieldHandler, ...props }: Props) {
     <FormControl isInvalid={!!error}>
       <FormLabel>{label}</FormLabel>
       {helper && <FormHelperText>{helper}</FormHelperText>}
-      <Textarea {...fieldHandler} {...props} />
+      <Textarea {...fieldHandler} {...props} h={32} />
       <FormErrorMessage>{error?.message}</FormErrorMessage>
     </FormControl>
   );
