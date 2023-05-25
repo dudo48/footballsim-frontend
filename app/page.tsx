@@ -1,5 +1,14 @@
+'use client';
+import { Heading } from '@chakra-ui/react';
+
 function Page() {
-  return <h1>Home</h1>;
+  return (
+    <>
+      <Heading textAlign={'center'} mb={'6'}>
+        What is this?
+      </Heading>
+    </>
+  );
 }
 
 export default Page;

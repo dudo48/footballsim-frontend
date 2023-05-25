@@ -31,15 +31,15 @@ const styles = {
 };
 
 Slider.defaultProps = {
-  min: 0.01,
+  min: 0.1,
   max: 10,
-  step: 0.01,
+  step: 0.1,
 };
 
 NumberInput.defaultProps = {
-  min: 0.01,
+  min: 0.1,
   max: 10,
-  step: 0.5,
+  step: 0.1,
   allowMouseWheel: true,
 };
 
