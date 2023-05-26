@@ -10,7 +10,7 @@ function Providers({ children }: PropsWithChildren) {
     <CacheProvider>
       <ChakraProvider
         theme={theme}
-        toastOptions={{ defaultOptions: { duration: 5000 } }}
+        toastOptions={{ defaultOptions: { duration: 2000 } }}
       >
         <DarkMode>{children}</DarkMode>
       </ChakraProvider>
