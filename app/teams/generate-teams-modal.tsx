@@ -1,13 +1,33 @@
-import FormSlider from '@/components/form-slider';
-import FormTextarea from '@/components/form-textarea';
+import FormSlider from '@/components/form/form-slider';
+import FormTextarea from '@/components/form/form-textarea';
 import Team from '@/interfaces/team.interface';
-import { useTeamActions } from '@/services/team-service';
-import { Button, Center, Link, Stack, Text, useToast } from '@chakra-ui/react';
+import { useTeamActions, useTeams } from '@/services/team-service';
+import {
+  Button,
+  Center,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { colord } from 'colord';
-import random from 'random';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import generateTeams from './teams-generator';
+
+interface FormProps {
+  onClose: () => void;
+}
+
+type Props = FormProps & {
+  isOpen: boolean;
+};
 
 const schema = yup
   .object({
@@ -39,11 +59,7 @@ const schema = yup
   .required();
 type FormData = yup.InferType<typeof schema>;
 
-interface Props {
-  mutateTeams: (result: Team) => void;
-}
-
-function GenerateTeamForm({ mutateTeams }: Props) {
+function GenerateTeamsForm({ onClose }: FormProps) {
   const {
     register,
     control,
@@ -58,45 +74,20 @@ function GenerateTeamForm({ mutateTeams }: Props) {
     },
   });
 
+  const { teams: existingTeams, mutate } = useTeams();
   const { createTeams } = useTeamActions();
   const toast = useToast();
 
-  function generateTeams(data: Omit<FormData, 'names'> & { names: string[] }) {
-    const getRandom = random.pareto(data.alpha);
-
-    const n = 10;
-    // multiply by two so that the mean is 1 not 0.5
-    const getNoise = () => random.bates(n)() * 2;
-
-    const teams = data.names.map((name) => {
-      // attack and defense are related
-      const attack = +(getRandom() * data.strength).toFixed(1);
-      const defense = +(attack * getNoise()).toFixed(1);
-
-      return {
-        name,
-        attack,
-        defense,
-        homeAdvantage: 1.2,
-        color: colord(
-          `hsl(
-          ${random.int(0, 255)},
-          ${random.int(80, 100)}%,
-          ${random.int(0, 100)}%
-          )`
-        ).toHex(),
-      };
-    });
-
-    return teams;
-  }
-
   async function onSubmit(data: FormData) {
-    const teams = generateTeams({ ...data, names: data.names.split(/\n+/) });
+    const teams: Team[] = generateTeams({
+      ...data,
+      names: data.names.split(/\n+/),
+    });
     const result = await createTeams(teams);
     if (!result.error) {
+      onClose();
       toast({ status: 'success', description: 'Teams created successfully.' });
-      mutateTeams(result);
+      mutate(existingTeams.concat(result));
     } else {
       toast({ status: 'error', description: 'Failed to create teams.' });
     }
@@ -114,7 +105,7 @@ function GenerateTeamForm({ mutateTeams }: Props) {
           error={errors.names}
         />
         <Text>
-          Teams&apos; strength will be generated using a{' '}
+          Each team&apos;s attack and defense will be generated using a{' '}
           <Link
             isExternal={true}
             href="https://en.m.wikipedia.org/wiki/Pareto_distribution"
@@ -129,7 +120,7 @@ function GenerateTeamForm({ mutateTeams }: Props) {
           name={'strength'}
           render={({ field }) => (
             <FormSlider
-              label="Minimum strength"
+              label="Weight"
               fieldHandler={field}
               error={errors.strength}
             />
@@ -141,9 +132,9 @@ function GenerateTeamForm({ mutateTeams }: Props) {
           render={({ field }) => (
             <FormSlider
               label="Alpha"
-              helper="The higher the more that the teams will be closer to the minimum strength"
+              helper="The higher the more the teams will be closer to the weight of strength."
               fieldHandler={field}
-              error={errors.strength}
+              error={errors.alpha}
             />
           )}
         />
@@ -162,4 +153,19 @@ function GenerateTeamForm({ mutateTeams }: Props) {
   );
 }
 
-export default GenerateTeamForm;
+function GenerateTeamsModal(props: Props) {
+  return (
+    <Modal size={'3xl'} {...props}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Generate Random Teams</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <GenerateTeamsForm onClose={props.onClose} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+export default GenerateTeamsModal;

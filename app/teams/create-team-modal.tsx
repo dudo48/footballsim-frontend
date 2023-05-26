@@ -1,11 +1,29 @@
-import FormInput from '@/components/form-input';
-import { useTeamActions } from '@/services/team-service';
-import { Button, Center, Stack, useToast } from '@chakra-ui/react';
+import FormInput from '@/components/form/form-input';
+import FormSlider from '@/components/form/form-slider';
+import { useTeamActions, useTeams } from '@/services/team-service';
+import {
+  Button,
+  Center,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  useToast,
+} from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import Team from '@/interfaces/team.interface';
-import FormSlider from '@/components/form-slider';
+
+interface FormProps {
+  onClose: () => void;
+}
+
+type Props = FormProps & {
+  isOpen: boolean;
+};
 
 const schema = yup
   .object({
@@ -38,17 +56,12 @@ const schema = yup
   .required();
 type FormData = yup.InferType<typeof schema>;
 
-interface Props {
-  mutateTeams: (result: Team) => void;
-}
-
-function CreateTeamForm({ mutateTeams }: Props) {
+function CreateTeamForm({ onClose }: FormProps) {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-    resetField,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -60,15 +73,16 @@ function CreateTeamForm({ mutateTeams }: Props) {
     },
   });
 
+  const { teams, mutate } = useTeams();
   const { createTeam } = useTeamActions();
   const toast = useToast();
 
   async function onSubmit(data: FormData) {
     const result = await createTeam(data);
     if (!result.error) {
-      resetField('name');
       toast({ status: 'success', description: 'Team created successfully.' });
-      mutateTeams(result);
+      mutate(teams.concat(result));
+      onClose();
     } else {
       toast({ status: 'error', description: 'Failed to create team.' });
     }
@@ -126,7 +140,6 @@ function CreateTeamForm({ mutateTeams }: Props) {
             />
           )}
         />
-
         <Center>
           <Button isLoading={isSubmitting} type="submit">
             Create
@@ -137,4 +150,19 @@ function CreateTeamForm({ mutateTeams }: Props) {
   );
 }
 
-export default CreateTeamForm;
+function CreateTeamModal({ ...props }: Props) {
+  return (
+    <Modal size={'xl'} {...props}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create a Team</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <CreateTeamForm onClose={props.onClose} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+export default CreateTeamModal;

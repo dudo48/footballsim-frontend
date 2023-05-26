@@ -1,13 +1,22 @@
 'use client';
-import FormModal from '@/components/form-modal';
 import { useTeams } from '@/services/team-service';
-import { Button, ButtonGroup, Heading, useDisclosure } from '@chakra-ui/react';
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Heading,
+  Skeleton,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
-import CreateTeamForm from './create-team-form';
-import GenerateTeamForm from './teams-generator-form';
+import CreateTeamModal from './create-team-modal';
+import GenerateTeamsModal from './generate-teams-modal';
+import TeamsGrid from './teams-grid';
 
 function Page() {
-  const { teams, mutate } = useTeams();
+  const { teams, isLoading } = useTeams();
+  const sortedTeams = [...teams].reverse();
+
   const {
     isOpen: createTeamIsOpen,
     onOpen: createTeamOnOpen,
@@ -22,35 +31,28 @@ function Page() {
 
   return (
     <>
-      <Heading textAlign={'center'} mb={'6'}>
-        Teams
-      </Heading>
-      <ButtonGroup colorScheme="cyan" variant={'outline'}>
-        <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>
-          Create a Team
-        </Button>
-        <Button leftIcon={<BsGear />} onClick={generateTeamsOnOpen}>
-          Random Teams Generator
-        </Button>
-      </ButtonGroup>
-      <FormModal
-        title="Create a Team"
-        onClose={createTeamOnClose}
-        isOpen={createTeamIsOpen}
-      >
-        <CreateTeamForm
-          mutateTeams={(result) => mutate(teams.concat(result))}
+      <Skeleton isLoaded={!isLoading} minH={'100vh'}>
+        <Flex align={'center'} justify={'space-between'} mb={4}>
+          <Heading>Teams ({teams.length})</Heading>
+          <ButtonGroup colorScheme="cyan" variant={'outline'}>
+            <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>
+              Create a Team
+            </Button>
+            <Button leftIcon={<BsGear />} onClick={generateTeamsOnOpen}>
+              Random Teams Generator
+            </Button>
+          </ButtonGroup>
+        </Flex>
+        <CreateTeamModal
+          onClose={createTeamOnClose}
+          isOpen={createTeamIsOpen}
         />
-      </FormModal>
-      <FormModal
-        title="Random Teams Generator"
-        onClose={generateTeamsOnClose}
-        isOpen={generateTeamsIsOpen}
-      >
-        <GenerateTeamForm
-          mutateTeams={(result) => mutate(teams.concat(result))}
+        <GenerateTeamsModal
+          onClose={generateTeamsOnClose}
+          isOpen={generateTeamsIsOpen}
         />
-      </FormModal>
+        <TeamsGrid teams={sortedTeams} />
+      </Skeleton>
     </>
   );
 }

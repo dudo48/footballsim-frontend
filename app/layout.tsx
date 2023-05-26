@@ -1,8 +1,8 @@
 'use client';
+import { Box, Flex } from '@chakra-ui/react';
 import { PropsWithChildren } from 'react';
 import './globals.css';
 import NavBar from './navbar';
-import { Box, Flex } from '@chakra-ui/react';
 import Providers from './providers';
 
 export const metadata = {
@@ -15,11 +15,11 @@ function Layout({ children }: PropsWithChildren) {
     <html lang="en">
       <body>
         <Providers>
-          <Flex direction={'column'} p={'2'} gap={'2'} minH={'100vh'}>
+          <Flex direction={'column'} p={2} gap={2} minH={'100vh'}>
             <Box rounded={'md'} bg={'footballsim.700'}>
               <NavBar />
             </Box>
-            <Box rounded={'md'} bg={'footballsim.700'} p={'2'} flex={'1'}>
+            <Box rounded={'md'} bg={'footballsim.700'} p={4} flex={1}>
               {children}
             </Box>
           </Flex>

@@ -4,12 +4,7 @@ export async function getRequest(url: string) {
   return result;
 }
 
-export async function postRequest(
-  url: string,
-  payload?:
-    | { [key: string]: string | number }
-    | { [key: string]: string | number }[]
-) {
+export async function postRequest(url: string, payload?: unknown) {
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
@@ -19,10 +14,7 @@ export async function postRequest(
   return result;
 }
 
-export async function putRequest(
-  url: string,
-  payload?: { [key: string]: string | number }
-) {
+export async function putRequest(url: string, payload?: unknown) {
   const response = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-type': 'application/json' },
