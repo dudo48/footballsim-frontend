@@ -11,6 +11,7 @@ const schema = yup
   .object({
     name: yup
       .string()
+      .trim()
       .min(3, 'Please enter a name with a length of at least 3 characters.')
       .typeError('Please enter a name with a length of at least 3 characters.')
       .required('Please enter a name with a length of at least 3 characters.'),

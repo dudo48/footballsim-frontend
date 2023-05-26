@@ -36,21 +36,21 @@ NumberInput.defaultProps = {
 };
 
 Slider.defaultProps = {
-  min: 1,
-  max: 100,
-  step: 1,
+  min: 0.1,
+  max: 10,
+  step: 0.1,
 };
 
 RangeSlider.defaultProps = {
-  min: 1,
-  max: 100,
-  step: 1,
+  min: 0.1,
+  max: 10,
+  step: 0.1,
 };
 
 NumberInput.defaultProps = {
-  min: 1,
-  max: 100,
-  step: 1,
+  min: 0.1,
+  max: 10,
+  step: 0.1,
 };
 
 const theme = extendTheme(

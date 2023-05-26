@@ -1,9 +1,10 @@
-import FormRange from '@/components/form-range';
+import FormSlider from '@/components/form-slider';
 import FormTextarea from '@/components/form-textarea';
 import Team from '@/interfaces/team.interface';
 import { useTeamActions } from '@/services/team-service';
 import { Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { colord } from 'colord';
 import random from 'random';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -12,6 +13,7 @@ const schema = yup
   .object({
     names: yup
       .string()
+      .trim()
       .test(
         'is-min-length-3',
         'Please enter all names with a length of at least 3 characters.',
@@ -23,42 +25,11 @@ const schema = yup
       .required(
         'Please enter all names with a length of at least 3 characters.'
       ),
-    attack: yup.object({
-      low: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-      high: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-    }),
-    defense: yup.object({
-      low: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-      high: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-    }),
-    homeAdvantage: yup.object({
-      low: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-      high: yup
-        .number()
-        .positive('Please select a valid number greater than 0.')
-        .typeError('Please select a valid number greater than 0.')
-        .required('Please select a valid number greater than 0'),
-    }),
+    strength: yup
+      .number()
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
@@ -77,9 +48,7 @@ function GenerateTeamForm({ mutateTeams }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       names: '',
-      attack: { low: 5, high: 12 },
-      defense: { low: 5, high: 12 },
-      homeAdvantage: { low: 1, high: 1.5 },
+      strength: 10,
     },
   });
 
@@ -87,18 +56,30 @@ function GenerateTeamForm({ mutateTeams }: Props) {
   const toast = useToast();
 
   function generateTeams(data: Omit<FormData, 'names'> & { names: string[] }) {
-    const getAttack = random.logNormal(Math.log(10), 0.5);
-    const getDefense = random.logNormal(Math.log(10), 0.5);
+    const getRandom = random.normal(data.strength, Math.sqrt(data.strength));
 
-    const teams = data.names.map((name) => ({
-      name,
-      attack: getAttack(),
-      defense: getDefense(),
-      homeAdvantage: +random
-        .float(data.homeAdvantage.low, data.homeAdvantage.high)
-        .toFixed(1),
-      color: `#${random.int(0, 16777215).toString(16)}`,
-    }));
+    const teams = data.names.map((name) => {
+      // attack and defense are related
+      const attack = Math.max(+Math.abs(getRandom()).toFixed(1), 0.1);
+      const defense = Math.max(
+        +(attack * (random.float() + 0.5)).toFixed(1),
+        0.1
+      );
+
+      return {
+        name,
+        attack,
+        defense,
+        homeAdvantage: 1.2,
+        color: colord(
+          `hsl(
+          ${random.int(0, 255)},
+          ${random.int(80, 100)}%,
+          ${random.int(0, 100)}%
+          )`
+        ).toHex(),
+      };
+    });
 
     return teams;
   }
@@ -127,46 +108,19 @@ function GenerateTeamForm({ mutateTeams }: Props) {
         />
         <Controller
           control={control}
-          name={'attack'}
+          name={'strength'}
           render={({ field }) => (
-            <FormRange
-              label="Attack Strength Range"
-              helper="The range which the teams' attack will be within."
+            <FormSlider
+              label="Mean Strength"
               fieldHandler={field}
-              error={errors.attack}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name={'defense'}
-          render={({ field }) => (
-            <FormRange
-              label="Defense Strength Range"
-              helper="The range which the teams' defense will be within."
-              fieldHandler={field}
-              error={errors.defense}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name={'homeAdvantage'}
-          render={({ field }) => (
-            <FormRange
-              label="Home Advantage Range"
-              helper="The range which the teams' home advantage will be within."
-              fieldHandler={field}
-              error={errors.homeAdvantage}
-              min={1}
-              max={2}
-              step={0.1}
+              error={errors.strength}
             />
           )}
         />
 
         <Text fontSize={'sm'}>
-          Note: colors will be automatically generated.
+          Note: colors will be automatically generated and home advantage will
+          take a default value.
         </Text>
         <Center>
           <Button isLoading={isSubmitting} type="submit">
