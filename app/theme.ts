@@ -48,8 +48,7 @@ RangeSlider.defaultProps = {
 };
 
 NumberInput.defaultProps = {
-  min: 0.1,
-  max: 10,
+  min: 0.01,
   step: 0.1,
 };
 

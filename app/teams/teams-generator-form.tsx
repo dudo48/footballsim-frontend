@@ -2,7 +2,7 @@ import FormSlider from '@/components/form-slider';
 import FormTextarea from '@/components/form-textarea';
 import Team from '@/interfaces/team.interface';
 import { useTeamActions } from '@/services/team-service';
-import { Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
+import { Button, Center, Link, Stack, Text, useToast } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { colord } from 'colord';
 import random from 'random';
@@ -30,6 +30,11 @@ const schema = yup
       .positive('Please select a valid number greater than 0.')
       .typeError('Please select a valid number greater than 0.')
       .required('Please select a valid number greater than 0'),
+    alpha: yup
+      .number()
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
@@ -48,7 +53,8 @@ function GenerateTeamForm({ mutateTeams }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       names: '',
-      strength: 10,
+      strength: 1,
+      alpha: 4,
     },
   });
 
@@ -56,15 +62,16 @@ function GenerateTeamForm({ mutateTeams }: Props) {
   const toast = useToast();
 
   function generateTeams(data: Omit<FormData, 'names'> & { names: string[] }) {
-    const getRandom = random.normal(data.strength, Math.sqrt(data.strength));
+    const getRandom = random.pareto(data.alpha);
+
+    const n = 10;
+    // multiply by two so that the mean is 1 not 0.5
+    const getNoise = () => random.bates(n)() * 2;
 
     const teams = data.names.map((name) => {
       // attack and defense are related
-      const attack = Math.max(+Math.abs(getRandom()).toFixed(1), 0.1);
-      const defense = Math.max(
-        +(attack * (random.float() + 0.5)).toFixed(1),
-        0.1
-      );
+      const attack = +(getRandom() * data.strength).toFixed(1);
+      const defense = +(attack * getNoise()).toFixed(1);
 
       return {
         name,
@@ -100,18 +107,41 @@ function GenerateTeamForm({ mutateTeams }: Props) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
         <FormTextarea
-          label="Teams Names"
+          label="Teams names"
           helper="Separated by a new line. This specifies the number of generated teams."
           placeholder="Zamalek, Al Ahly, etc..."
           fieldHandler={register('names')}
           error={errors.names}
         />
+        <Text>
+          Teams&apos; strength will be generated using a{' '}
+          <Link
+            isExternal={true}
+            href="https://en.m.wikipedia.org/wiki/Pareto_distribution"
+            color={'footballsim.200'}
+          >
+            Pareto distribution
+          </Link>
+          .
+        </Text>
         <Controller
           control={control}
           name={'strength'}
           render={({ field }) => (
             <FormSlider
-              label="Mean Strength"
+              label="Minimum strength"
+              fieldHandler={field}
+              error={errors.strength}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name={'alpha'}
+          render={({ field }) => (
+            <FormSlider
+              label="Alpha"
+              helper="The higher the more that the teams will be closer to the minimum strength"
               fieldHandler={field}
               error={errors.strength}
             />

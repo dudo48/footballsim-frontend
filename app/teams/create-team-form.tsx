@@ -53,8 +53,8 @@ function CreateTeamForm({ mutateTeams }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
-      attack: 10,
-      defense: 10,
+      attack: 1,
+      defense: 1,
       homeAdvantage: 1.2,
       color: '#ffffff',
     },
@@ -78,13 +78,13 @@ function CreateTeamForm({ mutateTeams }: Props) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
         <FormInput
-          label="Team Name"
+          label="Team name"
           placeholder="Zamalek, Al Ahly, etc..."
           fieldHandler={register('name')}
           error={errors?.name}
         />
         <FormInput
-          label="Team Color"
+          label="Team color"
           fieldHandler={register('color')}
           type="color"
           error={errors?.color}
@@ -94,7 +94,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
           name={'attack'}
           render={({ field }) => (
             <FormSlider
-              label="Attack Strength"
+              label="Attack strength"
               fieldHandler={field}
               error={errors.attack}
             />
@@ -105,7 +105,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
           name={'defense'}
           render={({ field }) => (
             <FormSlider
-              label="Defense Strength"
+              label="Defense strength"
               fieldHandler={field}
               error={errors.defense}
             />
@@ -116,7 +116,7 @@ function CreateTeamForm({ mutateTeams }: Props) {
           name={'homeAdvantage'}
           render={({ field }) => (
             <FormSlider
-              label="Home Advantage"
+              label="Home advantage"
               helper="The strength multiplier of the team when playing on home ground."
               fieldHandler={field}
               error={errors.homeAdvantage}
