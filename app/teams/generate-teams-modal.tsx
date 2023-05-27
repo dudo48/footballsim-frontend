@@ -1,6 +1,5 @@
 import FormSlider from '@/components/form/form-slider';
-import FormTextarea from '@/components/form/form-textarea';
-import Team from '@/interfaces/team.interface';
+import { getTeams } from '@/services/random-service';
 import { useTeamActions, useTeams } from '@/services/team-service';
 import {
   Button,
@@ -19,7 +18,6 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import generateTeams from './teams-generator';
 
 interface FormProps {
   onClose: () => void;
@@ -31,20 +29,11 @@ type Props = FormProps & {
 
 const schema = yup
   .object({
-    names: yup
-      .string()
-      .trim()
-      .test(
-        'is-min-length-3',
-        'Please enter all names with a length of at least 3 characters.',
-        (value?: string) => value?.split(/\n+/).every((n) => n.length >= 3)
-      )
-      .typeError(
-        'Please enter all names with a length of at least 3 characters.'
-      )
-      .required(
-        'Please enter all names with a length of at least 3 characters.'
-      ),
+    number: yup
+      .number()
+      .positive('Please select a valid number greater than 0.')
+      .typeError('Please select a valid number greater than 0.')
+      .required('Please select a valid number greater than 0'),
     strength: yup
       .number()
       .positive('Please select a valid number greater than 0.')
@@ -61,14 +50,13 @@ type FormData = yup.InferType<typeof schema>;
 
 function GenerateTeamsForm({ onClose }: FormProps) {
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      names: '',
+      number: 4,
       strength: 1,
       alpha: 4,
     },
@@ -79,10 +67,7 @@ function GenerateTeamsForm({ onClose }: FormProps) {
   const toast = useToast();
 
   async function onSubmit(data: FormData) {
-    const teams: Team[] = generateTeams({
-      ...data,
-      names: data.names.split(/\n+/),
-    });
+    const teams = await getTeams(data.number, data.strength, data.alpha);
     const result = await createTeams(teams);
     if (!result.error) {
       onClose();
@@ -91,18 +76,24 @@ function GenerateTeamsForm({ onClose }: FormProps) {
     } else {
       toast({ status: 'error', description: 'Failed to create teams.' });
     }
-    console.log(teams);
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
-        <FormTextarea
-          label="Teams names"
-          helper="Separated by a new line. This specifies the number of generated teams."
-          placeholder="Zamalek, Al Ahly, etc..."
-          fieldHandler={register('names')}
-          error={errors.names}
+        <Controller
+          control={control}
+          name={'number'}
+          render={({ field }) => (
+            <FormSlider
+              label="Number of Teams"
+              fieldHandler={field}
+              error={errors.number}
+              min={1}
+              max={20}
+              step={1}
+            />
+          )}
         />
         <Text>
           Each team&apos;s attack and defense will be generated using a{' '}
