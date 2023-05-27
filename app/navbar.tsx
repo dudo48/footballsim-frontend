@@ -1,8 +1,8 @@
 'use client';
 
 import { Flex } from '@chakra-ui/react';
+import { BsPeople, BsPlayBtn, BsQuestionCircle } from 'react-icons/bs';
 import NavBarItem from './navbaritem';
-import { BsPeople, BsQuestionCircle, BsTabletLandscape } from 'react-icons/bs';
 
 function NavBar() {
   return (
@@ -13,8 +13,8 @@ function NavBar() {
       <NavBarItem leftIcon={<BsPeople />} href="/teams">
         Teams
       </NavBarItem>
-      <NavBarItem leftIcon={<BsTabletLandscape />} href="/matches">
-        Matches
+      <NavBarItem leftIcon={<BsPlayBtn />} href="/simulations">
+        Simulations
       </NavBarItem>
     </Flex>
   );

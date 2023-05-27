@@ -8,7 +8,7 @@ interface Props {
 
 function TeamsGrid({ teams }: Props) {
   return (
-    <SimpleGrid minChildWidth={56} spacing={8}>
+    <SimpleGrid columns={[1, 2, 3, 4]} spacing={8}>
       {teams.map((team) => (
         <Center key={team.id}>
           <TeamCard team={team} displayActions={true} />

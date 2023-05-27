@@ -19,7 +19,13 @@ function Layout({ children }: PropsWithChildren) {
             <Box rounded={'md'} bg={'footballsim.700'}>
               <NavBar />
             </Box>
-            <Box rounded={'md'} bg={'footballsim.700'} p={4} flex={1}>
+            <Box
+              rounded={'md'}
+              bg={'footballsim.700'}
+              p={4}
+              flex={'1 1 0'}
+              display={'flex'}
+            >
               {children}
             </Box>
           </Flex>

@@ -55,7 +55,7 @@ function TeamCard({ team, displayActions }: Props) {
       size={'md'}
       border={'1px'}
       borderColor={'footballsim.500'}
-      w={72}
+      w={60}
     >
       <CardHeader>
         <Center>

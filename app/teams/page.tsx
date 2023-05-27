@@ -2,10 +2,10 @@
 import { useTeams } from '@/services/team-service';
 import {
   Button,
-  ButtonGroup,
   Flex,
   Heading,
   Skeleton,
+  Stack,
   useDisclosure,
 } from '@chakra-ui/react';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
@@ -31,17 +31,27 @@ function Page() {
 
   return (
     <>
-      <Skeleton isLoaded={!isLoading} minH={'100vh'}>
+      <Skeleton isLoaded={!isLoading} w={'full'}>
         <Flex align={'center'} justify={'space-between'} mb={4}>
           <Heading>Teams ({teams.length})</Heading>
-          <ButtonGroup colorScheme="cyan" variant={'outline'}>
-            <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>
+          <Stack direction={['column', null, 'row']}>
+            <Button
+              colorScheme="cyan"
+              variant={'outline'}
+              leftIcon={<BsPlusLg />}
+              onClick={createTeamOnOpen}
+            >
               Create a Team
             </Button>
-            <Button leftIcon={<BsGear />} onClick={generateTeamsOnOpen}>
-              Random Teams Generator
+            <Button
+              colorScheme="cyan"
+              variant={'outline'}
+              leftIcon={<BsGear />}
+              onClick={generateTeamsOnOpen}
+            >
+              Generate Random Teams
             </Button>
-          </ButtonGroup>
+          </Stack>
         </Flex>
         <CreateTeamModal
           onClose={createTeamOnClose}
