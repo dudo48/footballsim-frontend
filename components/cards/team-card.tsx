@@ -72,7 +72,7 @@ function TeamCard({ team, displayActions }: Props) {
         </Center>
       </CardHeader>
       <Divider />
-      <CardBody>
+      <CardBody textAlign={'center'}>
         <StatGroup>
           <Stat>
             <StatLabel>Attack</StatLabel>

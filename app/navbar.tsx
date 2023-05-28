@@ -13,8 +13,8 @@ function NavBar() {
       <NavBarItem leftIcon={<BsPeople />} href="/teams">
         Teams
       </NavBarItem>
-      <NavBarItem leftIcon={<BsPlayBtn />} href="/simulations">
-        Simulations
+      <NavBarItem leftIcon={<BsPlayBtn />} href="/quick-match">
+        Quick Match
       </NavBarItem>
     </Flex>
   );

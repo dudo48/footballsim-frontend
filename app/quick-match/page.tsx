@@ -5,7 +5,7 @@ function Page() {
   return (
     <>
       <Heading textAlign={'center'} mb={'6'}>
-        Simulations
+        Quick Match
       </Heading>
     </>
   );

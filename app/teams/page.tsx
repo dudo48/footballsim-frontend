@@ -30,40 +30,35 @@ function Page() {
   } = useDisclosure();
 
   return (
-    <>
-      <Skeleton isLoaded={!isLoading} w={'full'}>
-        <Flex align={'center'} justify={'space-between'} mb={4}>
-          <Heading>Teams ({teams.length})</Heading>
-          <Stack direction={['column', null, 'row']}>
-            <Button
-              colorScheme="cyan"
-              variant={'outline'}
-              leftIcon={<BsPlusLg />}
-              onClick={createTeamOnOpen}
-            >
-              Create a Team
-            </Button>
-            <Button
-              colorScheme="cyan"
-              variant={'outline'}
-              leftIcon={<BsGear />}
-              onClick={generateTeamsOnOpen}
-            >
-              Generate Random Teams
-            </Button>
-          </Stack>
-        </Flex>
-        <CreateTeamModal
-          onClose={createTeamOnClose}
-          isOpen={createTeamIsOpen}
-        />
-        <GenerateTeamsModal
-          onClose={generateTeamsOnClose}
-          isOpen={generateTeamsIsOpen}
-        />
-        <TeamsGrid teams={sortedTeams} />
-      </Skeleton>
-    </>
+    <Skeleton isLoaded={!isLoading} w={'full'}>
+      <Flex align={'center'} justify={'space-between'} mb={4}>
+        <Heading>Teams ({teams.length})</Heading>
+        <Stack direction={['column', null, 'row']}>
+          <Button
+            colorScheme="cyan"
+            variant={'outline'}
+            leftIcon={<BsPlusLg />}
+            onClick={createTeamOnOpen}
+          >
+            Create a Team
+          </Button>
+          <Button
+            colorScheme="cyan"
+            variant={'outline'}
+            leftIcon={<BsGear />}
+            onClick={generateTeamsOnOpen}
+          >
+            Generate Random Teams
+          </Button>
+        </Stack>
+      </Flex>
+      <CreateTeamModal onClose={createTeamOnClose} isOpen={createTeamIsOpen} />
+      <GenerateTeamsModal
+        onClose={generateTeamsOnClose}
+        isOpen={generateTeamsIsOpen}
+      />
+      <TeamsGrid teams={sortedTeams} />
+    </Skeleton>
   );
 }
 
