@@ -37,5 +37,11 @@ export function useTeamActions() {
     updateTeam: (id: number, payload: Partial<Team>) =>
       putRequest(`${baseUrl}/${id}`, payload),
     deleteTeam: (id: number) => deleteRequest(`${baseUrl}/${id}`),
+    getRandomTeams: (number: number, strength: number, alpha: number) =>
+      getRequest(`${baseUrl}/random`, {
+        n: `${number}`,
+        k: `${strength}`,
+        a: `${alpha}`,
+      }),
   };
 }

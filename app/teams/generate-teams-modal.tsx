@@ -1,5 +1,4 @@
 import FormSlider from '@/components/form/form-slider';
-import { getTeams } from '@/services/random-service';
 import { useTeamActions, useTeams } from '@/services/team-service';
 import {
   Button,
@@ -63,11 +62,11 @@ function GenerateTeamsForm({ onClose }: FormProps) {
   });
 
   const { teams: existingTeams, mutate } = useTeams();
-  const { createTeams } = useTeamActions();
+  const { createTeams, getRandomTeams } = useTeamActions();
   const toast = useToast();
 
   async function onSubmit(data: FormData) {
-    const teams = await getTeams(data.number, data.strength, data.alpha);
+    const teams = await getRandomTeams(data.number, data.strength, data.alpha);
     const result = await createTeams(teams);
     if (!result.error) {
       onClose();
