@@ -41,7 +41,7 @@ function Page() {
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
         <Flex align={'center'} justify={'space-between'}>
-          <Heading>Teams ({teams.length})</Heading>
+          <Heading size={'lg'}>Teams ({teams.length})</Heading>
           <ButtonGroup colorScheme={'cyan'} variant={'outline'}>
             <Stack direction={['column', null, 'row']}>
               <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>

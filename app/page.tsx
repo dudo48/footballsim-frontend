@@ -4,7 +4,7 @@ import { Box, Container, Heading, Text } from '@chakra-ui/react';
 function Page() {
   return (
     <Box w={'full'}>
-      <Heading textAlign={'center'} mb={'6'}>
+      <Heading size={'lg'} textAlign={'center'} mb={'6'}>
         What is this?
       </Heading>
       <Container maxW={'3xl'}>

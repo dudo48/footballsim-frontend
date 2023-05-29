@@ -60,9 +60,11 @@ function TeamCard({ team, displayActions }: Props) {
       <CardHeader>
         <Center>
           <Text
+            title={team.name}
             overflow={'hidden'}
             textOverflow={'ellipsis'}
             whiteSpace={'nowrap'}
+            fontSize={'lg'}
           >
             {team.name}
           </Text>
