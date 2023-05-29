@@ -70,7 +70,11 @@ function TeamCard({ team, displayActions }: Props) {
           </Text>
         </Center>
         <Center>
-          <FaTshirt fontSize={128} color={team.color} />
+          <FaTshirt
+            style={{ stroke: '#ffffff', strokeWidth: 4 }}
+            fontSize={128}
+            color={team.color}
+          />
         </Center>
       </CardHeader>
       <Divider />
