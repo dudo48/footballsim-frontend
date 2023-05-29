@@ -1,6 +1,6 @@
 'use client';
+import TeamsGrid from '@/components/misc/teams-grid';
 import { useTeams } from '@/services/team-service';
-import { teamSorts } from '@/utils/sorting';
 import {
   Button,
   ButtonGroup,
@@ -10,20 +10,12 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
 import CreateTeamModal from './create-team-modal';
 import GenerateTeamsModal from './generate-teams-modal';
-import SortTeams from './sort-teams';
-import TeamsGrid from './teams-grid';
 
 function Page() {
   const { teams, isLoading } = useTeams();
-  const [sorting, setSorting] = useState('lastAdded');
-  const [isDescending, setIsDescending] = useState(true);
-
-  const sortedTeams = [...teams].sort(teamSorts[sorting]);
-  if (isDescending) sortedTeams.reverse();
 
   const {
     isOpen: createTeamIsOpen,
@@ -53,13 +45,7 @@ function Page() {
             </Stack>
           </ButtonGroup>
         </Flex>
-        <SortTeams
-          sorting={sorting}
-          setSorting={setSorting}
-          isDescending={isDescending}
-          setIsDescending={setIsDescending}
-        />
-        <TeamsGrid teams={sortedTeams} />
+        <TeamsGrid teams={teams} />
         <CreateTeamModal
           onClose={createTeamOnClose}
           isOpen={createTeamIsOpen}

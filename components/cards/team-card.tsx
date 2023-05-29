@@ -18,13 +18,14 @@ import {
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
+import { getStrength } from '../../utils/functions';
 
 interface Props {
   team: Team;
-  displayActions?: boolean;
+  deletable?: boolean;
 }
 
-function TeamCard({ team, displayActions }: Props) {
+function TeamCard({ team, deletable }: Props) {
   const { teams, mutate } = useTeams();
 
   const toast = useToast();
@@ -80,6 +81,10 @@ function TeamCard({ team, displayActions }: Props) {
       <Divider />
       <CardBody textAlign={'center'}>
         <StatGroup>
+          <Stat title="The sum of attack and defense">
+            <StatLabel>Strength</StatLabel>
+            <StatNumber>{getStrength(team).toFixed(1)}</StatNumber>
+          </Stat>
           <Stat>
             <StatLabel>Attack</StatLabel>
             <StatNumber>{team.attack.toFixed(1)}</StatNumber>
@@ -96,19 +101,17 @@ function TeamCard({ team, displayActions }: Props) {
           </Stat>
         </Flex>
       </CardBody>
-      {displayActions && (
-        <>
-          <Divider />
-          <CardFooter>
-            <IconButton
-              colorScheme={'red'}
-              onClick={deleteTeamHandler}
-              aria-label="delete button"
-              icon={<BsTrash />}
-            />
-          </CardFooter>
-        </>
-      )}
+      <Divider />
+      <CardFooter>
+        {deletable && (
+          <IconButton
+            colorScheme={'red'}
+            onClick={deleteTeamHandler}
+            aria-label="delete button"
+            icon={<BsTrash />}
+          />
+        )}
+      </CardFooter>
     </Card>
   );
 }

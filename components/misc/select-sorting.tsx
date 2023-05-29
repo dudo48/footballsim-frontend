@@ -1,17 +1,20 @@
 import { Select, Stack, Text } from '@chakra-ui/react';
+import { startCase } from 'lodash';
 
 interface Props {
+  sorts: { [key: string]: (a: never, b: never) => number };
   sorting: string;
   setSorting: (value: string) => void;
-  isDescending: boolean;
-  setIsDescending: (value: boolean) => void;
+  isDesc: boolean;
+  setIsDesc: (value: boolean) => void;
 }
 
-function SortTeams({
+function SelectSorting({
+  sorts,
   sorting,
   setSorting,
-  isDescending,
-  setIsDescending,
+  isDesc,
+  setIsDesc,
 }: Props) {
   return (
     <Stack direction={'row'} align={'center'}>
@@ -22,18 +25,17 @@ function SortTeams({
         onChange={(event) => setSorting(event.target.value)}
         value={sorting}
       >
-        <option value={'lastAdded'}>Last Added</option>
-        <option value={'name'}>Name</option>
-        <option value={'attack'}>Attack</option>
-        <option value={'defense'}>Defense</option>
-        <option value={'homeAdvantage'}>Home Advantage</option>
-        <option value={'strength'}>Strength</option>
+        {Object.entries(sorts).map((p) => (
+          <option key={p[0]} value={p[0]}>
+            {startCase(p[0])}
+          </option>
+        ))}
       </Select>
       <Select
         maxW={44}
         variant={'solid'}
-        onChange={(event) => setIsDescending(event.target.value === 'desc')}
-        value={isDescending ? 'desc' : 'asc'}
+        onChange={(event) => setIsDesc(event.target.value === 'desc')}
+        value={isDesc ? 'desc' : 'asc'}
       >
         <option value={'asc'}>Ascending</option>
         <option value={'desc'}>Descending</option>
@@ -42,4 +44,4 @@ function SortTeams({
   );
 }
 
-export default SortTeams;
+export default SelectSorting;

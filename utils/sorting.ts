@@ -1,4 +1,5 @@
 import Team from '@/interfaces/team.interface';
+import { getStrength } from './functions';
 
 export const teamSorts: { [key: string]: (a: Team, b: Team) => number } = {
   lastAdded: () => 0,
@@ -6,5 +7,5 @@ export const teamSorts: { [key: string]: (a: Team, b: Team) => number } = {
   attack: (a, b) => a.attack - b.attack,
   defense: (a, b) => a.defense - b.defense,
   homeAdvantage: (a, b) => a.homeAdvantage - b.homeAdvantage,
-  strength: (a, b) => teamSorts.attack(a, b) + teamSorts.defense(a, b),
+  strength: (a, b) => getStrength(a) - getStrength(b),
 };

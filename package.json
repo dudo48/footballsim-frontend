@@ -20,6 +20,7 @@
     "autoprefixer": "10.4.14",
     "colord": "^2.9.3",
     "framer-motion": "^10.12.14",
+    "lodash": "^4.17.21",
     "next": "13.4.3",
     "postcss": "8.4.23",
     "random": "^4.1.0",
