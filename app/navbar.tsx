@@ -7,15 +7,9 @@ import NavBarItem from './navbaritem';
 function NavBar() {
   return (
     <Flex>
-      <NavBarItem leftIcon={<BsQuestionCircle />} href="/">
-        About
-      </NavBarItem>
-      <NavBarItem leftIcon={<BsPeople />} href="/teams">
-        Teams
-      </NavBarItem>
-      <NavBarItem leftIcon={<BsPlayBtn />} href="/quick-match">
-        Quick Match
-      </NavBarItem>
+      <NavBarItem href="/teams">Teams</NavBarItem>
+      <NavBarItem href="/quick-match">Quick Match</NavBarItem>
+      <NavBarItem href="/">About</NavBarItem>
     </Flex>
   );
 }

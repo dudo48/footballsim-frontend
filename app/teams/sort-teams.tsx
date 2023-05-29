@@ -1,15 +1,15 @@
 import { Select, Stack, Text } from '@chakra-ui/react';
 
 interface Props {
-  sortingOption: string;
-  setSortingOption: (value: string) => void;
+  sorting: string;
+  setSorting: (value: string) => void;
   isDescending: boolean;
   setIsDescending: (value: boolean) => void;
 }
 
 function SortTeams({
-  sortingOption,
-  setSortingOption,
+  sorting,
+  setSorting,
   isDescending,
   setIsDescending,
 }: Props) {
@@ -19,8 +19,8 @@ function SortTeams({
       <Select
         maxW={48}
         variant={'solid'}
-        onChange={(event) => setSortingOption(event.target.value)}
-        value={sortingOption}
+        onChange={(event) => setSorting(event.target.value)}
+        value={sorting}
       >
         <option value={'lastAdded'}>Last Added</option>
         <option value={'name'}>Name</option>

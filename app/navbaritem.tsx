@@ -15,7 +15,7 @@ function NavBarItem({ href, children, ...props }: PropsWithChildren<Props>) {
 
   return (
     <Link href={href}>
-      <Button variant={'ghost'} isActive={onThisPage} {...props}>
+      <Button variant={'ghost'} size={'lg'} isActive={onThisPage} {...props}>
         {children}
       </Button>
     </Link>

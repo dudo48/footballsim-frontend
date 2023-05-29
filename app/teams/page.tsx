@@ -1,8 +1,9 @@
 'use client';
 import { useTeams } from '@/services/team-service';
-import { sortingMethod } from '@/utils/sorting';
+import { teamSorts } from '@/utils/sorting';
 import {
   Button,
+  ButtonGroup,
   Flex,
   Heading,
   Skeleton,
@@ -18,10 +19,10 @@ import TeamsGrid from './teams-grid';
 
 function Page() {
   const { teams, isLoading } = useTeams();
-  const [sortingOption, setSortingOption] = useState('lastAdded');
+  const [sorting, setSorting] = useState('lastAdded');
   const [isDescending, setIsDescending] = useState(true);
 
-  const sortedTeams = [...teams].sort(sortingMethod[sortingOption]);
+  const sortedTeams = [...teams].sort(teamSorts[sorting]);
   if (isDescending) sortedTeams.reverse();
 
   const {
@@ -41,28 +42,20 @@ function Page() {
       <Stack spacing={4}>
         <Flex align={'center'} justify={'space-between'}>
           <Heading>Teams ({teams.length})</Heading>
-          <Stack direction={['column', null, 'row']}>
-            <Button
-              colorScheme="cyan"
-              variant={'outline'}
-              leftIcon={<BsPlusLg />}
-              onClick={createTeamOnOpen}
-            >
-              Create a Team
-            </Button>
-            <Button
-              colorScheme="cyan"
-              variant={'outline'}
-              leftIcon={<BsGear />}
-              onClick={generateTeamsOnOpen}
-            >
-              Generate Random Teams
-            </Button>
-          </Stack>
+          <ButtonGroup colorScheme={'cyan'} variant={'outline'}>
+            <Stack direction={['column', null, 'row']}>
+              <Button leftIcon={<BsPlusLg />} onClick={createTeamOnOpen}>
+                Create a Team
+              </Button>
+              <Button leftIcon={<BsGear />} onClick={generateTeamsOnOpen}>
+                Generate Random Teams
+              </Button>
+            </Stack>
+          </ButtonGroup>
         </Flex>
         <SortTeams
-          sortingOption={sortingOption}
-          setSortingOption={setSortingOption}
+          sorting={sorting}
+          setSorting={setSorting}
           isDescending={isDescending}
           setIsDescending={setIsDescending}
         />
