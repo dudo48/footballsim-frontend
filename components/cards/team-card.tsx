@@ -1,13 +1,13 @@
 import Team from '@/interfaces/team.interface';
 import { useTeamActions, useTeams } from '@/services/team-service';
 import {
+  Box,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Center,
   Divider,
-  Flex,
   IconButton,
   Stat,
   StatGroup,
@@ -58,7 +58,7 @@ function TeamCard({ team, deletable }: Props) {
       borderColor={'footballsim.500'}
       w={60}
     >
-      <CardHeader>
+      <CardHeader p={2}>
         <Center>
           <Text
             title={team.name}
@@ -77,29 +77,30 @@ function TeamCard({ team, deletable }: Props) {
             color={team.color}
           />
         </Center>
-      </CardHeader>
-      <Divider />
-      <CardBody textAlign={'center'}>
-        <StatGroup>
-          <Stat title="The sum of attack and defense">
-            <StatLabel>Strength</StatLabel>
+        <Box textAlign={'center'}>
+          <Stat title="Strength: The mean of attack and defense">
+            <StatLabel>STR</StatLabel>
             <StatNumber>{getStrength(team).toFixed(1)}</StatNumber>
           </Stat>
-          <Stat>
-            <StatLabel>Attack</StatLabel>
+        </Box>
+      </CardHeader>
+      <Divider />
+      <CardBody p={2} textAlign={'center'}>
+        <StatGroup>
+          <Stat title="Attack">
+            <StatLabel>ATT</StatLabel>
             <StatNumber>{team.attack.toFixed(1)}</StatNumber>
           </Stat>
-          <Stat>
-            <StatLabel>Defense</StatLabel>
+          <Stat title="Defense">
+            <StatLabel>DEF</StatLabel>
             <StatNumber>{team.defense.toFixed(1)}</StatNumber>
           </Stat>
-        </StatGroup>
-        <Flex mt={2}>
-          <Stat>
-            <StatLabel>Home Advantage</StatLabel>
+          <Stat title="Home Advantage">
+            <StatLabel>ADV</StatLabel>
             <StatNumber>{team.homeAdvantage.toFixed(1)}</StatNumber>
           </Stat>
-        </Flex>
+        </StatGroup>
+        <StatGroup></StatGroup>
       </CardBody>
       <Divider />
       <CardFooter>
