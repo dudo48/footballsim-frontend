@@ -21,17 +21,19 @@ import { FaTshirt } from 'react-icons/fa';
 import { getStrength } from '../../utils/functions';
 
 interface Props {
-  team: Team;
+  team?: Team;
+  isHighlighted?: boolean;
   deletable?: boolean;
 }
 
-function TeamCard({ team, deletable }: Props) {
+function TeamCard({ team, deletable, isHighlighted }: Props) {
   const { teams, mutate } = useTeams();
 
   const toast = useToast();
   const { deleteTeam } = useTeamActions();
 
   async function deleteTeamHandler() {
+    if (!team) return;
     const result = await deleteTeam(team.id as number);
     if (!result.error) {
       toast({
@@ -54,33 +56,31 @@ function TeamCard({ team, deletable }: Props) {
       p={1}
       bg={'footballsim.900'}
       size={'md'}
-      border={'1px'}
-      borderColor={'footballsim.500'}
+      borderWidth={isHighlighted ? 4 : 1}
+      borderColor={isHighlighted ? 'footballsim.200' : 'footballsim.500'}
       w={60}
     >
-      <CardHeader p={2}>
-        <Center>
-          <Text
-            title={team.name}
-            overflow={'hidden'}
-            textOverflow={'ellipsis'}
-            whiteSpace={'nowrap'}
-            fontSize={'lg'}
-          >
-            {team.name}
-          </Text>
-        </Center>
+      <CardHeader p={2} textAlign={'center'}>
+        <Text
+          title={team && team.name}
+          overflow={'hidden'}
+          textOverflow={'ellipsis'}
+          whiteSpace={'nowrap'}
+          fontSize={'lg'}
+        >
+          {team ? team.name : '-'}
+        </Text>
         <Center>
           <FaTshirt
             style={{ stroke: '#ffffff', strokeWidth: 4 }}
             fontSize={128}
-            color={team.color}
+            color={team ? team.color : '#888888'}
           />
         </Center>
-        <Box textAlign={'center'}>
+        <Box>
           <Stat title="Strength: The mean of attack and defense">
             <StatLabel>STR</StatLabel>
-            <StatNumber>{getStrength(team).toFixed(1)}</StatNumber>
+            <StatNumber>{team ? getStrength(team).toFixed(1) : '-'}</StatNumber>
           </Stat>
         </Box>
       </CardHeader>
@@ -89,22 +89,24 @@ function TeamCard({ team, deletable }: Props) {
         <StatGroup>
           <Stat title="Attack">
             <StatLabel>ATT</StatLabel>
-            <StatNumber>{team.attack.toFixed(1)}</StatNumber>
+            <StatNumber>{team ? team.attack.toFixed(1) : '-'}</StatNumber>
           </Stat>
           <Stat title="Defense">
             <StatLabel>DEF</StatLabel>
-            <StatNumber>{team.defense.toFixed(1)}</StatNumber>
+            <StatNumber>{team ? team.defense.toFixed(1) : '-'}</StatNumber>
           </Stat>
           <Stat title="Home Advantage">
             <StatLabel>ADV</StatLabel>
-            <StatNumber>{team.homeAdvantage.toFixed(1)}</StatNumber>
+            <StatNumber>
+              {team ? team.homeAdvantage.toFixed(1) : '-'}
+            </StatNumber>
           </Stat>
         </StatGroup>
         <StatGroup></StatGroup>
       </CardBody>
       <Divider />
       <CardFooter>
-        {deletable && (
+        {team && deletable && (
           <IconButton
             colorScheme={'red'}
             onClick={deleteTeamHandler}

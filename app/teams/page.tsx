@@ -1,5 +1,5 @@
 'use client';
-import TeamsGrid from '@/components/misc/teams-grid';
+import TeamsGrid from '@/app/teams/teams-grid';
 import { useTeams } from '@/services/team-service';
 import {
   Button,
@@ -45,7 +45,7 @@ function Page() {
             </Stack>
           </ButtonGroup>
         </Flex>
-        <TeamsGrid teams={teams} />
+        <TeamsGrid teams={teams} deletable={true} />
         <CreateTeamModal
           onClose={createTeamOnClose}
           isOpen={createTeamIsOpen}
