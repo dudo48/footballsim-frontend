@@ -1,5 +1,5 @@
 import Team from '@/interfaces/team.interface';
-import { useTeamActions, useTeams } from '@/services/team-service';
+import { useTeamActions, useTeams } from '@/services/teams-service';
 import {
   Box,
   Card,

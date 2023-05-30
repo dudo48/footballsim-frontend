@@ -15,9 +15,9 @@ export function useTeams() {
   };
 }
 
-export function useTeam(id: number) {
+export function useTeam(id: number | null) {
   const { data, error, isLoading, mutate } = useSWR(
-    `${baseUrl}/${id}`,
+    () => (id ? `${baseUrl}/${id}` : null),
     getRequest
   );
 
@@ -37,9 +37,9 @@ export function useTeamActions() {
     updateTeam: (id: number, payload: Partial<Team>) =>
       putRequest(`${baseUrl}/${id}`, payload),
     deleteTeam: (id: number) => deleteRequest(`${baseUrl}/${id}`),
-    getRandomTeams: (number: number, strength: number, alpha: number) =>
+    getRandomTeams: (n: number, strength: number, alpha: number) =>
       getRequest(`${baseUrl}/random`, {
-        n: `${number}`,
+        n: `${n}`,
         k: `${strength}`,
         a: `${alpha}`,
       }),

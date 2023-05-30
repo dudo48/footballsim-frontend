@@ -5,8 +5,10 @@ import NavBarItem from './navbaritem';
 
 function NavBar() {
   return (
-    <Flex>
-      <Heading mr={8}>⚽ Footballsim</Heading>
+    <Flex overflowX={'auto'}>
+      <Heading mr={8} whiteSpace={'nowrap'}>
+        ⚽ Footballsim
+      </Heading>
       <NavBarItem href="/teams">Teams</NavBarItem>
       <NavBarItem href="/quick-match">Quick Match</NavBarItem>
       <NavBarItem href="/">About</NavBarItem>

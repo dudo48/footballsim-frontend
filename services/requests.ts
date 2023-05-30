@@ -5,8 +5,13 @@ export async function getRequest(url: string, params?: Record<string, string>) {
   return result;
 }
 
-export async function postRequest(url: string, payload?: unknown) {
-  const response = await fetch(url, {
+export async function postRequest(
+  url: string,
+  payload?: unknown,
+  params?: Record<string, string>
+) {
+  const requestUrl = params ? `${url}?` + new URLSearchParams(params) : url;
+  const response = await fetch(requestUrl, {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify(payload),

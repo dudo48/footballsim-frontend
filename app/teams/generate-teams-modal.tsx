@@ -1,5 +1,5 @@
 import FormSlider from '@/components/form/form-slider';
-import { useTeamActions, useTeams } from '@/services/team-service';
+import { useTeamActions, useTeams } from '@/services/teams-service';
 import {
   Button,
   Center,

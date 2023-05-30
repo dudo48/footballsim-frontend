@@ -1,6 +1,6 @@
 'use client';
 import TeamsGrid from '@/app/teams/teams-grid';
-import { useTeams } from '@/services/team-service';
+import { useTeams } from '@/services/teams-service';
 import {
   Button,
   ButtonGroup,
