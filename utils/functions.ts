@@ -26,9 +26,27 @@ export function isLoss(result?: MatchResult) {
   return result.fullTime.home < result.fullTime.away;
 }
 
+export function getHomeGoals(match: Match) {
+  const result = match.result;
+  if (!result) return 0;
+  return result.fullTime.home;
+}
+
+export function getAwayGoals(match: Match) {
+  const result = match.result;
+  if (!result) return 0;
+  return result.fullTime.away;
+}
+
+export function getTotalGoals(match: Match) {
+  const result = match.result;
+  if (!result) return 0;
+  return result.fullTime.home + result.fullTime.away;
+}
+
 export function getWinner(match: Match) {
   const result = match.result;
-  if (!result) return null;
+  if (!result) throw new Error('result is undefined');
 
   if (isWin(result)) {
     return match.homeTeam;

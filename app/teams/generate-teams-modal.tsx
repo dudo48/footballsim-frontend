@@ -55,9 +55,9 @@ function GenerateTeamsForm({ onClose }: FormProps) {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      number: 4,
+      number: 10,
       strength: 1,
-      alpha: 4,
+      alpha: 5,
     },
   });
 
@@ -125,6 +125,7 @@ function GenerateTeamsForm({ onClose }: FormProps) {
               helper="The higher the more the teams will be closer to the weight of strength."
               fieldHandler={field}
               error={errors.alpha}
+              min={1}
             />
           )}
         />
