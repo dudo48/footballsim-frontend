@@ -7,33 +7,43 @@ interface Props {
   showMatchNumber?: boolean;
   markWinner?: boolean;
   markLoser?: boolean;
+  showResultTag?: boolean;
 }
 
 function MatchesTable({
   matches,
   markWinner,
   markLoser,
+  showResultTag,
   showMatchNumber,
 }: Props) {
   return (
     <TableContainer>
-      <Table variant={'striped'}>
+      <Table variant={'striped'} layout={'fixed'}>
         <Thead>
           <Tr>
-            {showMatchNumber && <Th isNumeric>NO</Th>}
+            {showMatchNumber && (
+              <Th w={12} isNumeric>
+                NO
+              </Th>
+            )}
+            {showResultTag && <Th w={12}></Th>}
             <Th>HOME TEAM</Th>
-            <Th textAlign={'center'}>RESULT</Th>
+            <Th w={32} textAlign={'center'}>
+              RESULT
+            </Th>
             <Th>AWAY TEAM</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {matches.map((match, i) => (
+          {matches.map((match) => (
             <MatchRow
               key={match.id}
               match={match}
-              number={showMatchNumber ? i + 1 : undefined}
+              number={showMatchNumber ? match.id : undefined}
               markWinner={markWinner}
               markLoser={markLoser}
+              showResultTag={showResultTag}
             />
           ))}
         </Tbody>

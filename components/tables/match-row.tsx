@@ -1,6 +1,7 @@
 import Match from '@/interfaces/match.interface';
 import { isLoss, isWin } from '@/utils/functions';
 import { Td, Tr } from '@chakra-ui/react';
+import ResultTag from '../misc/result-tag';
 import TeamLi from '../misc/team-li';
 
 interface Props {
@@ -8,9 +9,16 @@ interface Props {
   number?: number;
   markWinner?: boolean;
   markLoser?: boolean;
+  showResultTag?: boolean;
 }
 
-function MatchRow({ match, number, markWinner, markLoser }: Props) {
+function MatchRow({
+  match,
+  number,
+  markWinner,
+  markLoser,
+  showResultTag,
+}: Props) {
   return (
     <Tr>
       {number && (
@@ -23,6 +31,11 @@ function MatchRow({ match, number, markWinner, markLoser }: Props) {
           {number}
         </Td>
       )}
+      {match.result && showResultTag && (
+        <Td>
+          <ResultTag result={match.result} />
+        </Td>
+      )}
       <Td>
         <TeamLi
           isHighlighted={markWinner && isWin(match.result)}
@@ -30,7 +43,7 @@ function MatchRow({ match, number, markWinner, markLoser }: Props) {
           team={match.homeTeam}
         />
       </Td>
-      <Td textAlign={'center'} w={'full'} fontSize={'xl'}>
+      <Td textAlign={'center'} fontSize={'xl'}>
         {match.result
           ? `${match.result.fullTime.home} - ${match.result.fullTime.away}`
           : 'VS'}

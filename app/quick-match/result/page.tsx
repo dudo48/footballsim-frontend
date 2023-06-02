@@ -1,8 +1,7 @@
 'use client';
 import TeamCard from '@/components/cards/team-card';
 import MatchesTable from '@/components/tables/matches-table';
-import { useMatchesSimulations } from '@/services/simulations-service';
-import { useTeam } from '@/services/teams-service';
+import { QuickMatchSimulations } from '@/context/quick-match-simulations';
 import {
   Box,
   Center,
@@ -12,64 +11,28 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useContext, useEffect } from 'react';
 import MatchesStatistics from './matches-statistics';
 
 function Page() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [results, setResults] = useState([]);
-  const params = useSearchParams();
-  const { simulateQuickMatch } = useMatchesSimulations();
-
-  const homeTeamId = params.get('homeTeam')
-    ? +(params.get('homeTeam') as string)
-    : null;
-  const awayTeamId = params.get('awayTeam')
-    ? +(params.get('awayTeam') as string)
-    : null;
-  const onNeutralGround = params.get('onNeutralGround') === 'true';
-  const n = +(params.get('n') || 1);
-
-  const { team: homeTeam, isLoading: isHomeLoading } = useTeam(homeTeamId);
-  const { team: awayTeam, isLoading: isAwayLoading } = useTeam(awayTeamId);
+  const { matches } = useContext(QuickMatchSimulations);
+  const homeTeam = matches.length ? matches[0].homeTeam : undefined;
+  const awayTeam = matches.length ? matches[0].awayTeam : undefined;
+  const path = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!homeTeamId || !awayTeamId) return;
-    const match = {
-      homeTeam: homeTeamId,
-      awayTeam: awayTeamId,
-      onNeutralGround,
-    };
-
-    async function getResults() {
-      if (!homeTeam || !awayTeam) return;
-      setResults(await simulateQuickMatch(match, n));
+    if (!matches.length) {
+      const pathArray = path.split('/');
+      pathArray.pop();
+      const newPath = pathArray.join('/');
+      router.replace(newPath);
     }
-
-    if (!results.length) getResults();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [awayTeam, homeTeam]);
-
-  useEffect(() => {
-    if (results.length) {
-      setIsLoading(false);
-    }
-  }, [results]);
-
-  const matches = results.map((result, id) => ({
-    id,
-    homeTeam,
-    awayTeam,
-    onNeutralGround,
-    result,
-  }));
+  }, [matches.length, path, router]);
 
   return (
-    <Skeleton
-      isLoaded={!isLoading && !isHomeLoading && !isAwayLoading}
-      w={'full'}
-    >
+    <Skeleton isLoaded={!!matches.length} w={'full'}>
       <Stack spacing={4}>
         <Center justifyContent={'space-between'}>
           <Hide below={'md'}>
@@ -87,13 +50,8 @@ function Page() {
           </Hide>
         </Center>
         <Center>
-          <Container bg={'footballsim.600'} maxW={'2xl'} shadow={'xl'}>
-            <MatchesTable
-              markWinner
-              markLoser
-              showMatchNumber
-              matches={matches}
-            />
+          <Container bg={'footballsim.600'} maxW={'3xl'} shadow={'xl'}>
+            <MatchesTable showMatchNumber showResultTag matches={matches} />
           </Container>
         </Center>
       </Stack>

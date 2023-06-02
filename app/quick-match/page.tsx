@@ -1,7 +1,9 @@
 'use client';
 import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
+import { QuickMatchSimulations } from '@/context/quick-match-simulations';
 import Team from '@/interfaces/team.interface';
+import { useMatchesSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
 import {
   Box,
@@ -15,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import SelectTeamCard from './select-team-card';
@@ -46,7 +48,7 @@ function Page() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      n: 1,
+      n: 10,
       onNeutralGround: true,
     },
   });
@@ -57,6 +59,8 @@ function Page() {
   const { teams, isLoading } = useTeams();
   const [homeTeam, setHomeTeam] = useState<Team>();
   const [awayTeam, setAwayTeam] = useState<Team>();
+  const { simulateQuickMatch } = useMatchesSimulations();
+  const { setMatches } = useContext(QuickMatchSimulations);
 
   useEffect(() => {
     register('homeTeam');
@@ -80,13 +84,20 @@ function Page() {
     }
   }, [errors, toast]);
 
-  function onSubmit(data: FormData) {
-    const params = { ...data, homeTeam: homeTeam?.id, awayTeam: awayTeam?.id };
-    router.push(
-      `${path}/result?${Object.entries(params)
-        .map((p) => `${p[0]}=${p[1]}`)
-        .join('&')}`
-    );
+  async function onSubmit(data: FormData) {
+    const match = {
+      homeTeam: data.homeTeam as Team,
+      awayTeam: data.awayTeam as Team,
+      onNeutralGround: data.onNeutralGround,
+    };
+
+    const result = await simulateQuickMatch(match, data.n);
+    if (!result.error) {
+      setMatches(result);
+      router.push(`${path}/result`);
+    } else {
+      toast({ status: 'error', description: 'Failed to simulate match.' });
+    }
   }
 
   return (
