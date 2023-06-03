@@ -93,6 +93,8 @@ function Page() {
 
     const result = await simulateQuickMatch(match, data.n);
     if (!result.error) {
+      // setMatches(result);
+      sessionStorage.setItem('simulationMatches', JSON.stringify(result));
       setMatches(result);
       router.push(`${path}/result`);
     } else {

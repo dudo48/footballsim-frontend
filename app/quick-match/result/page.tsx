@@ -16,23 +16,23 @@ import { useContext, useEffect } from 'react';
 import MatchesStatistics from './matches-statistics';
 
 function Page() {
-  const { matches } = useContext(QuickMatchSimulations);
+  const { matches, isLoaded } = useContext(QuickMatchSimulations);
   const homeTeam = matches.length ? matches[0].homeTeam : undefined;
   const awayTeam = matches.length ? matches[0].awayTeam : undefined;
   const path = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (!matches.length) {
+    if (!matches.length && isLoaded) {
       const pathArray = path.split('/');
       pathArray.pop();
       const newPath = pathArray.join('/');
       router.replace(newPath);
     }
-  }, [matches.length, path, router]);
+  }, [matches.length, path, router, isLoaded]);
 
   return (
-    <Skeleton isLoaded={!!matches.length} w={'full'}>
+    <Skeleton isLoaded={!!matches.length && isLoaded} w={'full'}>
       <Stack spacing={4}>
         <Center justifyContent={'space-between'}>
           <Hide below={'md'}>
