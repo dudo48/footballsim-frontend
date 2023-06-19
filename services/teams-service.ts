@@ -2,7 +2,7 @@ import Team from '@/interfaces/team.interface';
 import useSWR from 'swr';
 import { deleteRequest, getRequest, postRequest, putRequest } from './requests';
 
-const baseUrl = `${process.env.backendUrl}/teams`;
+const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/teams`;
 
 export function useTeams() {
   const { data, error, isLoading, mutate } = useSWR(baseUrl, getRequest);

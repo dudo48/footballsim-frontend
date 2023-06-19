@@ -10,7 +10,7 @@ function NavBar() {
         ⚽ Footballsim
       </Heading>
       <NavBarItem href="/teams">Teams</NavBarItem>
-      <NavBarItem href="/quick-match">Quick Match</NavBarItem>
+      <NavBarItem href="/match">Match</NavBarItem>
       <NavBarItem href="/">About</NavBarItem>
     </Flex>
   );

@@ -1,13 +1,13 @@
 import Match from '@/interfaces/match.interface';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
-export const QuickMatchSimulations = createContext<{
+export const MatchSimulations = createContext<{
   isLoaded: boolean;
   matches: Match[];
   setMatches: (value: Match[]) => void;
 }>({ isLoaded: false, matches: [], setMatches: () => null });
 
-export function QuickMatchSimulationsProvider({ children }: PropsWithChildren) {
+export function MatchSimulationsProvider({ children }: PropsWithChildren) {
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
@@ -20,8 +20,8 @@ export function QuickMatchSimulationsProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <QuickMatchSimulations.Provider value={{ matches, isLoaded, setMatches }}>
+    <MatchSimulations.Provider value={{ matches, isLoaded, setMatches }}>
       {children}
-    </QuickMatchSimulations.Provider>
+    </MatchSimulations.Provider>
   );
 }

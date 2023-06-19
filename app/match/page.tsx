@@ -1,7 +1,7 @@
 'use client';
 import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
-import { QuickMatchSimulations } from '@/context/quick-match-simulations';
+import { MatchSimulations } from '@/context/match-simulations';
 import Team from '@/interfaces/team.interface';
 import { useMatchesSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
@@ -59,8 +59,8 @@ function Page() {
   const { teams, isLoading } = useTeams();
   const [homeTeam, setHomeTeam] = useState<Team>();
   const [awayTeam, setAwayTeam] = useState<Team>();
-  const { simulateQuickMatch } = useMatchesSimulations();
-  const { setMatches } = useContext(QuickMatchSimulations);
+  const { simulateMatch } = useMatchesSimulations();
+  const { setMatches } = useContext(MatchSimulations);
 
   useEffect(() => {
     register('homeTeam');
@@ -91,7 +91,7 @@ function Page() {
       onNeutralGround: data.onNeutralGround,
     };
 
-    const result = await simulateQuickMatch(match, data.n);
+    const result = await simulateMatch(match, data.n);
     if (!result.error) {
       // setMatches(result);
       sessionStorage.setItem('simulationMatches', JSON.stringify(result));
@@ -105,7 +105,7 @@ function Page() {
   return (
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
-        <Heading size={'lg'}>Quick Match</Heading>
+        <Heading size={'lg'}>Match</Heading>
         <Center justifyContent={'space-between'}>
           <SelectTeamCard
             title="Home Team"
