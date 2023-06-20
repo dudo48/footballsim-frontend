@@ -4,7 +4,7 @@ import MatchRow from './match-row';
 
 interface Props {
   matches: Match[];
-  showMatchNumber?: boolean;
+  showMatchId?: boolean;
   markWinner?: boolean;
   markLoser?: boolean;
   showResultTag?: boolean;
@@ -15,14 +15,14 @@ function MatchesTable({
   markWinner,
   markLoser,
   showResultTag,
-  showMatchNumber,
+  showMatchId,
 }: Props) {
   return (
     <TableContainer>
-      <Table variant={'striped'} layout={'fixed'}>
+      <Table layout={'fixed'}>
         <Thead>
           <Tr>
-            {showMatchNumber && (
+            {showMatchId && (
               <Th w={12} isNumeric>
                 NO
               </Th>
@@ -40,7 +40,7 @@ function MatchesTable({
             <MatchRow
               key={match.id}
               match={match}
-              number={showMatchNumber ? match.id : undefined}
+              showMatchId={showMatchId}
               markWinner={markWinner}
               markLoser={markLoser}
               showResultTag={showResultTag}

@@ -1,4 +1,5 @@
 'use client';
+import TeamCard from '@/components/cards/team-card';
 import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
 import { MatchSimulations } from '@/context/match-simulations';
@@ -20,7 +21,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import SelectTeamCard from './select-team-card';
+import TeamsSelector from '../../components/selectors/teams-selector';
 
 const schema = yup
   .object({
@@ -79,7 +80,7 @@ function Page() {
     if (errors.homeTeam || errors.awayTeam) {
       toast({
         status: 'error',
-        description: 'Please select the two opponent teams',
+        description: 'Please select two opponent teams',
       });
     }
   }, [errors, toast]);
@@ -107,22 +108,18 @@ function Page() {
       <Stack spacing={4}>
         <Heading size={'lg'}>Match</Heading>
         <Center justifyContent={'space-between'}>
-          <SelectTeamCard
-            title="Home Team"
-            selectedTeam={homeTeam}
-            setSelectedTeam={setHomeTeam}
-            teams={teams}
-          />
+          <TeamsSelector setSelectedTeam={setHomeTeam} teams={teams}>
+            <Text fontSize={'lg'}>Home Team</Text>
+            <TeamCard team={homeTeam} />
+          </TeamsSelector>
           <Box textAlign={'center'}>
             <Heading size={'lg'}>VS</Heading>
             <Text>Click on a team card to choose a team</Text>
           </Box>
-          <SelectTeamCard
-            title="Away Team"
-            selectedTeam={awayTeam}
-            setSelectedTeam={setAwayTeam}
-            teams={teams}
-          />
+          <TeamsSelector setSelectedTeam={setAwayTeam} teams={teams}>
+            <Text fontSize={'lg'}>Away Team</Text>
+            <TeamCard team={awayTeam} />
+          </TeamsSelector>
         </Center>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>

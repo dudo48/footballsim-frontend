@@ -6,7 +6,7 @@ import TeamLi from '../misc/team-li';
 
 interface Props {
   match: Match;
-  number?: number;
+  showMatchId?: boolean;
   markWinner?: boolean;
   markLoser?: boolean;
   showResultTag?: boolean;
@@ -14,21 +14,21 @@ interface Props {
 
 function MatchRow({
   match,
-  number,
+  showMatchId,
   markWinner,
   markLoser,
   showResultTag,
 }: Props) {
   return (
     <Tr>
-      {number && (
+      {showMatchId && (
         <Td
           color={'footballsim.200'}
           fontStyle={'italic'}
           fontSize={'sm'}
           isNumeric
         >
-          {number}
+          {match.id}
         </Td>
       )}
       {match.result && showResultTag && (

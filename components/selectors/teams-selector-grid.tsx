@@ -3,16 +3,15 @@ import Team from '@/interfaces/team.interface';
 import { teamSorts } from '@/utils/sorting';
 import { Box, Center, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
-import SelectSorting from './select-sorting';
+import SelectSorting from '../misc/select-sorting';
 
 interface Props {
-  deletable?: boolean;
   teams: Team[];
   selectedTeams: Team[];
   setSelectedTeams: (value: Team[]) => void;
 }
 
-function SelectTeamsGrid({ teams, selectedTeams, setSelectedTeams }: Props) {
+function TeamsSelectorGrid({ teams, selectedTeams, setSelectedTeams }: Props) {
   const [sorting, setSorting] = useState(Object.entries(teamSorts)[0][0]);
   const [isDesc, setIsDesc] = useState(true);
 
@@ -52,4 +51,4 @@ function SelectTeamsGrid({ teams, selectedTeams, setSelectedTeams }: Props) {
   );
 }
 
-export default SelectTeamsGrid;
+export default TeamsSelectorGrid;

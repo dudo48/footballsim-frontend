@@ -25,7 +25,7 @@ type Props = RangeSliderProps &
       name: string;
       value: { low: number; high: number };
       onBlur: FocusEventHandler<HTMLInputElement>;
-      onChange: (v: { low: number; high: number }) => void;
+      onChange: (value: { low: number; high: number }) => void;
     };
     label: string;
     helper?: string;
@@ -44,10 +44,10 @@ function FormRange({ label, helper, error, fieldHandler, ...props }: Props) {
           name={`${fieldHandler.name}.low`}
           value={fieldHandler.value.low}
           onBlur={fieldHandler.onBlur}
-          onChange={(v) =>
+          onChange={(value) =>
             fieldHandler.onChange({
               ...fieldHandler.value,
-              low: Number(v),
+              low: Number(value),
             })
           }
           max={fieldHandler.value.high}
@@ -60,7 +60,9 @@ function FormRange({ label, helper, error, fieldHandler, ...props }: Props) {
         </NumberInput>
         <RangeSlider
           value={[fieldHandler.value.low, fieldHandler.value.high]}
-          onChange={(v) => fieldHandler.onChange({ low: v[0], high: v[1] })}
+          onChange={(value) =>
+            fieldHandler.onChange({ low: value[0], high: value[1] })
+          }
           {...props}
         >
           <RangeSliderTrack>
@@ -75,10 +77,10 @@ function FormRange({ label, helper, error, fieldHandler, ...props }: Props) {
           name={`${fieldHandler.name}.high`}
           value={fieldHandler.value.high}
           onBlur={fieldHandler.onBlur}
-          onChange={(v) =>
+          onChange={(value) =>
             fieldHandler.onChange({
               ...fieldHandler.value,
-              high: Number(v),
+              high: Number(value),
             })
           }
           min={fieldHandler.value.low}

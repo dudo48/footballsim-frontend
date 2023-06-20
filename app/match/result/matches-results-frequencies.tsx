@@ -24,8 +24,8 @@ function MatchesResultsFrequencies({ matches }: Props) {
   );
 
   return (
-    <TableContainer bg={'footballsim.600'} shadow={'xl'} p={2}>
-      <Table variant="striped">
+    <TableContainer shadow={'xl'} p={2}>
+      <Table>
         <Thead>
           <Tr>
             <Th>Result</Th>

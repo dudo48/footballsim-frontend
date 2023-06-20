@@ -76,8 +76,8 @@ function Page() {
         </Flex>
         <Center>
           <Flex gap={4} alignItems={'flex-start'}>
-            <Container bg={'footballsim.600'} maxW={'3xl'} shadow={'xl'}>
-              <MatchesTable showMatchNumber showResultTag matches={matches} />
+            <Container maxW={'3xl'} shadow={'xl'}>
+              <MatchesTable showMatchId showResultTag matches={matches} />
             </Container>
           </Flex>
         </Center>

@@ -8,7 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import SelectTeamsGrid from './select-teams-grid';
+import TeamsSelectorTable from './teams-selector-table';
 
 type Props = {
   teams: Team[];
@@ -18,7 +18,7 @@ type Props = {
   onClose: () => void;
 };
 
-function SelectTeamsModal({
+function TeamsSelectorModal({
   teams,
   setFinalSelectedTeams,
   count,
@@ -44,7 +44,7 @@ function SelectTeamsModal({
         } more team(s).`}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SelectTeamsGrid
+          <TeamsSelectorTable
             teams={teams}
             selectedTeams={selectedTeams}
             setSelectedTeams={setSelectedTeams}
@@ -55,4 +55,4 @@ function SelectTeamsModal({
   );
 }
 
-export default SelectTeamsModal;
+export default TeamsSelectorModal;

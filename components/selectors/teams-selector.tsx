@@ -1,7 +1,7 @@
-import TeamCard from '@/components/cards/team-card';
-import SelectTeamsModal from '@/components/misc/select-teams-modal';
 import Team from '@/interfaces/team.interface';
-import { Box, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, useDisclosure } from '@chakra-ui/react';
+import { PropsWithChildren } from 'react';
+import TeamsSelectorModal from './teams-selector-modal';
 
 interface Props {
   title: string;
@@ -10,21 +10,19 @@ interface Props {
   setSelectedTeam: (value: Team) => void;
 }
 
-function SelectTeamCard({
-  title,
+function TeamsSelector({
   teams,
-  selectedTeam,
   setSelectedTeam,
-}: Props) {
+  children,
+}: PropsWithChildren<Props>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Box textAlign={'center'} cursor={'pointer'} onClick={() => onOpen()}>
-        <Text fontSize={'lg'}>{title}</Text>
-        <TeamCard team={selectedTeam} />
+        {children}
       </Box>
-      <SelectTeamsModal
+      <TeamsSelectorModal
         teams={teams}
         count={1}
         isOpen={isOpen}
@@ -35,4 +33,4 @@ function SelectTeamCard({
   );
 }
 
-export default SelectTeamCard;
+export default TeamsSelector;

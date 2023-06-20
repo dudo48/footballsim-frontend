@@ -2,6 +2,8 @@ import {
   NumberInput,
   RangeSlider,
   Slider,
+  Table,
+  TableContainer,
   Td,
   Th,
   extendTheme,
@@ -49,6 +51,14 @@ NumberInput.defaultProps = {
   allowMouseWheel: true,
   min: 0.1,
   step: 0.1,
+};
+
+TableContainer.defaultProps = {
+  bg: 'footballsim.600',
+};
+
+Table.defaultProps = {
+  variant: 'striped',
 };
 
 Td.defaultProps = {
