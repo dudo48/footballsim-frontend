@@ -1,5 +1,6 @@
-import Team from '@/interfaces/team.interface';
 import { useTeamActions, useTeams } from '@/services/teams-service';
+import Team from '@/shared/interfaces/team.interface';
+import { getStrength } from '@/shared/functions/team.functions';
 import {
   Box,
   Card,
@@ -18,7 +19,6 @@ import {
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
 import { FaTshirt } from 'react-icons/fa';
-import { getStrength } from '../../utils/functions';
 
 interface Props {
   team?: Team;

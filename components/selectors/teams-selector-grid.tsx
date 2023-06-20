@@ -1,9 +1,9 @@
 import TeamCard from '@/components/cards/team-card';
-import Team from '@/interfaces/team.interface';
 import { teamSorts } from '@/utils/sorting';
 import { Box, Center, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import SelectSorting from '../misc/select-sorting';
+import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   teams: Team[];

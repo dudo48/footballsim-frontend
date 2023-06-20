@@ -1,5 +1,5 @@
-import Team from '@/interfaces/team.interface';
-import { getStrength } from './functions';
+import Team from '@/shared/interfaces/team.interface';
+import { getStrength } from '@/shared/functions/team.functions';
 
 export const teamSorts: { [key: string]: (a: Team, b: Team) => number } = {
   lastAdded: () => 0,

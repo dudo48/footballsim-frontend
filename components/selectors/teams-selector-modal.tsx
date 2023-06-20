@@ -1,4 +1,3 @@
-import Team from '@/interfaces/team.interface';
 import {
   Modal,
   ModalBody,
@@ -9,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import TeamsSelectorTable from './teams-selector-table';
+import Team from '@/shared/interfaces/team.interface';
 
 type Props = {
   teams: Team[];

@@ -3,24 +3,16 @@ import TeamCard from '@/components/cards/team-card';
 import MatchesTable from '@/components/tables/matches-table';
 import { MatchSimulations } from '@/context/match-simulations';
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
   Center,
   Container,
   Flex,
-  Heading,
-  Hide,
   Skeleton,
   Stack,
   Text,
 } from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
-import MatchesResultsFrequencies from './matches-results-frequencies';
 import MatchesStatistics from './matches-statistics';
 
 function Page() {
@@ -43,36 +35,32 @@ function Page() {
     <Skeleton isLoaded={!!matches.length && isLoaded} w={'full'}>
       <Stack spacing={4}>
         <Flex justifyContent={'space-between'}>
-          <Hide below={'md'}>
-            <Box textAlign={'center'}>
-              <Text fontSize={'lg'}>Home Team</Text>
-              <TeamCard team={homeTeam} />
-            </Box>
-          </Hide>
-          <Stack>
+          <Box textAlign={'center'}>
+            <Text fontSize={'lg'}>Home Team</Text>
+            <TeamCard team={homeTeam} />
+          </Box>
+          <Center>
             <MatchesStatistics matches={matches} />
-            <Accordion allowToggle>
-              <AccordionItem>
-                <AccordionButton>
-                  <Heading flex={1} textAlign={'left'} size={'md'}>
-                    Results Frequencies
-                  </Heading>
-                  <Heading size={'md'}>
-                    <AccordionIcon />
-                  </Heading>
-                </AccordionButton>
-                <AccordionPanel>
-                  <MatchesResultsFrequencies matches={matches} />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Stack>
-          <Hide below={'md'}>
-            <Box textAlign={'center'}>
-              <Text fontSize={'lg'}>Away Team</Text>
-              <TeamCard team={awayTeam} />
-            </Box>
-          </Hide>
+            {/* <Accordion allowToggle>
+                <AccordionItem>
+                  <AccordionButton>
+                    <Heading flex={1} textAlign={'left'} size={'md'}>
+                      Results Frequencies
+                    </Heading>
+                    <Heading size={'md'}>
+                      <AccordionIcon />
+                    </Heading>
+                  </AccordionButton>
+                  <AccordionPanel>
+                    <MatchesResultsFrequencies matches={matches} />
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion> */}
+          </Center>
+          <Box textAlign={'center'}>
+            <Text fontSize={'lg'}>Away Team</Text>
+            <TeamCard team={awayTeam} />
+          </Box>
         </Flex>
         <Center>
           <Flex gap={4} alignItems={'flex-start'}>

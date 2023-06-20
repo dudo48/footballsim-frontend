@@ -1,4 +1,4 @@
-import Team from '@/interfaces/team.interface';
+import Team from '@/shared/interfaces/team.interface';
 import useSWR from 'swr';
 import { deleteRequest, getRequest, postRequest, putRequest } from './requests';
 

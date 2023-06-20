@@ -1,10 +1,9 @@
-import Team from '@/interfaces/team.interface';
+import Team from '@/shared/interfaces/team.interface';
 import { Box, useDisclosure } from '@chakra-ui/react';
 import { PropsWithChildren } from 'react';
 import TeamsSelectorModal from './teams-selector-modal';
 
 interface Props {
-  title: string;
   selectedTeam?: Team;
   teams: Team[];
   setSelectedTeam: (value: Team) => void;

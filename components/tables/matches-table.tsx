@@ -1,4 +1,4 @@
-import Match from '@/interfaces/match.interface';
+import Match from '@/shared/interfaces/match.interface';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import MatchRow from './match-row';
 

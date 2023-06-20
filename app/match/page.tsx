@@ -3,9 +3,9 @@ import TeamCard from '@/components/cards/team-card';
 import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
 import { MatchSimulations } from '@/context/match-simulations';
-import Team from '@/interfaces/team.interface';
 import { useMatchesSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
+import Team from '@/shared/interfaces/team.interface';
 import {
   Box,
   Button,
@@ -36,6 +36,14 @@ const schema = yup
       .bool()
       .typeError('Please make a choice.')
       .required('Please make a choice.'),
+    isKnockout: yup
+      .bool()
+      .typeError('Please make a choice.')
+      .required('Please make a choice.'),
+    allowExtraTime: yup
+      .bool()
+      .typeError('Please make a choice.')
+      .required('Please make a choice.'),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
@@ -45,12 +53,15 @@ function Page() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       n: 10,
       onNeutralGround: true,
+      isKnockout: false,
+      allowExtraTime: true,
     },
   });
 
@@ -86,16 +97,18 @@ function Page() {
   }, [errors, toast]);
 
   async function onSubmit(data: FormData) {
+    const { n, homeTeam, awayTeam, ...options } = data;
+
     const match = {
-      homeTeam: data.homeTeam as Team,
-      awayTeam: data.awayTeam as Team,
-      onNeutralGround: data.onNeutralGround,
+      homeTeam: homeTeam as Team,
+      awayTeam: awayTeam as Team,
+      ...options,
     };
 
-    const result = await simulateMatch(match, data.n);
+    const result = await simulateMatch(match, n);
     if (!result.error) {
       // setMatches(result);
-      sessionStorage.setItem('simulationMatches', JSON.stringify(result));
+      sessionStorage.setItem('matches', JSON.stringify(result));
       setMatches(result);
       router.push(`${path}/result`);
     } else {
@@ -129,14 +142,38 @@ function Page() {
               fieldHandler={register('n')}
               error={errors.onNeutralGround}
             />
-            <FormCheckbox
-              label={'Play on neutral ground'}
-              helper={
-                'If checked, the home team will not have the bonus of the home advantage'
-              }
-              fieldHandler={register('onNeutralGround')}
-              error={errors.onNeutralGround}
-            />
+            <Box
+              p={2}
+              borderWidth={1}
+              borderColor={'footballsim.500'}
+              rounded={'md'}
+            >
+              <Heading size={'md'}>Options</Heading>
+              <Stack p={4}>
+                <FormCheckbox
+                  label={'Play on neutral ground'}
+                  helper={
+                    'If checked, the home team will not have the bonus of the home advantage.'
+                  }
+                  fieldHandler={register('onNeutralGround')}
+                  error={errors.onNeutralGround}
+                />
+                <FormCheckbox
+                  label={'Knockout'}
+                  helper={
+                    'If checked, then in case of a draw extra-time will be played (optionally), then penalty shootout.'
+                  }
+                  fieldHandler={register('isKnockout')}
+                  error={errors.isKnockout}
+                />
+                <FormCheckbox
+                  label={'Allow extra-time'}
+                  fieldHandler={register('allowExtraTime')}
+                  error={errors.allowExtraTime}
+                  isDisabled={!watch('isKnockout')}
+                />
+              </Stack>
+            </Box>
             <Center>
               <Button
                 isLoading={isSubmitting || isSubmitSuccessful}

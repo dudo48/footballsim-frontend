@@ -1,4 +1,4 @@
-import Match from '@/interfaces/match.interface';
+import Match from '@/shared/interfaces/match.interface';
 import {
   Table,
   TableContainer,
@@ -16,7 +16,7 @@ interface Props {
 function MatchesResultsFrequencies({ matches }: Props) {
   const frequencies = matches.reduce(
     (data: { [key: string]: number }, match) => {
-      const result = `${match.result?.fullTime.home} - ${match.result?.fullTime.away}`;
+      const result = `${match.result?.standardTime.home} - ${match.result?.standardTime.away}`;
       data[result] = (data[result] || 0) + 1;
       return data;
     },

@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@/interfaces/*": ["../backend/interfaces/*"],
+      "@/shared/*": ["../backend/shared/*"],
       "@/*": ["./*"]
     }
   },

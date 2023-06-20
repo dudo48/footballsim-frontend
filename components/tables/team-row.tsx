@@ -1,5 +1,5 @@
-import Team from '@/interfaces/team.interface';
-import { getStrength } from '@/utils/functions';
+import Team from '@/shared/interfaces/team.interface';
+import { getStrength } from '@/shared/functions/team.functions';
 import { Checkbox, Td, Tr } from '@chakra-ui/react';
 import { FaTshirt } from 'react-icons/fa';
 

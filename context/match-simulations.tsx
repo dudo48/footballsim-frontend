@@ -1,4 +1,4 @@
-import Match from '@/interfaces/match.interface';
+import Match from '@/shared/interfaces/match.interface';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 export const MatchSimulations = createContext<{
@@ -13,7 +13,7 @@ export function MatchSimulationsProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const simulationMatches = JSON.parse(
-      sessionStorage.getItem('simulationMatches') || '[]'
+      sessionStorage.getItem('matches') || '[]'
     );
     setMatches(simulationMatches);
     setIsLoaded(true);

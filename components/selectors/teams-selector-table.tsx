@@ -1,9 +1,9 @@
-import Team from '@/interfaces/team.interface';
 import { teamSorts } from '@/utils/sorting';
 import { Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import SelectSorting from '../misc/select-sorting';
 import TeamsTable from '../tables/teams-table';
+import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   teams: Team[];

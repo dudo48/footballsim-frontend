@@ -1,6 +1,6 @@
-import Team from '@/interfaces/team.interface';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import TeamRow from './team-row';
+import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   teams: Team[];

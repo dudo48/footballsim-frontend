@@ -1,4 +1,4 @@
-import Match from '@/interfaces/match.interface';
+import Match from '@/shared/interfaces/match.interface';
 import { postRequest } from './requests';
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/simulate`;

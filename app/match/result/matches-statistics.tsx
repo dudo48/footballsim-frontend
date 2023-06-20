@@ -1,12 +1,10 @@
-import Match from '@/interfaces/match.interface';
+import Match from '@/shared/interfaces/match.interface';
 import {
-  getAwayGoals,
-  getHomeGoals,
   getTotalGoals,
   isDraw,
   isLoss,
   isWin,
-} from '@/utils/functions';
+} from '@/shared/functions/result.functions';
 import {
   Container,
   Divider,
@@ -27,12 +25,14 @@ function MatchesStatistics({ matches }: Props) {
   const draws = matches.filter((m) => isDraw(m.result));
   const losses = matches.filter((m) => isLoss(m.result));
 
-  const goals = matches.map((m) => getTotalGoals(m)).reduce((a, b) => a + b, 0);
+  const goals = matches
+    .map((m) => getTotalGoals(m.result).home + getTotalGoals(m.result).away)
+    .reduce((a, b) => a + b, 0);
   const homeGoals = matches
-    .map((m) => getHomeGoals(m))
+    .map((m) => getTotalGoals(m.result).home)
     .reduce((a, b) => a + b, 0);
   const awayGoals = matches
-    .map((m) => getAwayGoals(m))
+    .map((m) => getTotalGoals(m.result).away)
     .reduce((a, b) => a + b, 0);
 
   return (

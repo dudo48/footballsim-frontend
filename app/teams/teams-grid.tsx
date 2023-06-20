@@ -1,9 +1,9 @@
 import TeamCard from '@/components/cards/team-card';
-import Team from '@/interfaces/team.interface';
 import { teamSorts } from '@/utils/sorting';
 import { Center, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import SelectSorting from '../../components/misc/select-sorting';
+import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   deletable?: boolean;

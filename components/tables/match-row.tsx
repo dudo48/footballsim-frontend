@@ -1,6 +1,6 @@
-import Match from '@/interfaces/match.interface';
-import { isLoss, isWin } from '@/utils/functions';
-import { Td, Tr } from '@chakra-ui/react';
+import { isLoss, isWin } from '@/shared/functions/result.functions';
+import Match from '@/shared/interfaces/match.interface';
+import { Stack, Td, Text, Tr } from '@chakra-ui/react';
 import ResultTag from '../misc/result-tag';
 import TeamLi from '../misc/team-li';
 
@@ -43,10 +43,22 @@ function MatchRow({
           team={match.homeTeam}
         />
       </Td>
-      <Td textAlign={'center'} fontSize={'xl'}>
-        {match.result
-          ? `${match.result.fullTime.home} - ${match.result.fullTime.away}`
-          : 'VS'}
+      <Td textAlign={'center'}>
+        {!match.result ? (
+          'VS'
+        ) : (
+          <Stack>
+            <Text title="Standard-time result">{`${match.result.standardTime.home} - ${match.result.standardTime.away}`}</Text>
+            {match.result.extraTime && (
+              <Text title="Extra-time result">{`(${match.result.extraTime.home} - ${match.result.extraTime.away} E.T.)`}</Text>
+            )}
+            {match.result.penaltyShootout && (
+              <Text title="Penalty shootout result">
+                {`(${match.result.penaltyShootout.home} - ${match.result.penaltyShootout.away} P.S.)`}
+              </Text>
+            )}
+          </Stack>
+        )}
       </Td>
       <Td>
         <TeamLi

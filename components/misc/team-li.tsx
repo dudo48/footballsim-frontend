@@ -1,4 +1,4 @@
-import Team from '@/interfaces/team.interface';
+import Team from '@/shared/interfaces/team.interface';
 import { Flex, Text } from '@chakra-ui/react';
 import { FaTshirt } from 'react-icons/fa';
 
