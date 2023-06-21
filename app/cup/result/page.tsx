@@ -1,74 +1,43 @@
 'use client';
-import TeamCard from '@/components/cards/team-card';
 import MatchesTable from '@/components/tables/matches-table';
-import { MatchSimulations } from '@/context/match-simulations';
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Skeleton,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import TeamsTable from '@/components/tables/teams-table';
+import { CupSimulation } from '@/context/cup-simulations';
+import { teamSorts } from '@/utils/sorting';
+import { Heading, Skeleton, Stack } from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
-import MatchesStatistics from './matches-statistics';
 
 function Page() {
-  const { matches, isLoaded } = useContext(MatchSimulations);
-  const homeTeam = matches.length ? matches[0].homeTeam : undefined;
-  const awayTeam = matches.length ? matches[0].awayTeam : undefined;
+  const { cup, isLoaded } = useContext(CupSimulation);
   const path = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (!matches.length && isLoaded) {
+    if (!cup && isLoaded) {
       const pathArray = path.split('/');
       pathArray.pop();
       const newPath = pathArray.join('/');
       router.replace(newPath);
     }
-  }, [matches.length, path, router, isLoaded]);
+  }, [cup, path, router, isLoaded]);
+
+  const sortedTeams = cup?.teams.sort(teamSorts.strength) || [];
 
   return (
-    <Skeleton isLoaded={!!matches.length && isLoaded} w={'full'}>
+    <Skeleton isLoaded={!!cup && isLoaded} w={'full'}>
       <Stack spacing={4}>
-        <Flex justifyContent={'space-between'}>
-          <Box textAlign={'center'}>
-            <Text fontSize={'lg'}>Home Team</Text>
-            <TeamCard team={homeTeam} />
-          </Box>
-          <Center>
-            <MatchesStatistics matches={matches} />
-            {/* <Accordion allowToggle>
-                <AccordionItem>
-                  <AccordionButton>
-                    <Heading flex={1} textAlign={'left'} size={'md'}>
-                      Results Frequencies
-                    </Heading>
-                    <Heading size={'md'}>
-                      <AccordionIcon />
-                    </Heading>
-                  </AccordionButton>
-                  <AccordionPanel>
-                    <MatchesResultsFrequencies matches={matches} />
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion> */}
-          </Center>
-          <Box textAlign={'center'}>
-            <Text fontSize={'lg'}>Away Team</Text>
-            <TeamCard team={awayTeam} />
-          </Box>
-        </Flex>
-        <Center>
-          <Flex gap={4} alignItems={'flex-start'}>
-            <Container maxW={'4xl'} shadow={'xl'}>
-              <MatchesTable showMatchId showResultTag matches={matches} />
-            </Container>
-          </Flex>
-        </Center>
+        <Stack maxW={'xl'} shadow={'xl'}>
+          <Heading size={'md'}>Teams</Heading>
+          <TeamsTable teams={sortedTeams} />
+        </Stack>
+        <Stack spacing={8}>
+          {cup?.result?.rounds.map((round) => (
+            <Stack key={round.id} maxW={'3xl'} shadow={'xl'}>
+              <Heading size={'md'}>Round {round.id}</Heading>
+              <MatchesTable markWinner markLoser matches={round.matches} />
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
     </Skeleton>
   );

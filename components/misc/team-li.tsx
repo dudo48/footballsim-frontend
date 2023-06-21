@@ -22,7 +22,7 @@ function TeamLi({ team, isHighlighted, isDeemphasized }: Props) {
         textOverflow={'ellipsis'}
         whiteSpace={'nowrap'}
         fontWeight={isHighlighted ? 'bold' : 'normal'}
-        opacity={isDeemphasized ? 0.25 : 1}
+        opacity={isDeemphasized ? 0.5 : 1}
       >
         {team.name}
       </Text>

@@ -36,7 +36,7 @@ function TeamsTable({
 
   function table() {
     return (
-      <TableContainer p={1}>
+      <TableContainer>
         <Table>
           <Thead>
             <Tr>

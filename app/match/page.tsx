@@ -3,7 +3,7 @@ import TeamCard from '@/components/cards/team-card';
 import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
 import { MatchSimulations } from '@/context/match-simulations';
-import { useMatchesSimulations } from '@/services/simulations-service';
+import { useSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
 import Team from '@/shared/interfaces/team.interface';
 import {
@@ -71,7 +71,7 @@ function Page() {
   const { teams, isLoading } = useTeams();
   const [homeTeam, setHomeTeam] = useState<Team>();
   const [awayTeam, setAwayTeam] = useState<Team>();
-  const { simulateMatch } = useMatchesSimulations();
+  const { simulateMatch } = useSimulations();
   const { setMatches } = useContext(MatchSimulations);
 
   useEffect(() => {
@@ -98,7 +98,6 @@ function Page() {
 
     const result = await simulateMatch(match, n);
     if (!result.error) {
-      // setMatches(result);
       sessionStorage.setItem('matches', JSON.stringify(result));
       setMatches(result);
       router.push(`${path}/result`);

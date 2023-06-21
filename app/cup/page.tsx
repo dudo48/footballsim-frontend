@@ -2,8 +2,8 @@
 import FormSelect from '@/components/form/form-select';
 import TeamsSelector from '@/components/selectors/teams-selector';
 import TeamsTable from '@/components/tables/teams-table';
-import { MatchSimulations } from '@/context/match-simulations';
-import { useMatchesSimulations } from '@/services/simulations-service';
+import { CupSimulation } from '@/context/cup-simulations';
+import { useSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
 import Team from '@/shared/interfaces/team.interface';
 import {
@@ -25,7 +25,7 @@ import * as yup from 'yup';
 
 const schema = yup
   .object({
-    selectedTeams: yup.array<Team[]>().required(),
+    teams: yup.array().required(),
     numberOfTeams: yup
       .number()
       .positive('Please select an integer greater than 0.')
@@ -45,7 +45,7 @@ function Page() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      selectedTeams: [],
+      teams: [],
       numberOfTeams: 16,
     },
   });
@@ -55,15 +55,15 @@ function Page() {
   const router = useRouter();
   const { teams, isLoading } = useTeams();
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
-  const { simulateMatch } = useMatchesSimulations();
-  const { setMatches } = useContext(MatchSimulations);
+  const { simulateCup } = useSimulations();
+  const { setCup } = useContext(CupSimulation);
 
   useEffect(() => {
-    register('selectedTeams');
+    register('teams');
   }, [register]);
 
   useEffect(() => {
-    setValue('selectedTeams', selectedTeams);
+    setValue('teams', selectedTeams);
   }, [selectedTeams, setValue]);
 
   useEffect(() => {
@@ -73,32 +73,17 @@ function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch('numberOfTeams')]);
 
-  useEffect(() => {
-    if (errors.selectedTeams) {
-      toast({
-        status: 'error',
-        description: 'Please select two opponent teams',
-      });
-    }
-  }, [errors, toast]);
-
   async function onSubmit(data: FormData) {
-    console.log(data);
-    // const { n, homeTeam, awayTeam, ...options } = data;
-    // const match = {
-    //   homeTeam: homeTeam as Team,
-    //   awayTeam: awayTeam as Team,
-    //   ...options,
-    // };
-    // const result = await simulateMatch(match, n);
-    // if (!result.error) {
-    //   // setMatches(result);
-    //   sessionStorage.setItem('matches', JSON.stringify(result));
-    //   setMatches(result);
-    //   router.push(`${path}/result`);
-    // } else {
-    //   toast({ status: 'error', description: 'Failed to simulate match.' });
-    // }
+    const { teams } = data;
+    const cup = { teams };
+    const result = await simulateCup(cup);
+    if (!result.error) {
+      sessionStorage.setItem('cup', JSON.stringify(result));
+      setCup(result);
+      router.push(`${path}/result`);
+    } else {
+      toast({ status: 'error', description: 'Failed to simulate cup.' });
+    }
   }
 
   return (
