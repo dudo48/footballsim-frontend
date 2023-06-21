@@ -1,6 +1,6 @@
 import { isLoss, isWin } from '@/shared/functions/result.functions';
 import Match from '@/shared/interfaces/match.interface';
-import { Stack, Td, Text, Tr } from '@chakra-ui/react';
+import { Box, Stack, Td, Text, Tr } from '@chakra-ui/react';
 import ResultTag from '../misc/result-tag';
 import TeamLi from '../misc/team-li';
 
@@ -27,16 +27,18 @@ function MatchRow({
           fontStyle={'italic'}
           fontSize={'sm'}
           isNumeric
+          verticalAlign={'top'}
+          px={2}
         >
           {match.id}
         </Td>
       )}
       {match.result && showResultTag && (
-        <Td>
+        <Td verticalAlign={'top'} px={2}>
           <ResultTag result={match.result} />
         </Td>
       )}
-      <Td>
+      <Td verticalAlign={'top'}>
         <TeamLi
           isHighlighted={markWinner && isWin(match.result)}
           isDeemphasized={markLoser && isLoss(match.result)}
@@ -48,19 +50,30 @@ function MatchRow({
           'VS'
         ) : (
           <Stack>
-            <Text title="Standard-time result">{`${match.result.standardTime.home} - ${match.result.standardTime.away}`}</Text>
+            <Text
+              fontSize={'xl'}
+              title="Standard-time result"
+            >{`${match.result.standardTime.home} - ${match.result.standardTime.away}`}</Text>
             {match.result.extraTime && (
-              <Text title="Extra-time result">{`(${match.result.extraTime.home} - ${match.result.extraTime.away} E.T.)`}</Text>
+              <Text title="Extra-time result">
+                {`${match.result.extraTime.home} - ${match.result.extraTime.away} `}
+                <Box as="span" fontStyle={'italic'}>
+                  (E.T.)
+                </Box>
+              </Text>
             )}
             {match.result.penaltyShootout && (
               <Text title="Penalty shootout result">
-                {`(${match.result.penaltyShootout.home} - ${match.result.penaltyShootout.away} P.S.)`}
+                {`${match.result.penaltyShootout.home} - ${match.result.penaltyShootout.away} `}
+                <Box as="span" fontStyle={'italic'}>
+                  (P.S.)
+                </Box>
               </Text>
             )}
           </Stack>
         )}
       </Td>
-      <Td>
+      <Td verticalAlign={'top'}>
         <TeamLi
           isHighlighted={markWinner && isLoss(match.result)}
           isDeemphasized={markLoser && isWin(match.result)}

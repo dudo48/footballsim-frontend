@@ -13,7 +13,7 @@ function TeamLi({ team, isHighlighted, isDeemphasized }: Props) {
     <Flex gap={2} align={'center'}>
       <FaTshirt
         style={{ stroke: '#ffffff', strokeWidth: 8 }}
-        fontSize={32}
+        fontSize={28}
         color={team.color}
       />
       <Text

@@ -4,8 +4,6 @@ import {
   Slider,
   Table,
   TableContainer,
-  Td,
-  Th,
   extendTheme,
   withDefaultColorScheme,
 } from '@chakra-ui/react';
@@ -59,15 +57,6 @@ TableContainer.defaultProps = {
 
 Table.defaultProps = {
   variant: 'striped',
-};
-
-Td.defaultProps = {
-  p: 2,
-  border: 0,
-};
-
-Th.defaultProps = {
-  p: 2,
 };
 
 const theme = extendTheme(

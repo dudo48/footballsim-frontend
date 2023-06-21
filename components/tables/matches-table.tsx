@@ -19,19 +19,17 @@ function MatchesTable({
 }: Props) {
   return (
     <TableContainer>
-      <Table layout={'fixed'}>
+      <Table>
         <Thead>
           <Tr>
             {showMatchId && (
-              <Th w={12} isNumeric>
+              <Th isNumeric px={2}>
                 NO
               </Th>
             )}
-            {showResultTag && <Th w={12}></Th>}
+            {showResultTag && <Th px={2}></Th>}
             <Th>HOME TEAM</Th>
-            <Th w={32} textAlign={'center'}>
-              RESULT
-            </Th>
+            <Th textAlign={'center'}>RESULT</Th>
             <Th>AWAY TEAM</Th>
           </Tr>
         </Thead>
