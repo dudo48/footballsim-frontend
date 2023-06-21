@@ -1,7 +1,7 @@
-import Team from '@/shared/interfaces/team.interface';
 import { getStrength } from '@/shared/functions/team.functions';
+import Team from '@/shared/interfaces/team.interface';
 import { Checkbox, Td, Tr } from '@chakra-ui/react';
-import { FaTshirt } from 'react-icons/fa';
+import TeamLi from '../misc/team-li';
 
 interface Props {
   team: Team;
@@ -13,25 +13,28 @@ function TeamRow({ team, selectTeam, selectedTeams }: Props) {
   return (
     <Tr>
       {selectTeam && selectedTeams && (
-        <Td>
+        <Td px={1}>
           <Checkbox
             isChecked={selectedTeams.some((t) => t.id === team.id)}
             onChange={() => selectTeam(team)}
           ></Checkbox>
         </Td>
       )}
-      <Td>
-        <FaTshirt
-          style={{ stroke: '#ffffff', strokeWidth: 8 }}
-          fontSize={32}
-          color={team.color}
-        />
+      <Td px={4}>
+        <TeamLi team={team} />
       </Td>
-      <Td>{team.name}</Td>
-      <Td isNumeric>{getStrength(team).toFixed(1)}</Td>
-      <Td isNumeric>{team.attack.toFixed(1)}</Td>
-      <Td isNumeric>{team.defense.toFixed(1)}</Td>
-      <Td isNumeric>{team.homeAdvantage.toFixed(1)}</Td>
+      <Td px={2} isNumeric>
+        {getStrength(team).toFixed(1)}
+      </Td>
+      <Td px={2} isNumeric>
+        {team.attack.toFixed(1)}
+      </Td>
+      <Td px={2} isNumeric>
+        {team.defense.toFixed(1)}
+      </Td>
+      <Td px={2} isNumeric>
+        {team.homeAdvantage.toFixed(1)}
+      </Td>
     </Tr>
   );
 }

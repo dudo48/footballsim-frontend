@@ -1,6 +1,6 @@
+import Team from '@/shared/interfaces/team.interface';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import TeamRow from './team-row';
-import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   teams: Team[];
@@ -14,13 +14,20 @@ function TeamsTable({ teams, selectTeam, selectedTeams }: Props) {
       <Table>
         <Thead>
           <Tr>
-            {selectTeam && <Th></Th>}
-            <Th>COLORS</Th>
-            <Th>NAME</Th>
-            <Th isNumeric>STRENGTH</Th>
-            <Th isNumeric>ATTACK</Th>
-            <Th isNumeric>DEFENSE</Th>
-            <Th isNumeric>HOME ADVANTAGE</Th>
+            {selectTeam && <Th px={1}></Th>}
+            <Th px={4}>Team</Th>
+            <Th px={2} isNumeric>
+              STR
+            </Th>
+            <Th px={2} isNumeric>
+              ATT
+            </Th>
+            <Th px={2} isNumeric>
+              DEF
+            </Th>
+            <Th px={2} isNumeric>
+              ADV
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
