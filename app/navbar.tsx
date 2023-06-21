@@ -11,6 +11,7 @@ function NavBar() {
       </Heading>
       <NavBarItem href="/teams">Teams</NavBarItem>
       <NavBarItem href="/match">Match</NavBarItem>
+      <NavBarItem href="/cup">Cup</NavBarItem>
       <NavBarItem href="/">About</NavBarItem>
     </Flex>
   );

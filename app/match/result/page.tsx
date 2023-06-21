@@ -7,9 +7,9 @@ import {
   Center,
   Container,
   Flex,
+  Heading,
   Skeleton,
   Stack,
-  Text,
 } from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
@@ -36,7 +36,7 @@ function Page() {
       <Stack spacing={4}>
         <Flex justifyContent={'space-between'}>
           <Box textAlign={'center'}>
-            <Text fontSize={'lg'}>Home Team</Text>
+            <Heading size={'md'}>Home Team</Heading>
             <TeamCard team={homeTeam} />
           </Box>
           <Center>
@@ -58,7 +58,7 @@ function Page() {
               </Accordion> */}
           </Center>
           <Box textAlign={'center'}>
-            <Text fontSize={'lg'}>Away Team</Text>
+            <Heading size={'md'}>Away Team</Heading>
             <TeamCard team={awayTeam} />
           </Box>
         </Flex>

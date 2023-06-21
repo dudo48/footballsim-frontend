@@ -1,3 +1,4 @@
+import FormSelect from '@/components/form/form-select';
 import FormSlider from '@/components/form/form-slider';
 import { useTeamActions, useTeams } from '@/services/teams-service';
 import {
@@ -50,6 +51,7 @@ type FormData = yup.InferType<typeof schema>;
 function GenerateTeamsForm({ onClose }: FormProps) {
   const {
     control,
+    register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -80,19 +82,13 @@ function GenerateTeamsForm({ onClose }: FormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
-        <Controller
-          control={control}
-          name={'number'}
-          render={({ field }) => (
-            <FormSlider
-              label="Number of Teams"
-              fieldHandler={field}
-              error={errors.number}
-              min={1}
-              max={20}
-              step={1}
-            />
-          )}
+        <FormSelect
+          variant={'solid'}
+          bg={'gray.600'}
+          options={[1, 5, 10, 20, 30, 50, 100]}
+          label={'Number of teams'}
+          fieldHandler={register('number')}
+          error={errors.number}
         />
         <Text>
           Each team&apos;s attack and defense will be generated using a{' '}

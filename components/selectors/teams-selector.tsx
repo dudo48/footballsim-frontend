@@ -4,7 +4,6 @@ import { PropsWithChildren } from 'react';
 import TeamsSelectorModal from './teams-selector-modal';
 
 interface Props {
-  selectedTeam?: Team;
   teams: Team[];
   setSelectedTeam: (value: Team) => void;
 }

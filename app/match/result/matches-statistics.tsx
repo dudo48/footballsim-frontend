@@ -38,7 +38,7 @@ function MatchesStatistics({ matches }: Props) {
   return (
     <Container textAlign={'center'} bg={'footballsim.600'} shadow={'xl'} p={2}>
       <Stack>
-        <Heading size={'lg'}>Statistics</Heading>
+        <Heading size={'md'}>Statistics</Heading>
         <Stack>
           <Flex>
             <Stat>

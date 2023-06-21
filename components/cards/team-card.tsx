@@ -37,7 +37,7 @@ function TeamCard({ team, deletable, isHighlighted }: Props) {
     const result = await deleteTeam(team.id as number);
     if (!result.error) {
       toast({
-        status: 'info',
+        status: 'success',
         description: `Team '${team.name}' was deleted.`,
         duration: 1000,
       });

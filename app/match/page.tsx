@@ -122,7 +122,7 @@ function Page() {
         <Heading size={'lg'}>Match</Heading>
         <Center justifyContent={'space-between'}>
           <TeamsSelector setSelectedTeam={setHomeTeam} teams={teams}>
-            <Text fontSize={'lg'}>Home Team</Text>
+            <Heading size={'md'}>Home Team</Heading>
             <TeamCard team={homeTeam} />
           </TeamsSelector>
           <Box textAlign={'center'}>
@@ -130,18 +130,12 @@ function Page() {
             <Text>Click on a team card to choose a team</Text>
           </Box>
           <TeamsSelector setSelectedTeam={setAwayTeam} teams={teams}>
-            <Text fontSize={'lg'}>Away Team</Text>
+            <Heading size={'md'}>Away Team</Heading>
             <TeamCard team={awayTeam} />
           </TeamsSelector>
         </Center>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
-            <FormSelect
-              options={[1, 5, 10, 20, 30, 50, 100, 200, 500, 1000]}
-              label={'Number of simulations'}
-              fieldHandler={register('n')}
-              error={errors.onNeutralGround}
-            />
             <Box
               p={2}
               borderWidth={1}
@@ -150,6 +144,12 @@ function Page() {
             >
               <Heading size={'md'}>Options</Heading>
               <Stack p={4}>
+                <FormSelect
+                  options={[1, 5, 10, 20, 30, 50, 100, 200, 500, 1000]}
+                  label={'Number of simulations'}
+                  fieldHandler={register('n')}
+                  error={errors.n}
+                />
                 <FormCheckbox
                   label={'Play on neutral ground'}
                   helper={
