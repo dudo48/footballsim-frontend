@@ -5,27 +5,34 @@ import TeamsSelectorModal from './teams-selector-modal';
 
 interface Props {
   teams: Team[];
-  setSelectedTeam: (value: Team) => void;
+  setSelectedTeams: (value: Team[]) => void;
+  count?: number;
 }
 
 function TeamsSelector({
   teams,
-  setSelectedTeam,
+  setSelectedTeams,
+  count,
   children,
 }: PropsWithChildren<Props>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Box textAlign={'center'} cursor={'pointer'} onClick={() => onOpen()}>
+      <Box
+        w={'max-content'}
+        h={'max-content'}
+        cursor={'pointer'}
+        onClick={() => onOpen()}
+      >
         {children}
       </Box>
       <TeamsSelectorModal
         teams={teams}
-        count={1}
+        count={count && Math.floor(count) > 0 ? Math.floor(count) : 1}
         isOpen={isOpen}
         onClose={onClose}
-        setFinalSelectedTeams={(value: Team[]) => setSelectedTeam(value[0])}
+        setFinalSelectedTeams={(value: Team[]) => setSelectedTeams(value)}
       />
     </>
   );

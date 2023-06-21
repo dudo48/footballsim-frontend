@@ -12,7 +12,7 @@ interface Props {
 }
 
 function TeamsSelectorGrid({ teams, selectedTeams, setSelectedTeams }: Props) {
-  const [sorting, setSorting] = useState(Object.entries(teamSorts)[0][0]);
+  const [sorting, setSorting] = useState('lastAdded');
   const [isDesc, setIsDesc] = useState(true);
 
   const sortedTeams = [...teams].sort(teamSorts[sorting]);

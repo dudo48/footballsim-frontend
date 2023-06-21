@@ -87,15 +87,6 @@ function Page() {
     setValue('awayTeam', awayTeam as Team);
   }, [awayTeam, setValue]);
 
-  useEffect(() => {
-    if (errors.homeTeam || errors.awayTeam) {
-      toast({
-        status: 'error',
-        description: 'Please select two opponent teams',
-      });
-    }
-  }, [errors, toast]);
-
   async function onSubmit(data: FormData) {
     const { n, homeTeam, awayTeam, ...options } = data;
 
@@ -121,16 +112,26 @@ function Page() {
       <Stack spacing={4}>
         <Heading size={'lg'}>Match</Heading>
         <Center justifyContent={'space-between'}>
-          <TeamsSelector setSelectedTeam={setHomeTeam} teams={teams}>
-            <Heading size={'md'}>Home Team</Heading>
+          <TeamsSelector
+            setSelectedTeams={(t) => setHomeTeam(t[0])}
+            teams={teams}
+          >
+            <Heading textAlign={'center'} size={'md'}>
+              Home Team
+            </Heading>
             <TeamCard team={homeTeam} />
           </TeamsSelector>
           <Box textAlign={'center'}>
             <Heading size={'lg'}>VS</Heading>
             <Text>Click on a team card to choose a team</Text>
           </Box>
-          <TeamsSelector setSelectedTeam={setAwayTeam} teams={teams}>
-            <Heading size={'md'}>Away Team</Heading>
+          <TeamsSelector
+            setSelectedTeams={(t) => setAwayTeam(t[0])}
+            teams={teams}
+          >
+            <Heading textAlign={'center'} size={'md'}>
+              Away Team
+            </Heading>
             <TeamCard team={awayTeam} />
           </TeamsSelector>
         </Center>
@@ -173,15 +174,16 @@ function Page() {
                   isDisabled={!watch('isKnockout')}
                 />
               </Stack>
+              <Center>
+                <Button
+                  isDisabled={!homeTeam || !awayTeam}
+                  isLoading={isSubmitting || isSubmitSuccessful}
+                  type="submit"
+                >
+                  Simulate
+                </Button>
+              </Center>
             </Box>
-            <Center>
-              <Button
-                isLoading={isSubmitting || isSubmitSuccessful}
-                type="submit"
-              >
-                Simulate
-              </Button>
-            </Center>
           </Stack>
         </form>
       </Stack>

@@ -1,4 +1,4 @@
-import { Select, Stack, Text } from '@chakra-ui/react';
+import { Flex, Select } from '@chakra-ui/react';
 import { startCase } from 'lodash';
 
 interface Props {
@@ -17,8 +17,7 @@ function SelectSorting({
   setIsDesc,
 }: Props) {
   return (
-    <Stack direction={'row'} align={'center'}>
-      <Text>Sort by</Text>
+    <Flex gap={2} align={'center'}>
       <Select
         maxW={48}
         variant={'solid'}
@@ -40,7 +39,7 @@ function SelectSorting({
         <option value={'asc'}>Ascending</option>
         <option value={'desc'}>Descending</option>
       </Select>
-    </Stack>
+    </Flex>
   );
 }
 

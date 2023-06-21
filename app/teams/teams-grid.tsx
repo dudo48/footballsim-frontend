@@ -1,9 +1,9 @@
 import TeamCard from '@/components/cards/team-card';
+import Team from '@/shared/interfaces/team.interface';
 import { teamSorts } from '@/utils/sorting';
 import { Center, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import SelectSorting from '../../components/misc/select-sorting';
-import Team from '@/shared/interfaces/team.interface';
 
 interface Props {
   deletable?: boolean;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 function TeamsGrid({ teams, deletable }: Props) {
-  const [sorting, setSorting] = useState(Object.entries(teamSorts)[0][0]);
+  const [sorting, setSorting] = useState('lastAdded');
   const [isDesc, setIsDesc] = useState(true);
 
   const sortedTeams = [...teams].sort(teamSorts[sorting]);
