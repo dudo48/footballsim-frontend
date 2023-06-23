@@ -67,11 +67,9 @@ function Page() {
           </Box>
         </Flex>
         <Center>
-          <Flex gap={4} alignItems={'flex-start'}>
-            <Container maxW={'4xl'} shadow={'xl'}>
-              <MatchesTable showMatchId showResultTag matches={matches} />
-            </Container>
-          </Flex>
+          <Container size={'md'} shadow={'xl'}>
+            <MatchesTable showMatchId showResultTag matches={matches} />
+          </Container>
         </Center>
       </Stack>
     </Skeleton>

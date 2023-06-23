@@ -17,6 +17,9 @@ function MatchesTable({
   showResultTag,
   showMatchId,
 }: Props) {
+  const showExtraTime = matches.some((m) => m.result?.extraTime);
+  const showPenaltyShootout = matches.some((m) => m.result?.penaltyShootout);
+
   return (
     <TableContainer>
       <Table>
@@ -28,9 +31,20 @@ function MatchesTable({
               </Th>
             )}
             {showResultTag && <Th px={2}></Th>}
-            <Th>HOME TEAM</Th>
-            <Th textAlign={'center'}>RESULT</Th>
-            <Th>AWAY TEAM</Th>
+            <Th>TEAMS</Th>
+            <Th isNumeric title="Standard-time result" px={2}>
+              S.T.
+            </Th>
+            {showExtraTime && (
+              <Th isNumeric title="Extra-time result" px={2}>
+                E.T.
+              </Th>
+            )}
+            {showPenaltyShootout && (
+              <Th isNumeric title="Penalty-shootout result" px={2}>
+                P.S.
+              </Th>
+            )}
           </Tr>
         </Thead>
         <Tbody>
@@ -42,6 +56,8 @@ function MatchesTable({
               markWinner={markWinner}
               markLoser={markLoser}
               showResultTag={showResultTag}
+              showExtraTime={showExtraTime}
+              showPenaltyShootout={showPenaltyShootout}
             />
           ))}
         </Tbody>
