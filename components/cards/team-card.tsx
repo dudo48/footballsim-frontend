@@ -1,6 +1,6 @@
 import { useTeamActions, useTeams } from '@/services/teams-service';
-import Team from '@/shared/interfaces/team.interface';
 import { getStrength } from '@/shared/functions/team.functions';
+import Team from '@/shared/interfaces/team.interface';
 import {
   Box,
   Card,
@@ -85,8 +85,8 @@ function TeamCard({ team, deletable, isHighlighted }: Props) {
         </Box>
       </CardHeader>
       <Divider />
-      <CardBody p={2} textAlign={'center'}>
-        <StatGroup>
+      <CardBody p={2}>
+        <StatGroup gap={4} textAlign={'center'}>
           <Stat title="Attack">
             <StatLabel>ATT</StatLabel>
             <StatNumber>{team ? team.attack.toFixed(1) : '-'}</StatNumber>
@@ -105,7 +105,7 @@ function TeamCard({ team, deletable, isHighlighted }: Props) {
         <StatGroup></StatGroup>
       </CardBody>
       <Divider />
-      <CardFooter>
+      <CardFooter p={2}>
         {team && deletable && (
           <IconButton
             colorScheme={'red'}

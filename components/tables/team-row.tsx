@@ -1,6 +1,6 @@
 import { getStrength } from '@/shared/functions/team.functions';
 import Team from '@/shared/interfaces/team.interface';
-import { Checkbox, Td, Tr } from '@chakra-ui/react';
+import { Box, Checkbox, Td, Tr } from '@chakra-ui/react';
 import TeamLi from '../misc/team-li';
 
 interface Props {
@@ -8,9 +8,16 @@ interface Props {
   selectTeam?: (team: Team) => void;
   selectedTeams?: Team[];
   number?: number;
+  isDeemphasized?: boolean;
 }
 
-function TeamRow({ team, selectTeam, selectedTeams, number }: Props) {
+function TeamRow({
+  team,
+  selectTeam,
+  selectedTeams,
+  number,
+  isDeemphasized,
+}: Props) {
   return (
     <Tr>
       {selectTeam && selectedTeams && (
@@ -33,19 +40,25 @@ function TeamRow({ team, selectTeam, selectedTeams, number }: Props) {
         </Td>
       )}
       <Td px={4}>
-        <TeamLi team={team} />
+        <Box opacity={isDeemphasized ? 0.25 : 1}>
+          <TeamLi team={team} />
+        </Box>
       </Td>
       <Td px={2} isNumeric>
-        {team.attack.toFixed(1)}
+        <Box opacity={isDeemphasized ? 0.25 : 1}>{team.attack.toFixed(1)}</Box>
       </Td>
       <Td px={2} isNumeric>
-        {team.defense.toFixed(1)}
+        <Box opacity={isDeemphasized ? 0.25 : 1}>{team.defense.toFixed(1)}</Box>
       </Td>
       <Td px={2} isNumeric>
-        {team.homeAdvantage.toFixed(1)}
+        <Box opacity={isDeemphasized ? 0.25 : 1}>
+          {team.homeAdvantage.toFixed(1)}
+        </Box>
       </Td>
       <Td px={2} isNumeric>
-        {getStrength(team).toFixed(1)}
+        <Box opacity={isDeemphasized ? 0.25 : 1}>
+          {getStrength(team).toFixed(1)}
+        </Box>
       </Td>
     </Tr>
   );

@@ -7,9 +7,10 @@ interface Props {
   team: Team;
   isHighlighted?: boolean;
   isDeemphasized?: boolean;
+  showStrength?: boolean;
 }
 
-function TeamLi({ team, isDeemphasized }: Props) {
+function TeamLi({ team, isDeemphasized, showStrength }: Props) {
   return (
     <Flex gap={2} align={'center'}>
       <FaTshirt
@@ -25,6 +26,7 @@ function TeamLi({ team, isDeemphasized }: Props) {
         opacity={isDeemphasized ? 0.5 : 1}
       >
         {team.name}
+        {showStrength && ` (${getStrength(team).toFixed(1)})`}
       </Text>
     </Flex>
   );

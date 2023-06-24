@@ -23,6 +23,7 @@ interface Props {
   showTeamNumber?: boolean;
   allowSorting?: boolean;
   showStrengthStats?: boolean;
+  deemphasizedTeams?: Team[];
 }
 
 function TeamsTable({
@@ -32,6 +33,7 @@ function TeamsTable({
   showTeamNumber,
   allowSorting,
   showStrengthStats,
+  deemphasizedTeams,
 }: Props) {
   const [sorting, setSorting] = useState('strength');
   const [isDesc, setIsDesc] = useState(true);
@@ -82,6 +84,9 @@ function TeamsTable({
                 team={team}
                 selectTeam={selectTeam}
                 selectedTeams={selectedTeams}
+                isDeemphasized={deemphasizedTeams?.some(
+                  (t) => t.id === team.id
+                )}
               />
             ))}
           </Tbody>

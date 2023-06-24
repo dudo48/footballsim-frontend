@@ -15,9 +15,11 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
+import { differenceBy, flatten } from 'lodash';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import Options from './options';
 
 function Page() {
   const { control, watch } = useForm({
@@ -29,6 +31,7 @@ function Page() {
   const { simulations, isLoaded } = useContext(CupSimulations);
   const path = usePathname();
   const router = useRouter();
+  const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
     if (!simulations.length && isLoaded) {
@@ -39,9 +42,18 @@ function Page() {
     }
   }, [simulations, path, router, isLoaded]);
 
+  const remainingTeams = simulations.length
+    ? flatten(
+        simulations[watch('simulationNumber') - 1].result?.rounds[
+          tabIndex
+        ].matches.map((m) => [m.homeTeam, m.awayTeam])
+      )
+    : [];
+
   return (
     <Skeleton isLoaded={!!simulations.length && isLoaded} w={'full'}>
       <Stack spacing={4}>
+        {simulations.length && <Options simulation={simulations[0]} />}
         {simulations.length > 1 && (
           <Controller
             control={control}
@@ -58,21 +70,30 @@ function Page() {
           />
         )}
         <Flex gap={2}>
-          <Stack flexGrow={1} maxW={'xl'} shadow={'xl'}>
+          <Stack flex={1} maxW={'xl'} shadow={'xl'}>
             <Heading size={'md'}>Teams</Heading>
             <TeamsTable
-              teams={
-                simulations.length
-                  ? simulations[watch('simulationNumber') - 1].teams
-                  : []
-              }
+              teams={simulations.length ? simulations[0].teams : []}
               showTeamNumber
               showStrengthStats
               allowSorting
+              deemphasizedTeams={differenceBy(
+                simulations.length
+                  ? differenceBy(
+                      simulations[0].teams,
+                      remainingTeams,
+                      (t) => t.id
+                    )
+                  : []
+              )}
             />
           </Stack>
-          <Stack flexGrow={1}>
-            <Tabs shadow={'xl'}>
+          <Stack flex={1}>
+            <Tabs
+              index={tabIndex}
+              onChange={(i) => setTabIndex(i)}
+              shadow={'xl'}
+            >
               <TabList>
                 {simulations.length &&
                   simulations[watch('simulationNumber') - 1].result?.rounds.map(
@@ -89,7 +110,7 @@ function Page() {
                         <MatchesTable
                           matches={round.matches}
                           showMatchId
-                          markWinner
+                          showTeamsStrength
                           markLoser
                         />
                       </TabPanel>

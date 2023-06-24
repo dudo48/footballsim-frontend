@@ -12,6 +12,7 @@ interface Props {
   showResultTag?: boolean;
   showExtraTime?: boolean;
   showPenaltyShootout?: boolean;
+  showTeamsStrength?: boolean;
 }
 
 function MatchRow({
@@ -22,6 +23,7 @@ function MatchRow({
   showResultTag,
   showExtraTime,
   showPenaltyShootout,
+  showTeamsStrength,
 }: Props) {
   return (
     <Tr>
@@ -47,11 +49,13 @@ function MatchRow({
             isHighlighted={markWinner && isWin(match.result)}
             isDeemphasized={markLoser && isLoss(match.result)}
             team={match.homeTeam}
+            showStrength={showTeamsStrength}
           />
           <TeamLi
             isHighlighted={markWinner && isLoss(match.result)}
             isDeemphasized={markLoser && isWin(match.result)}
             team={match.awayTeam}
+            showStrength={showTeamsStrength}
           />
         </Stack>
       </Td>

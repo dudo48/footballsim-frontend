@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   Heading,
   Skeleton,
   Stack,
@@ -110,7 +111,12 @@ function Page() {
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
         <Heading size={'lg'}>Match</Heading>
-        <Center justifyContent={'space-between'}>
+        <Flex
+          align={'center'}
+          justifyContent={'space-between'}
+          flexWrap={'wrap'}
+          gap={4}
+        >
           <TeamsSelector
             setSelectedTeams={(t) => setHomeTeam(t[0])}
             teams={teams}
@@ -133,7 +139,7 @@ function Page() {
             </Heading>
             <TeamCard team={awayTeam} />
           </TeamsSelector>
-        </Center>
+        </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <Box

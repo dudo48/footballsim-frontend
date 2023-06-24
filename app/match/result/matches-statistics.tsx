@@ -61,19 +61,19 @@ function MatchesStatistics({ matches }: Props) {
           <Divider borderColor={'footballsim.950'} />
           <Flex>
             <Stat>
-              <StatLabel>Home Win Percentage</StatLabel>
+              <StatLabel>Home Win %</StatLabel>
               <StatNumber>
                 {((wins.length / matches.length) * 100).toFixed(1)}%
               </StatNumber>
             </Stat>
             <Stat>
-              <StatLabel>Draw Percentage</StatLabel>
+              <StatLabel>Draw %</StatLabel>
               <StatNumber>
                 {((draws.length / matches.length) * 100).toFixed(1)}%
               </StatNumber>
             </Stat>
             <Stat>
-              <StatLabel>Away Win Percentage</StatLabel>
+              <StatLabel>Away Win %</StatLabel>
               <StatNumber>
                 {((losses.length / matches.length) * 100).toFixed(1)}%
               </StatNumber>
@@ -82,15 +82,15 @@ function MatchesStatistics({ matches }: Props) {
           <Divider borderColor={'footballsim.950'} />
           <Flex>
             <Stat>
-              <StatLabel>Avg. Goals / Match</StatLabel>
+              <StatLabel>Avg. Goals</StatLabel>
               <StatNumber>{(goals / matches.length).toFixed(2)}</StatNumber>
             </Stat>
             <Stat>
-              <StatLabel>Avg. Home Goals / Match</StatLabel>
+              <StatLabel>Avg. Home Goals</StatLabel>
               <StatNumber>{(homeGoals / matches.length).toFixed(2)}</StatNumber>
             </Stat>
             <Stat>
-              <StatLabel>Avg. Away Goals / Match</StatLabel>
+              <StatLabel>Avg. Away Goals</StatLabel>
               <StatNumber>{(awayGoals / matches.length).toFixed(2)}</StatNumber>
             </Stat>
           </Flex>

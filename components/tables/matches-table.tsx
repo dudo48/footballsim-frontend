@@ -8,6 +8,7 @@ interface Props {
   markWinner?: boolean;
   markLoser?: boolean;
   showResultTag?: boolean;
+  showTeamsStrength?: boolean;
 }
 
 function MatchesTable({
@@ -16,6 +17,7 @@ function MatchesTable({
   markLoser,
   showResultTag,
   showMatchId,
+  showTeamsStrength,
 }: Props) {
   const showExtraTime = matches.some((m) => m.result?.extraTime);
   const showPenaltyShootout = matches.some((m) => m.result?.penaltyShootout);
@@ -58,6 +60,7 @@ function MatchesTable({
               showResultTag={showResultTag}
               showExtraTime={showExtraTime}
               showPenaltyShootout={showPenaltyShootout}
+              showTeamsStrength={showTeamsStrength}
             />
           ))}
         </Tbody>
