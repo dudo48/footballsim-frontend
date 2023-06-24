@@ -8,6 +8,7 @@ export function useSimulations() {
   return {
     simulateMatch: (match: Match, n: number) =>
       postRequest(`${baseUrl}/match`, match, { n: `${n}` }),
-    simulateCup: (cup: Cup) => postRequest(`${baseUrl}/cup`, cup),
+    simulateCup: (cup: Cup, n: number) =>
+      postRequest(`${baseUrl}/cup`, cup, { n: `${n}` }),
   };
 }

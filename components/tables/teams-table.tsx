@@ -1,14 +1,17 @@
+import { getStrength } from '@/shared/functions/team.functions';
 import Team from '@/shared/interfaces/team.interface';
-import { teamSorts } from '@/utils/sorting';
+import { teamSorts } from '@/shared/misc/sorting';
 import {
   Stack,
   Table,
+  TableCaption,
   TableContainer,
   Tbody,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { meanBy } from 'lodash';
 import { useState } from 'react';
 import SelectSorting from '../misc/select-sorting';
 import TeamRow from './team-row';
@@ -19,6 +22,7 @@ interface Props {
   selectedTeams?: Team[];
   showTeamNumber?: boolean;
   allowSorting?: boolean;
+  showStrengthStats?: boolean;
 }
 
 function TeamsTable({
@@ -27,8 +31,9 @@ function TeamsTable({
   selectedTeams,
   showTeamNumber,
   allowSorting,
+  showStrengthStats,
 }: Props) {
-  const [sorting, setSorting] = useState('lastAdded');
+  const [sorting, setSorting] = useState('strength');
   const [isDesc, setIsDesc] = useState(true);
 
   const sortedTeams = [...teams].sort(teamSorts[sorting]);
@@ -38,6 +43,14 @@ function TeamsTable({
     return (
       <TableContainer>
         <Table>
+          {showStrengthStats && (
+            <TableCaption placement="top">
+              Mean strength:{' '}
+              {(
+                meanBy(selectedTeams ? selectedTeams : teams, getStrength) || 0
+              ).toFixed(1)}
+            </TableCaption>
+          )}
           <Thead>
             <Tr>
               {selectTeam && <Th px={1}></Th>}
@@ -48,16 +61,16 @@ function TeamsTable({
               )}
               <Th px={4}>Team</Th>
               <Th px={2} isNumeric>
-                STR
-              </Th>
-              <Th px={2} isNumeric>
                 ATT
               </Th>
               <Th px={2} isNumeric>
                 DEF
               </Th>
-              <Th px={2} isNumeric>
+              <Th title="Home advantage" px={2} isNumeric>
                 ADV
+              </Th>
+              <Th px={2} isNumeric>
+                STR
               </Th>
             </Tr>
           </Thead>

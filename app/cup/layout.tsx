@@ -1,9 +1,9 @@
 'use client';
-import { CupSimulationProvider } from '@/context/cup-simulations';
+import { CupSimulationsProvider } from '@/context/cup-simulations';
 import { PropsWithChildren } from 'react';
 
 function Layout({ children }: PropsWithChildren) {
-  return <CupSimulationProvider>{children}</CupSimulationProvider>;
+  return <CupSimulationsProvider>{children}</CupSimulationsProvider>;
 }
 
 export default Layout;

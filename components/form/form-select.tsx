@@ -16,7 +16,7 @@ type Props = SelectProps & {
   options: string[] | number[];
 };
 
-function FormInput({
+function FormSelect({
   label,
   helper,
   error,
@@ -40,4 +40,4 @@ function FormInput({
   );
 }
 
-export default FormInput;
+export default FormSelect;

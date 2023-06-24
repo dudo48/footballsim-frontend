@@ -1,26 +1,25 @@
 import Cup from '@/shared/interfaces/cup.interface';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
-export const CupSimulation = createContext<{
+export const CupSimulations = createContext<{
   isLoaded: boolean;
-  cup?: Cup;
-  setCup: (value: Cup) => void;
-}>({ isLoaded: false, cup: undefined, setCup: () => null });
+  simulations: Cup[];
+  setSimulations: (value: Cup[]) => void;
+}>({ isLoaded: false, simulations: [], setSimulations: () => null });
 
-export function CupSimulationProvider({ children }: PropsWithChildren) {
-  const [cup, setCup] = useState<Cup>();
+export function CupSimulationsProvider({ children }: PropsWithChildren) {
+  const [simulations, setSimulations] = useState<Cup[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    const sessionCup = sessionStorage.getItem('cup');
-    const cup = sessionCup ? JSON.parse(sessionCup) : undefined;
-    setCup(cup);
+    const stringified = sessionStorage.getItem('cups');
+    setSimulations(stringified ? JSON.parse(stringified) : []);
     setIsLoaded(true);
   }, []);
 
   return (
-    <CupSimulation.Provider value={{ cup, isLoaded, setCup }}>
+    <CupSimulations.Provider value={{ simulations, isLoaded, setSimulations }}>
       {children}
-    </CupSimulation.Provider>
+    </CupSimulations.Provider>
   );
 }

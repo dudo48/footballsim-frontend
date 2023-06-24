@@ -16,23 +16,23 @@ import { useContext, useEffect } from 'react';
 import MatchesStatistics from './matches-statistics';
 
 function Page() {
-  const { matches, isLoaded } = useContext(MatchSimulations);
-  const homeTeam = matches.length ? matches[0].homeTeam : undefined;
-  const awayTeam = matches.length ? matches[0].awayTeam : undefined;
+  const { simulations, isLoaded } = useContext(MatchSimulations);
+  const homeTeam = simulations.length ? simulations[0].homeTeam : undefined;
+  const awayTeam = simulations.length ? simulations[0].awayTeam : undefined;
   const path = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (!matches.length && isLoaded) {
+    if (!simulations.length && isLoaded) {
       const pathArray = path.split('/');
       pathArray.pop();
       const newPath = pathArray.join('/');
       router.replace(newPath);
     }
-  }, [matches.length, path, router, isLoaded]);
+  }, [simulations.length, path, router, isLoaded]);
 
   return (
-    <Skeleton isLoaded={!!matches.length && isLoaded} w={'full'}>
+    <Skeleton isLoaded={!!simulations.length && isLoaded} w={'full'}>
       <Stack spacing={4}>
         <Flex justifyContent={'space-between'}>
           <Box>
@@ -42,7 +42,7 @@ function Page() {
             <TeamCard team={homeTeam} />
           </Box>
           <Center>
-            <MatchesStatistics matches={matches} />
+            <MatchesStatistics matches={simulations} />
             {/* <Accordion allowToggle>
                 <AccordionItem>
                   <AccordionButton>
@@ -68,7 +68,7 @@ function Page() {
         </Flex>
         <Center>
           <Container size={'md'} shadow={'xl'}>
-            <MatchesTable showMatchId showResultTag matches={matches} />
+            <MatchesTable showMatchId showResultTag matches={simulations} />
           </Container>
         </Center>
       </Stack>

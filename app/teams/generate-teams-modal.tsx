@@ -59,7 +59,7 @@ function GenerateTeamsForm({ onClose }: FormProps) {
     defaultValues: {
       number: 10,
       strength: 1,
-      alpha: 5,
+      alpha: 4,
     },
   });
 

@@ -72,7 +72,7 @@ function Page() {
   const [homeTeam, setHomeTeam] = useState<Team>();
   const [awayTeam, setAwayTeam] = useState<Team>();
   const { simulateMatch } = useSimulations();
-  const { setMatches } = useContext(MatchSimulations);
+  const { setSimulations } = useContext(MatchSimulations);
 
   useEffect(() => {
     register('homeTeam');
@@ -99,7 +99,7 @@ function Page() {
     const result = await simulateMatch(match, n);
     if (!result.error) {
       sessionStorage.setItem('matches', JSON.stringify(result));
-      setMatches(result);
+      setSimulations(result);
       router.push(`${path}/result`);
     } else {
       toast({ status: 'error', description: 'Failed to simulate match.' });

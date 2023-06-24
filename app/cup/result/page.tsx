@@ -1,43 +1,104 @@
 'use client';
+import FormSlider from '@/components/form/form-slider';
 import MatchesTable from '@/components/tables/matches-table';
 import TeamsTable from '@/components/tables/teams-table';
-import { CupSimulation } from '@/context/cup-simulations';
-import { teamSorts } from '@/utils/sorting';
-import { Heading, Skeleton, Stack } from '@chakra-ui/react';
+import { CupSimulations } from '@/context/cup-simulations';
+import { getCupRoundName } from '@/utils/functions';
+import {
+  Flex,
+  Heading,
+  Skeleton,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 function Page() {
-  const { cup, isLoaded } = useContext(CupSimulation);
+  const { control, watch } = useForm({
+    defaultValues: {
+      simulationNumber: 1,
+    },
+  });
+
+  const { simulations, isLoaded } = useContext(CupSimulations);
   const path = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (!cup && isLoaded) {
+    if (!simulations.length && isLoaded) {
       const pathArray = path.split('/');
       pathArray.pop();
       const newPath = pathArray.join('/');
       router.replace(newPath);
     }
-  }, [cup, path, router, isLoaded]);
-
-  const sortedTeams = cup?.teams.sort(teamSorts.strength) || [];
+  }, [simulations, path, router, isLoaded]);
 
   return (
-    <Skeleton isLoaded={!!cup && isLoaded} w={'full'}>
+    <Skeleton isLoaded={!!simulations.length && isLoaded} w={'full'}>
       <Stack spacing={4}>
-        <Stack maxW={'xl'} shadow={'xl'}>
-          <Heading size={'md'}>Teams</Heading>
-          <TeamsTable teams={sortedTeams} />
-        </Stack>
-        <Stack spacing={8}>
-          {cup?.result?.rounds.map((round) => (
-            <Stack key={round.id} maxW={'3xl'} shadow={'xl'}>
-              <Heading size={'md'}>Round {round.id}</Heading>
-              <MatchesTable markWinner markLoser matches={round.matches} />
-            </Stack>
-          ))}
-        </Stack>
+        {simulations.length > 1 && (
+          <Controller
+            control={control}
+            name={'simulationNumber'}
+            render={({ field }) => (
+              <FormSlider
+                fieldHandler={field}
+                label="Simulation #"
+                min={1}
+                max={simulations.length}
+                step={1}
+              />
+            )}
+          />
+        )}
+        <Flex gap={2}>
+          <Stack flexGrow={1} maxW={'xl'} shadow={'xl'}>
+            <Heading size={'md'}>Teams</Heading>
+            <TeamsTable
+              teams={
+                simulations.length
+                  ? simulations[watch('simulationNumber') - 1].teams
+                  : []
+              }
+              showTeamNumber
+              showStrengthStats
+              allowSorting
+            />
+          </Stack>
+          <Stack flexGrow={1}>
+            <Tabs shadow={'xl'}>
+              <TabList>
+                {simulations.length &&
+                  simulations[watch('simulationNumber') - 1].result?.rounds.map(
+                    (round) => (
+                      <Tab key={round.id}>{getCupRoundName(round)}</Tab>
+                    )
+                  )}
+              </TabList>
+              <TabPanels>
+                {simulations.length &&
+                  simulations[watch('simulationNumber') - 1].result?.rounds.map(
+                    (round) => (
+                      <TabPanel key={round.id}>
+                        <MatchesTable
+                          matches={round.matches}
+                          showMatchId
+                          markWinner
+                          markLoser
+                        />
+                      </TabPanel>
+                    )
+                  )}
+              </TabPanels>
+            </Tabs>
+          </Stack>
+        </Flex>
       </Stack>
     </Skeleton>
   );

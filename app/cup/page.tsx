@@ -1,8 +1,9 @@
 'use client';
+import FormCheckbox from '@/components/form/form-checkbox';
 import FormSelect from '@/components/form/form-select';
 import TeamsSelector from '@/components/selectors/teams-selector';
 import TeamsTable from '@/components/tables/teams-table';
-import { CupSimulation } from '@/context/cup-simulations';
+import { CupSimulations } from '@/context/cup-simulations';
 import { useSimulations } from '@/services/simulations-service';
 import { useTeams } from '@/services/teams-service';
 import Team from '@/shared/interfaces/team.interface';
@@ -25,12 +26,26 @@ import * as yup from 'yup';
 
 const schema = yup
   .object({
-    teams: yup.array().required(),
     numberOfTeams: yup
       .number()
       .positive('Please select an integer greater than 0.')
       .typeError('Please select an integer greater than 0.')
       .required('Please select an integer greater than 0'),
+    n: yup
+      .number()
+      .positive('Please select an integer greater than 0.')
+      .typeError('Please select an integer greater than 0.')
+      .required('Please select an integer greater than 0'),
+    teams: yup.array().required(),
+    seeds: yup
+      .number()
+      .positive('Please select an integer greater than 0.')
+      .typeError('Please select an integer greater than 0.')
+      .required('Please select an integer greater than 0'),
+    allowExtraTime: yup
+      .bool()
+      .typeError('Please make a choice.')
+      .required('Please make a choice.'),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
@@ -47,6 +62,8 @@ function Page() {
     defaultValues: {
       teams: [],
       numberOfTeams: 16,
+      seeds: 4,
+      allowExtraTime: true,
     },
   });
 
@@ -56,7 +73,7 @@ function Page() {
   const { teams, isLoading } = useTeams();
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
   const { simulateCup } = useSimulations();
-  const { setCup } = useContext(CupSimulation);
+  const { setSimulations } = useContext(CupSimulations);
 
   useEffect(() => {
     register('teams');
@@ -74,25 +91,31 @@ function Page() {
   }, [watch('numberOfTeams')]);
 
   async function onSubmit(data: FormData) {
-    const { teams } = data;
-    const cup = { teams };
-    const result = await simulateCup(cup);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { numberOfTeams, n, ...cup } = data;
+    const result = await simulateCup(cup, n);
     if (!result.error) {
-      sessionStorage.setItem('cup', JSON.stringify(result));
-      setCup(result);
+      sessionStorage.setItem('cups', JSON.stringify(result));
+      setSimulations(result);
       router.push(`${path}/result`);
     } else {
       toast({ status: 'error', description: 'Failed to simulate cup.' });
     }
   }
 
+  const teamsCountOptions = [1, 2, 4, 8, 16, 32, 64, 128];
   return (
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
         <Heading size={'lg'}>Cup</Heading>
         <Flex gap={2} direction={[null, 'column', 'row']}>
           <Box flex={2}>
-            <TeamsTable showTeamNumber allowSorting teams={selectedTeams} />
+            <TeamsTable
+              showStrengthStats
+              showTeamNumber
+              allowSorting
+              teams={selectedTeams}
+            />
           </Box>
           <Box flex={1}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -121,10 +144,29 @@ function Page() {
                   </Flex>
                   <Stack p={4}>
                     <FormSelect
-                      options={[2, 4, 8, 16, 32, 64, 128]}
+                      options={teamsCountOptions}
                       label={'Number of teams'}
                       fieldHandler={register('numberOfTeams')}
                       error={errors.numberOfTeams}
+                    />
+                    <FormSelect
+                      options={[1, 5, 10, 20]}
+                      label={'Number of simulations'}
+                      fieldHandler={register('n')}
+                      error={errors.n}
+                    />
+                    <FormSelect
+                      options={teamsCountOptions.filter(
+                        (n) => n <= watch('numberOfTeams')
+                      )}
+                      label={'Number of seeds'}
+                      fieldHandler={register('seeds')}
+                      error={errors.seeds}
+                    />
+                    <FormCheckbox
+                      label={'Allow extra-time'}
+                      fieldHandler={register('allowExtraTime')}
+                      error={errors.allowExtraTime}
                     />
                   </Stack>
                   <Center>

@@ -41,7 +41,7 @@ function MatchRow({
           <ResultTag result={match.result} />
         </Td>
       )}
-      <Td pl={2}>
+      <Td>
         <Stack spacing={1}>
           <TeamLi
             isHighlighted={markWinner && isWin(match.result)}

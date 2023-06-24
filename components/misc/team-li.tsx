@@ -1,3 +1,4 @@
+import { getStrength } from '@/shared/functions/team.functions';
 import Team from '@/shared/interfaces/team.interface';
 import { Flex, Text } from '@chakra-ui/react';
 import { FaTshirt } from 'react-icons/fa';
@@ -8,7 +9,7 @@ interface Props {
   isDeemphasized?: boolean;
 }
 
-function TeamLi({ team, isHighlighted, isDeemphasized }: Props) {
+function TeamLi({ team, isDeemphasized }: Props) {
   return (
     <Flex gap={2} align={'center'}>
       <FaTshirt
@@ -17,11 +18,10 @@ function TeamLi({ team, isHighlighted, isDeemphasized }: Props) {
         color={team.color}
       />
       <Text
-        title={team.name}
+        title={`${team.name} (${getStrength(team).toFixed(1)})`}
         overflow={'hidden'}
         textOverflow={'ellipsis'}
         whiteSpace={'nowrap'}
-        fontWeight={isHighlighted ? 'bold' : 'normal'}
         opacity={isDeemphasized ? 0.5 : 1}
       >
         {team.name}

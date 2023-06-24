@@ -24,6 +24,7 @@ function TeamsSelectorTable({ teams, selectedTeams, setSelectedTeams }: Props) {
         selectedTeams={selectedTeams}
         teams={teams}
         allowSorting
+        showStrengthStats
       />
     </Stack>
   );

@@ -36,9 +36,6 @@ function TeamRow({ team, selectTeam, selectedTeams, number }: Props) {
         <TeamLi team={team} />
       </Td>
       <Td px={2} isNumeric>
-        {getStrength(team).toFixed(1)}
-      </Td>
-      <Td px={2} isNumeric>
         {team.attack.toFixed(1)}
       </Td>
       <Td px={2} isNumeric>
@@ -46,6 +43,9 @@ function TeamRow({ team, selectTeam, selectedTeams, number }: Props) {
       </Td>
       <Td px={2} isNumeric>
         {team.homeAdvantage.toFixed(1)}
+      </Td>
+      <Td px={2} isNumeric>
+        {getStrength(team).toFixed(1)}
       </Td>
     </Tr>
   );
