@@ -16,7 +16,7 @@ function Options({ simulation }: Props) {
             <option value={simulation.seeds}>{simulation.seeds}</option>
           </Select>
         </>
-        <Checkbox isReadOnly isChecked={simulation.allowExtraTime}>
+        <Checkbox isReadOnly isChecked={simulation.allowExtraTime} isDisabled={!simulation.isKnockout}>
           Extra-time
         </Checkbox>
       </Stack>

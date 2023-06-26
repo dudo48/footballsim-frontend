@@ -18,6 +18,7 @@ function TeamRow({
   number,
   isDeemphasized,
 }: Props) {
+  const deemphasizedOpacity = 0.25;
   return (
     <Tr>
       {selectTeam && selectedTeams && (
@@ -40,23 +41,27 @@ function TeamRow({
         </Td>
       )}
       <Td px={4}>
-        <Box opacity={isDeemphasized ? 0.25 : 1}>
+        <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
           <TeamLi team={team} />
         </Box>
       </Td>
       <Td px={2} isNumeric>
-        <Box opacity={isDeemphasized ? 0.25 : 1}>{team.attack.toFixed(1)}</Box>
+        <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
+          {team.attack.toFixed(1)}
+        </Box>
       </Td>
       <Td px={2} isNumeric>
-        <Box opacity={isDeemphasized ? 0.25 : 1}>{team.defense.toFixed(1)}</Box>
+        <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
+          {team.defense.toFixed(1)}
+        </Box>
       </Td>
       <Td px={2} isNumeric>
-        <Box opacity={isDeemphasized ? 0.25 : 1}>
+        <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
           {team.homeAdvantage.toFixed(1)}
         </Box>
       </Td>
       <Td px={2} isNumeric>
-        <Box opacity={isDeemphasized ? 0.25 : 1}>
+        <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
           {getStrength(team).toFixed(1)}
         </Box>
       </Td>

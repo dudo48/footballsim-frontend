@@ -6,9 +6,9 @@ const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/simulate`;
 
 export function useSimulations() {
   return {
-    simulateMatch: (match: Match, n: number) =>
+    simulateMatch: (match: Omit<Match, 'id'>, n: number) =>
       postRequest(`${baseUrl}/match`, match, { n: `${n}` }),
-    simulateCup: (cup: Cup, n: number) =>
+    simulateCup: (cup: Omit<Cup, 'id'>, n?: number) =>
       postRequest(`${baseUrl}/cup`, cup, { n: `${n}` }),
   };
 }

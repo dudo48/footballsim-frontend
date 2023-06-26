@@ -19,7 +19,7 @@ function Options({ simulation }: Props) {
         <Checkbox
           isReadOnly
           isChecked={simulation.allowExtraTime}
-          isDisabled={simulation.isKnockout}
+          isDisabled={!simulation.isKnockout}
         >
           Extra-time
         </Checkbox>

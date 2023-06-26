@@ -99,7 +99,6 @@ function Page() {
 
     const result = await simulateMatch(match, n);
     if (!result.error) {
-      sessionStorage.setItem('matches', JSON.stringify(result));
       setSimulations(result);
       router.push(`${path}/result`);
     } else {

@@ -31,11 +31,6 @@ const schema = yup
       .positive('Please select an integer greater than 0.')
       .typeError('Please select an integer greater than 0.')
       .required('Please select an integer greater than 0'),
-    n: yup
-      .number()
-      .positive('Please select an integer greater than 0.')
-      .typeError('Please select an integer greater than 0.')
-      .required('Please select an integer greater than 0'),
     teams: yup.array().required(),
     seeds: yup
       .number()
@@ -92,10 +87,9 @@ function Page() {
 
   async function onSubmit(data: FormData) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { numberOfTeams, n, ...cup } = data;
-    const result = await simulateCup(cup, n);
+    const { numberOfTeams, ...cup } = data;
+    const result = await simulateCup(cup);
     if (!result.error) {
-      sessionStorage.setItem('cups', JSON.stringify(result));
       setSimulations(result);
       router.push(`${path}/result`);
     } else {
@@ -148,12 +142,6 @@ function Page() {
                       label={'Number of teams'}
                       fieldHandler={register('numberOfTeams')}
                       error={errors.numberOfTeams}
-                    />
-                    <FormSelect
-                      options={[1, 5, 10, 20]}
-                      label={'Number of simulations'}
-                      fieldHandler={register('n')}
-                      error={errors.n}
                     />
                     <FormSelect
                       options={teamsCountOptions.filter(
