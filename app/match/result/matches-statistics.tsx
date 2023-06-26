@@ -1,10 +1,10 @@
-import Match from '@/shared/interfaces/match.interface';
 import {
   getTotalGoals,
   isDraw,
   isLoss,
   isWin,
-} from '@/shared/functions/result.functions';
+} from '@/shared/functions/match.functions';
+import Match from '@/shared/interfaces/match.interface';
 import {
   Container,
   Divider,

@@ -1,27 +1,14 @@
-import { getStrength } from '@/shared/functions/team.functions';
 import Team from '@/shared/interfaces/team.interface';
 import { teamSorts } from '@/shared/misc/sorting';
-import {
-  Stack,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
-import { meanBy } from 'lodash';
+import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useState } from 'react';
-import SelectSorting from '../misc/select-sorting';
 import TeamRow from './team-row';
 
 interface Props {
   teams: Team[];
   selectTeam?: (team: Team) => void;
   selectedTeams?: Team[];
-  showTeamNumber?: boolean;
-  allowSorting?: boolean;
+  showTeamsStrengthRank?: boolean;
   showStrengthStats?: boolean;
   deemphasizedTeams?: Team[];
 }
@@ -30,9 +17,7 @@ function TeamsTable({
   teams,
   selectTeam,
   selectedTeams,
-  showTeamNumber,
-  allowSorting,
-  showStrengthStats,
+  showTeamsStrengthRank,
   deemphasizedTeams,
 }: Props) {
   const [sorting, setSorting] = useState('strength');
@@ -41,73 +26,86 @@ function TeamsTable({
   const sortedTeams = [...teams].sort(teamSorts[sorting]);
   if (isDesc) sortedTeams.reverse();
 
-  function table() {
-    return (
-      <TableContainer>
-        <Table>
-          {showStrengthStats && (
-            <TableCaption placement="top">
-              Mean strength:{' '}
-              {(
-                meanBy(selectedTeams ? selectedTeams : teams, getStrength) || 0
-              ).toFixed(1)}
-            </TableCaption>
-          )}
-          <Thead>
-            <Tr>
-              {selectTeam && <Th px={1}></Th>}
-              {showTeamNumber && (
-                <Th isNumeric px={2}></Th>
-              )}
-              <Th px={4} pl={2}>
-                Team
-              </Th>
-              <Th px={2} isNumeric>
-                ATT
-              </Th>
-              <Th px={2} isNumeric>
-                DEF
-              </Th>
-              <Th title="Home advantage" px={2} isNumeric>
-                ADV
-              </Th>
-              <Th px={2} isNumeric>
-                STR
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {sortedTeams.map((team, i) => (
-              <TeamRow
-                key={team.id}
-                number={showTeamNumber ? i + 1 : undefined}
-                team={team}
-                selectTeam={selectTeam}
-                selectedTeams={selectedTeams}
-                isDeemphasized={deemphasizedTeams?.some(
-                  (t) => t.id === team.id
-                )}
-              />
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-    );
+  function updateSorting(type: string) {
+    if (sorting === type) {
+      if (!isDesc) {
+        setSorting('default');
+        return;
+      }
+      setIsDesc(false);
+    } else {
+      setSorting(type);
+      setIsDesc(true);
+    }
   }
 
-  return allowSorting ? (
-    <Stack>
-      <SelectSorting
-        sorts={teamSorts}
-        sorting={sorting}
-        setSorting={setSorting}
-        isDesc={isDesc}
-        setIsDesc={setIsDesc}
-      />
-      {table()}
-    </Stack>
-  ) : (
-    table()
+  function getSortingDecoration(type?: string) {
+    if (sorting !== type) {
+      return 'none';
+    }
+    return isDesc ? 'underline' : 'overline';
+  }
+
+  const headers = [
+    ...(selectTeam ? [{ title: '', px: 1 }] : []),
+    ...(showTeamsStrengthRank
+      ? [
+          {
+            title: 'R',
+            hoverTitle: 'Rank according to strength',
+            sorting: 'strength',
+            px: 2,
+            isNumeric: true,
+          },
+        ]
+      : []),
+    { title: 'TEAM', sorting: 'name', px: 4, isNumeric: false },
+    { title: 'ATT', sorting: 'attack', px: 2, isNumeric: true },
+    { title: 'DEF', sorting: 'defense', px: 2, isNumeric: true },
+    { title: 'ADV', sorting: 'homeAdvantage', px: 2, isNumeric: true },
+    { title: 'STR', sorting: 'strength', px: 2, isNumeric: true },
+  ];
+
+  const sortedByStrength = [...teams].sort(teamSorts['strength']).reverse();
+  return (
+    <TableContainer>
+      <Table>
+        <Thead>
+          <Tr>
+            {headers.map((h, i) => (
+              <Th
+                key={i}
+                cursor={h.sorting ? 'pointer' : 'auto'}
+                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
+                userSelect={h.sorting ? 'none' : 'auto'}
+                textDecor={getSortingDecoration(h.sorting)}
+                isNumeric={h.isNumeric}
+                px={h.px}
+                title={h?.hoverTitle}
+              >
+                {h.title}
+              </Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {sortedTeams.map((team) => (
+            <TeamRow
+              key={team.id}
+              number={
+                showTeamsStrengthRank
+                  ? sortedByStrength.findIndex((t) => t.id === team.id) + 1
+                  : undefined
+              }
+              team={team}
+              selectTeam={selectTeam}
+              selectedTeams={selectedTeams}
+              isDeemphasized={deemphasizedTeams?.some((t) => t.id === team.id)}
+            />
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 }
 

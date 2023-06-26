@@ -105,9 +105,8 @@ function Page() {
         <Flex gap={2} direction={[null, 'column', 'row']}>
           <Box flex={2}>
             <TeamsTable
+              showTeamsStrengthRank
               showStrengthStats
-              showTeamNumber
-              allowSorting
               teams={selectedTeams}
             />
           </Box>

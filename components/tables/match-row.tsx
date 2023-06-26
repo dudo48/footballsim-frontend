@@ -1,4 +1,4 @@
-import { isLoss, isWin } from '@/shared/functions/result.functions';
+import { isLoss, isWin } from '@/shared/functions/match.functions';
 import Match from '@/shared/interfaces/match.interface';
 import { Stack, Td, Text, Tr } from '@chakra-ui/react';
 import ResultTag from '../misc/result-tag';
@@ -28,12 +28,7 @@ function MatchRow({
   return (
     <Tr>
       {showMatchId && (
-        <Td
-          color={'footballsim.200'}
-          fontSize={'sm'}
-          isNumeric
-          px={2}
-        >
+        <Td color={'footballsim.200'} fontSize={'sm'} isNumeric px={2}>
           {match.id}
         </Td>
       )}
@@ -42,7 +37,7 @@ function MatchRow({
           <ResultTag result={match.result} />
         </Td>
       )}
-      <Td pl={2}>
+      <Td px={4}>
         <Stack spacing={1}>
           <TeamLi
             isHighlighted={markWinner && isWin(match.result)}

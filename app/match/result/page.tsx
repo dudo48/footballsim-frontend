@@ -49,7 +49,11 @@ function Page() {
         </Flex>
         <Flex flexWrap={'wrap-reverse'} gap={2} shadow={'xl'}>
           <Box flex={2}>
-            <MatchesTable showMatchId showResultTag matches={simulations} />
+            <MatchesTable
+              showMatchesOrder
+              showResultTag
+              matches={simulations}
+            />
           </Box>
           <Box flex={1}>
             <MatchesStatistics matches={simulations} />

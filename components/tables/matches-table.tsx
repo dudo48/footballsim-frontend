@@ -1,10 +1,12 @@
 import Match from '@/shared/interfaces/match.interface';
+import { matchSorts } from '@/shared/misc/sorting';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { useState } from 'react';
 import MatchRow from './match-row';
 
 interface Props {
   matches: Match[];
-  showMatchId?: boolean;
+  showMatchesOrder?: boolean;
   markWinner?: boolean;
   markLoser?: boolean;
   showResultTag?: boolean;
@@ -16,43 +18,77 @@ function MatchesTable({
   markWinner,
   markLoser,
   showResultTag,
-  showMatchId,
+  showMatchesOrder,
   showTeamsStrength,
 }: Props) {
+  const [sorting, setSorting] = useState('id');
+  const [isDesc, setIsDesc] = useState(false);
+
+  const sortedMatches = [...matches].sort(matchSorts[sorting]);
+  if (isDesc) sortedMatches.reverse();
+
+  function updateSorting(type: string) {
+    if (sorting === type) {
+      if (!isDesc) {
+        setSorting('default');
+        return;
+      }
+      setIsDesc(false);
+    } else {
+      setSorting(type);
+      setIsDesc(true);
+    }
+  }
+
+  function getSortingDecoration(type?: string) {
+    if (sorting !== type) {
+      return 'none';
+    }
+    return isDesc ? 'underline' : 'overline';
+  }
+
   const showExtraTime = matches.some((m) => m.result?.extraTime);
   const showPenaltyShootout = matches.some((m) => m.result?.penaltyShootout);
+
+  const headers = [
+    ...(showMatchesOrder
+      ? [{ title: '', sorting: 'id', px: 2, isNumeric: true }]
+      : []),
+    ...(showResultTag ? [{ title: '', sorting: 'result', px: 2 }] : []),
+    { title: 'TEAMS', sorting: 'strength', px: 4, isNumeric: false },
+    { title: 'ST', sorting: 'goals', px: 2, isNumeric: true },
+    ...(showExtraTime
+      ? [{ title: 'ET', px: 2, sorting: 'goals', isNumeric: true }]
+      : []),
+    ...(showPenaltyShootout ? [{ title: 'PS', px: 2, isNumeric: true }] : []),
+  ];
 
   return (
     <TableContainer>
       <Table>
         <Thead>
           <Tr>
-            {showMatchId && (
-              <Th isNumeric px={2}></Th>
-            )}
-            {showResultTag && <Th px={2}></Th>}
-            <Th pl={2}>TEAMS</Th>
-            <Th isNumeric title="Standard-time result" px={2}>
-              ST
-            </Th>
-            {showExtraTime && (
-              <Th isNumeric title="Extra-time result" px={2}>
-                ET
+            {headers.map((h, i) => (
+              <Th
+                key={i}
+                cursor={h.sorting ? 'pointer' : 'auto'}
+                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
+                userSelect={h.sorting ? 'none' : 'auto'}
+                textDecor={getSortingDecoration(h.sorting)}
+                isNumeric={h.isNumeric}
+                px={h.px}
+              >
+                {h.title}
               </Th>
-            )}
-            {showPenaltyShootout && (
-              <Th isNumeric title="Penalty-shootout result" px={2}>
-                PS
-              </Th>
-            )}
+            ))}
           </Tr>
         </Thead>
         <Tbody>
-          {matches.map((match) => (
+          {sortedMatches.map((match) => (
             <MatchRow
               key={match.id}
               match={match}
-              showMatchId={showMatchId}
+              showMatchId={showMatchesOrder}
               markWinner={markWinner}
               markLoser={markLoser}
               showResultTag={showResultTag}

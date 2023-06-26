@@ -1,6 +1,8 @@
 import Standings from '@/shared/interfaces/standings.interface';
 import Team from '@/shared/interfaces/team.interface';
+import { rankingSorts } from '@/shared/misc/sorting';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { useState } from 'react';
 import RankingRow, { PartialRanking } from './rankings-row';
 
 interface Props {
@@ -9,36 +11,85 @@ interface Props {
 }
 
 function RankingsTable({ standings, deemphasizedTeams }: Props) {
-  const firstRow = standings.table.length ? standings.table[0] : undefined;
-  const row = [];
-  if (firstRow) {
-    if (firstRow.matchesPlayed !== undefined) row.push('P');
-    if (firstRow.wins !== undefined) row.push('W');
-    if (firstRow.draws !== undefined) row.push('D');
-    if (firstRow.losses !== undefined) row.push('L');
-    if (firstRow.goalsFor !== undefined) row.push('F');
-    if (firstRow.goalsAgainst !== undefined) row.push('A');
-    if (firstRow.goalsFor !== undefined && firstRow.goalsAgainst !== undefined)
-      row.push('D');
-    if (firstRow.points !== undefined) row.push('PT');
+  const [sorting, setSorting] = useState('position');
+  const [isDesc, setIsDesc] = useState(false);
+
+  const sortedRankings = [...standings.table].sort(rankingSorts[sorting]);
+  if (isDesc) sortedRankings.reverse();
+
+  function updateSorting(type: string) {
+    if (sorting === type) {
+      if (!isDesc) {
+        setSorting('default');
+        return;
+      }
+      setIsDesc(false);
+    } else {
+      setSorting(type);
+      setIsDesc(true);
+    }
   }
+
+  function getSortingDecoration(type?: string) {
+    if (sorting !== type) {
+      return 'none';
+    }
+    return isDesc ? 'underline' : 'overline';
+  }
+
+  const firstRow = standings.table.length ? standings.table[0] : undefined;
+  const headers = [
+    { title: '', sorting: 'position', px: 2 },
+    { title: 'TEAM', sorting: 'teamName', px: 4 },
+    ...(isFinite(Number(firstRow?.matchesPlayed))
+      ? [{ title: 'P', px: 2, sorting: 'matchesPlayed', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.wins))
+      ? [{ title: 'W', px: 2, sorting: 'wins', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.draws))
+      ? [{ title: 'D', px: 2, sorting: 'draws', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.losses))
+      ? [{ title: 'L', px: 2, sorting: 'losses', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.goalsFor))
+      ? [{ title: 'F', px: 2, sorting: 'goalsFor', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.goalsAgainst))
+      ? [{ title: 'A', px: 2, sorting: 'goalsAgainst', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.goalsFor)) &&
+    isFinite(Number(firstRow?.goalsAgainst))
+      ? [{ title: 'D', px: 2, sorting: 'goalsDiff', isNumeric: true }]
+      : []),
+    ...(isFinite(Number(firstRow?.points))
+      ? [{ title: 'PT', px: 2, sorting: 'points', isNumeric: true }]
+      : []),
+  ];
 
   return (
     <TableContainer>
       <Table>
         <Thead>
           <Tr>
-            <Th title="Position" isNumeric px={2}></Th>
-            <Th px={4} pl={2}>Team</Th>
-            {row.map((data) => (
-              <Th key={data} px={2} isNumeric>
-                {data}
+            {headers.map((h, i) => (
+              <Th
+                key={i}
+                cursor={h.sorting ? 'pointer' : 'auto'}
+                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
+                userSelect={h.sorting ? 'none' : 'auto'}
+                textDecor={getSortingDecoration(h.sorting)}
+                isNumeric={h.isNumeric}
+                px={h.px}
+              >
+                {h.title}
               </Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {standings.table.map((ranking) => (
+          {sortedRankings.map((ranking) => (
             <RankingRow
               key={ranking.position}
               ranking={ranking}

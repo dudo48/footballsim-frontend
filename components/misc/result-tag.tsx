@@ -1,5 +1,5 @@
-import MatchResult from '@/shared/interfaces/matchResult.interface';
-import { isDraw, isWin } from '@/shared/functions/result.functions';
+import { isDraw, isWin } from '@/shared/functions/match.functions';
+import { MatchResult } from '@/shared/interfaces/match.interface';
 import { Tag } from '@chakra-ui/react';
 
 interface Props {

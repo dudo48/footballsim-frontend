@@ -29,7 +29,7 @@ function Page() {
   const [isReSimulating, setisReSimulating] = useState(false);
   const path = usePathname();
   const router = useRouter();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [roundTab, setTabIndex] = useState(0);
   const { simulateCup } = useSimulations();
   const toast = useToast();
   const cup = simulations.length ? simulations[0] : undefined;
@@ -55,12 +55,12 @@ function Page() {
   }
 
   const standings = cup
-    ? cup.result.allStandings[tabIndex + 1]
+    ? cup.result.allStandings[roundTab + 1]
     : { roundId: 0, table: [] };
 
   const remainingTeams = flatten(
     cup
-      ? cup.result.rounds[tabIndex].matches.map((m) => [m.homeTeam, m.awayTeam])
+      ? cup.result.rounds[roundTab].matches.map((m) => [m.homeTeam, m.awayTeam])
       : []
   );
 
@@ -84,7 +84,7 @@ function Page() {
         </Button>
         <Flex gap={2} flexWrap={'wrap-reverse'}>
           <Stack flex={1}>
-            <Tabs w={'full'} shadow={'xl'}>
+            <Tabs isFitted w={'full'} shadow={'xl'}>
               <TabList>
                 <Tab>Teams</Tab>
                 <Tab>Standings</Tab>
@@ -93,8 +93,8 @@ function Page() {
                 <TabPanel>
                   <TeamsTable
                     teams={cup ? cup.teams : []}
-                    showTeamNumber
                     deemphasizedTeams={eliminatedTeams}
+                    showTeamsStrengthRank
                   />
                 </TabPanel>
                 <TabPanel>
@@ -108,9 +108,10 @@ function Page() {
           </Stack>
           <Stack flex={1}>
             <Tabs
-              index={tabIndex}
+              index={roundTab}
               onChange={(i) => setTabIndex(i)}
               shadow={'xl'}
+              isFitted
             >
               <TabList>
                 {simulations.length &&
@@ -118,19 +119,12 @@ function Page() {
                     <Tab key={round.id}>{getCupRoundName(round)}</Tab>
                   ))}
               </TabList>
-              <TabPanels>
-                {simulations.length &&
-                  cup?.result?.rounds.map((round) => (
-                    <TabPanel key={round.id}>
-                      <MatchesTable
-                        matches={round.matches}
-                        showMatchId
-                        showTeamsStrength
-                        markLoser
-                      />
-                    </TabPanel>
-                  ))}
-              </TabPanels>
+              <MatchesTable
+                matches={cup?.result.rounds[roundTab].matches || []}
+                showMatchesOrder
+                markLoser
+                showTeamsStrength
+              />
             </Tabs>
           </Stack>
         </Flex>
