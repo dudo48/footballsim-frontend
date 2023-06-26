@@ -57,11 +57,11 @@ function TeamsTable({
             <Tr>
               {selectTeam && <Th px={1}></Th>}
               {showTeamNumber && (
-                <Th isNumeric px={2}>
-                  NO
-                </Th>
+                <Th isNumeric px={2}></Th>
               )}
-              <Th px={4}>Team</Th>
+              <Th px={4} pl={2}>
+                Team
+              </Th>
               <Th px={2} isNumeric>
                 ATT
               </Th>

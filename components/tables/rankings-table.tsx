@@ -12,15 +12,15 @@ function RankingsTable({ standings, deemphasizedTeams }: Props) {
   const firstRow = standings.table.length ? standings.table[0] : undefined;
   const row = [];
   if (firstRow) {
-    if (firstRow.matchesPlayed !== undefined) row.push('MP');
+    if (firstRow.matchesPlayed !== undefined) row.push('P');
     if (firstRow.wins !== undefined) row.push('W');
     if (firstRow.draws !== undefined) row.push('D');
     if (firstRow.losses !== undefined) row.push('L');
-    if (firstRow.goalsFor !== undefined) row.push('GF');
-    if (firstRow.goalsAgainst !== undefined) row.push('GA');
+    if (firstRow.goalsFor !== undefined) row.push('F');
+    if (firstRow.goalsAgainst !== undefined) row.push('A');
     if (firstRow.goalsFor !== undefined && firstRow.goalsAgainst !== undefined)
-      row.push('GD');
-    if (firstRow.points !== undefined) row.push('PTS');
+      row.push('D');
+    if (firstRow.points !== undefined) row.push('PT');
   }
 
   return (
@@ -28,10 +28,8 @@ function RankingsTable({ standings, deemphasizedTeams }: Props) {
       <Table>
         <Thead>
           <Tr>
-            <Th isNumeric px={2}>
-              POS
-            </Th>
-            <Th px={4}>Team</Th>
+            <Th title="Position" isNumeric px={2}></Th>
+            <Th px={4} pl={2}>Team</Th>
             {row.map((data) => (
               <Th key={data} px={2} isNumeric>
                 {data}

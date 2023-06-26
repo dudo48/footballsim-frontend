@@ -30,7 +30,6 @@ function MatchRow({
       {showMatchId && (
         <Td
           color={'footballsim.200'}
-          fontStyle={'italic'}
           fontSize={'sm'}
           isNumeric
           px={2}
@@ -43,7 +42,7 @@ function MatchRow({
           <ResultTag result={match.result} />
         </Td>
       )}
-      <Td>
+      <Td pl={2}>
         <Stack spacing={1}>
           <TeamLi
             isHighlighted={markWinner && isWin(match.result)}

@@ -1,6 +1,7 @@
 'use client';
 import MatchesTable from '@/components/tables/matches-table';
 import RankingsTable from '@/components/tables/rankings-table';
+import TeamsTable from '@/components/tables/teams-table';
 import { CupSimulations } from '@/context/cup-simulations';
 import { useSimulations } from '@/services/simulations-service';
 import Cup from '@/shared/interfaces/cup.interface';
@@ -8,7 +9,6 @@ import { getCupRoundName } from '@/utils/functions';
 import {
   Button,
   Flex,
-  Heading,
   Skeleton,
   Stack,
   Tab,
@@ -58,14 +58,15 @@ function Page() {
     ? cup.result.allStandings[tabIndex + 1]
     : { roundId: 0, table: [] };
 
-  const remainingTeams = cup
-    ? flatten(
-        cup.result?.rounds[tabIndex].matches.map((m) => [
-          m.homeTeam,
-          m.awayTeam,
-        ])
-      )
-    : [];
+  const remainingTeams = flatten(
+    cup
+      ? cup.result.rounds[tabIndex].matches.map((m) => [m.homeTeam, m.awayTeam])
+      : []
+  );
+
+  const eliminatedTeams = differenceBy(
+    cup ? differenceBy(cup.teams, remainingTeams, (t) => t.id) : []
+  );
 
   return (
     <Skeleton isLoaded={cup && isLoaded} w={'full'}>
@@ -81,15 +82,29 @@ function Page() {
         >
           Re-simulate
         </Button>
-        <Flex gap={2}>
-          <Stack flex={1} shadow={'xl'}>
-            <Heading size={'md'}>Standings</Heading>
-            <RankingsTable
-              standings={standings}
-              deemphasizedTeams={differenceBy(
-                cup ? differenceBy(cup.teams, remainingTeams, (t) => t.id) : []
-              )}
-            />
+        <Flex gap={2} flexWrap={'wrap-reverse'}>
+          <Stack flex={1}>
+            <Tabs w={'full'} shadow={'xl'}>
+              <TabList>
+                <Tab>Teams</Tab>
+                <Tab>Standings</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <TeamsTable
+                    teams={cup ? cup.teams : []}
+                    showTeamNumber
+                    deemphasizedTeams={eliminatedTeams}
+                  />
+                </TabPanel>
+                <TabPanel>
+                  <RankingsTable
+                    standings={standings}
+                    deemphasizedTeams={eliminatedTeams}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Stack>
           <Stack flex={1}>
             <Tabs

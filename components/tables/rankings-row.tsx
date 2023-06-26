@@ -29,14 +29,13 @@ function RankingRow({ ranking, isDeemphasized }: Props) {
     <Tr>
       <Td
         color={'footballsim.200'}
-        fontStyle={'italic'}
         fontSize={'sm'}
         isNumeric
         px={2}
       >
         {ranking.position}
       </Td>
-      <Td px={4}>
+      <Td pl={2}>
         <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
           <TeamLi team={ranking.team} />
         </Box>

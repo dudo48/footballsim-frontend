@@ -28,23 +28,21 @@ function MatchesTable({
         <Thead>
           <Tr>
             {showMatchId && (
-              <Th isNumeric px={2}>
-                NO
-              </Th>
+              <Th isNumeric px={2}></Th>
             )}
             {showResultTag && <Th px={2}></Th>}
-            <Th>TEAMS</Th>
+            <Th pl={2}>TEAMS</Th>
             <Th isNumeric title="Standard-time result" px={2}>
-              S.T.
+              ST
             </Th>
             {showExtraTime && (
               <Th isNumeric title="Extra-time result" px={2}>
-                E.T.
+                ET
               </Th>
             )}
             {showPenaltyShootout && (
               <Th isNumeric title="Penalty-shootout result" px={2}>
-                P.S.
+                PS
               </Th>
             )}
           </Tr>

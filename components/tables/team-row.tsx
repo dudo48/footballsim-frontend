@@ -32,7 +32,6 @@ function TeamRow({
       {number && (
         <Td
           color={'footballsim.200'}
-          fontStyle={'italic'}
           fontSize={'sm'}
           isNumeric
           px={2}
@@ -40,7 +39,7 @@ function TeamRow({
           {number}
         </Td>
       )}
-      <Td px={4}>
+      <Td px={4} pl={2}>
         <Box opacity={isDeemphasized ? deemphasizedOpacity : 1}>
           <TeamLi team={team} />
         </Box>
