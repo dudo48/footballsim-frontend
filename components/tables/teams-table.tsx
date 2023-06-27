@@ -1,6 +1,14 @@
 import Team from '@/shared/interfaces/team.interface';
 import { teamSorts } from '@/shared/misc/sorting';
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import TeamRow from './team-row';
 
@@ -70,6 +78,9 @@ function TeamsTable({
   return (
     <TableContainer>
       <Table>
+        <TableCaption placement={'top'}>
+          Displaying {teams.length} teams.
+        </TableCaption>
         <Thead>
           <Tr>
             {headers.map((h, i) => (
