@@ -3,11 +3,8 @@ import MatchesTable from '@/components/tables/matches-table';
 import RankingsTable from '@/components/tables/rankings-table';
 import TeamsTable from '@/components/tables/teams-table';
 import { CupSimulations } from '@/context/cup-simulations';
-import { useSimulations } from '@/services/simulations-service';
-import Cup from '@/shared/interfaces/cup.interface';
 import { getCupRoundName } from '@/utils/functions';
 import {
-  Button,
   Flex,
   Skeleton,
   Stack,
@@ -16,23 +13,21 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  useToast,
+  useBoolean,
 } from '@chakra-ui/react';
 import { differenceBy, flatten } from 'lodash';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import { BsArrowClockwise } from 'react-icons/bs';
 import Options from './options';
+import SetOptions from './set-options';
 
 function Page() {
-  const { simulations, setSimulations, isLoaded } = useContext(CupSimulations);
-  const [isReSimulating, setisReSimulating] = useState(false);
+  const { simulations, isLoaded } = useContext(CupSimulations);
   const path = usePathname();
   const router = useRouter();
   const [roundTab, setTabIndex] = useState(0);
-  const { simulateCup } = useSimulations();
-  const toast = useToast();
   const cup = simulations.length ? simulations[0] : undefined;
+  const [showResultOnHover, setShowResultOnHover] = useBoolean(true);
 
   useEffect(() => {
     if (!simulations.length && isLoaded) {
@@ -42,17 +37,6 @@ function Page() {
       router.replace(newPath);
     }
   }, [simulations, path, router, isLoaded]);
-
-  async function reSimulate() {
-    setisReSimulating(true);
-    const result = await simulateCup(cup as Cup);
-    if (!result.error) {
-      setSimulations(result);
-    } else {
-      toast({ status: 'error', description: 'Failed to re-simulate.' });
-    }
-    setisReSimulating(false);
-  }
 
   const standings = cup
     ? cup.result.allStandings[roundTab + 1]
@@ -71,17 +55,16 @@ function Page() {
   return (
     <Skeleton isLoaded={cup && isLoaded} w={'full'}>
       <Stack spacing={4}>
-        {cup && <Options simulation={cup} />}
-        <Button
-          variant={'outline'}
-          colorScheme={'cyan'}
-          leftIcon={<BsArrowClockwise />}
-          title="With same options"
-          onClick={reSimulate}
-          isLoading={isReSimulating}
-        >
-          Re-simulate
-        </Button>
+        {cup && (
+          <Flex gap={2}>
+            <SetOptions simulation={cup} />
+            <Options
+              showResultOnHover={showResultOnHover}
+              setShowResultOnHover={setShowResultOnHover}
+              simulation={cup}
+            />
+          </Flex>
+        )}
         <Flex gap={2} flexWrap={'wrap-reverse'}>
           <Stack flex={1}>
             <Tabs isFitted w={'full'} shadow={'xl'}>
@@ -124,6 +107,7 @@ function Page() {
                 showMatchesOrder
                 markLoser
                 showTeamsStrength
+                showResultOnHover={showResultOnHover}
               />
             </Tabs>
           </Stack>

@@ -11,6 +11,7 @@ interface Props {
   markLoser?: boolean;
   showResultTag?: boolean;
   showTeamsStrength?: boolean;
+  showResultOnHover?: boolean;
 }
 
 function MatchesTable({
@@ -20,6 +21,7 @@ function MatchesTable({
   showResultTag,
   showMatchesOrder,
   showTeamsStrength,
+  showResultOnHover,
 }: Props) {
   const [sorting, setSorting] = useState('id');
   const [isDesc, setIsDesc] = useState(false);
@@ -95,6 +97,7 @@ function MatchesTable({
               showExtraTime={showExtraTime}
               showPenaltyShootout={showPenaltyShootout}
               showTeamsStrength={showTeamsStrength}
+              showResultOnHover={showResultOnHover}
             />
           ))}
         </Tbody>

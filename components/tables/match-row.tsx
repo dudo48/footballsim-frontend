@@ -1,6 +1,7 @@
 import { isLoss, isWin } from '@/shared/functions/match.functions';
 import Match from '@/shared/interfaces/match.interface';
-import { Stack, Td, Text, Tr } from '@chakra-ui/react';
+import { Stack, Td, Text, Tr, useBoolean } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import ResultTag from '../misc/result-tag';
 import TeamLi from '../misc/team-li';
 
@@ -13,6 +14,7 @@ interface Props {
   showExtraTime?: boolean;
   showPenaltyShootout?: boolean;
   showTeamsStrength?: boolean;
+  showResultOnHover?: boolean;
 }
 
 function MatchRow({
@@ -24,9 +26,17 @@ function MatchRow({
   showExtraTime,
   showPenaltyShootout,
   showTeamsStrength,
+  showResultOnHover,
 }: Props) {
+  const [showResult, setShowResult] = useBoolean(false);
+
+  useEffect(() => {
+    showResultOnHover ? setShowResult.off() : setShowResult.on();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showResultOnHover, match]);
+
   return (
-    <Tr>
+    <Tr onMouseEnter={setShowResult.on}>
       {showMatchId && (
         <Td color={'footballsim.200'} fontSize={'sm'} isNumeric px={2}>
           {match.id}
@@ -41,13 +51,13 @@ function MatchRow({
         <Stack spacing={1}>
           <TeamLi
             isHighlighted={markWinner && isWin(match.result)}
-            isDeemphasized={markLoser && isLoss(match.result)}
+            isDeemphasized={showResult && markLoser && isLoss(match.result)}
             team={match.homeTeam}
             showStrength={showTeamsStrength}
           />
           <TeamLi
             isHighlighted={markWinner && isLoss(match.result)}
-            isDeemphasized={markLoser && isWin(match.result)}
+            isDeemphasized={showResult && markLoser && isWin(match.result)}
             team={match.awayTeam}
             showStrength={showTeamsStrength}
           />
@@ -55,23 +65,27 @@ function MatchRow({
       </Td>
       <Td isNumeric px={2}>
         <Stack spacing={2}>
-          <Text>{match.result ? match.result?.standardTime.home : '-'}</Text>
-          <Text>{match.result ? match.result?.standardTime.away : '-'}</Text>
+          <Text>
+            {showResult && match.result ? match.result?.standardTime.home : '-'}
+          </Text>
+          <Text>
+            {showResult && match.result ? match.result?.standardTime.away : '-'}
+          </Text>
         </Stack>
       </Td>
       {showExtraTime && (
         <Td isNumeric px={2}>
           <Stack spacing={2}>
-            <Text>{match.result?.extraTime?.home}</Text>
-            <Text>{match.result?.extraTime?.away}</Text>
+            <Text>{showResult && match.result?.extraTime?.home}</Text>
+            <Text>{showResult && match.result?.extraTime?.away}</Text>
           </Stack>
         </Td>
       )}
       {showPenaltyShootout && (
         <Td isNumeric px={2}>
           <Stack spacing={2}>
-            <Text>{match.result?.penaltyShootout?.home}</Text>
-            <Text>{match.result?.penaltyShootout?.away}</Text>
+            <Text>{showResult && match.result?.penaltyShootout?.home}</Text>
+            <Text>{showResult && match.result?.penaltyShootout?.away}</Text>
           </Stack>
         </Td>
       )}
