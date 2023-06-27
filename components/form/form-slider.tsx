@@ -30,7 +30,7 @@ function FormSlider({
   label,
   helper,
   error,
-  fieldHandler: { ref, ...restFieldHandler },
+  fieldHandler: { ref, name, ...restFieldHandler },
   ...props
 }: Props) {
   return (
@@ -45,10 +45,7 @@ function FormSlider({
           <SliderThumb />
         </Slider>
         <NumberInput w={'32'} {...restFieldHandler} {...props}>
-          <NumberInputField
-            ref={ref as RefCallBack}
-            name={restFieldHandler.name as string}
-          />
+          <NumberInputField ref={ref as RefCallBack} name={name as string} />
           <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />

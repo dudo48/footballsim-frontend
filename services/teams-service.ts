@@ -31,7 +31,7 @@ export function useTeam(id: number | null) {
 
 export function useTeamActions() {
   return {
-    createTeam: (payload: Team) => postRequest(baseUrl, payload),
+    createTeam: (payload: Omit<Team, 'id'>) => postRequest(baseUrl, payload),
     createTeams: (payload: Team[]) =>
       postRequest(`${baseUrl}/multiple`, payload),
     updateTeam: (id: number, payload: Partial<Team>) =>

@@ -2,8 +2,10 @@ import FormInput from '@/components/form/form-input';
 import FormSlider from '@/components/form/form-slider';
 import { useTeamActions, useTeams } from '@/services/teams-service';
 import {
+  Box,
   Button,
   Center,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -61,7 +63,8 @@ function CreateTeamForm({ onClose }: FormProps) {
     register,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    formState: { errors, isSubmitting, dirtyFields },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -91,26 +94,36 @@ function CreateTeamForm({ onClose }: FormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack>
-        <FormInput
-          label="Team name"
-          placeholder="Zamalek, Al Ahly, etc..."
-          fieldHandler={register('name')}
-          error={errors?.name}
-        />
-        <FormInput
-          label="Team color"
-          fieldHandler={register('color')}
-          type="color"
-          error={errors?.color}
-        />
+        <Flex gap={2}>
+          <Box flex={4}>
+            <FormInput
+              label="Name"
+              placeholder="Zamalek, Al Ahly, etc..."
+              fieldHandler={register('name')}
+              error={errors?.name}
+            />
+          </Box>
+          <Box flex={1}>
+            <FormInput
+              label="Color"
+              fieldHandler={register('color')}
+              type="color"
+              error={errors?.color}
+            />
+          </Box>
+        </Flex>
         <Controller
           control={control}
           name={'attack'}
           render={({ field }) => (
             <FormSlider
-              label="Attack strength"
+              label="Attack"
               fieldHandler={field}
               error={errors.attack}
+              onChange={(value) => {
+                field.onChange(value);
+                if (!dirtyFields.defense) setValue('defense', +value);
+              }}
             />
           )}
         />
@@ -119,9 +132,13 @@ function CreateTeamForm({ onClose }: FormProps) {
           name={'defense'}
           render={({ field }) => (
             <FormSlider
-              label="Defense strength"
+              label="Defense"
               fieldHandler={field}
               error={errors.defense}
+              onChange={(value) => {
+                field.onChange(value);
+                if (!dirtyFields.attack) setValue('attack', +value);
+              }}
             />
           )}
         />
