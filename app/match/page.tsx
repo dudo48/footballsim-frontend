@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { BsPlusLg } from 'react-icons/bs';
 import * as yup from 'yup';
@@ -27,8 +27,7 @@ import TeamsSelector from '../../components/selectors/teams-selector';
 
 const schema = yup
   .object({
-    homeTeam: yup.object().required(),
-    awayTeam: yup.object().required(),
+    teams: yup.array().required(),
     n: yup
       .number()
       .positive('Please select an integer greater than 0.')
@@ -51,6 +50,9 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 function Page() {
+  const { simulations } = useContext(MatchSimulations);
+  const match = simulations.length ? simulations[0] : undefined;
+
   const {
     register,
     handleSubmit,
@@ -59,11 +61,12 @@ function Page() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      n: 10,
-      onNeutralGround: true,
-      isKnockout: false,
-      allowExtraTime: true,
+    values: {
+      teams: match ? [match.homeTeam, match.awayTeam] : [],
+      n: simulations.length || 10,
+      onNeutralGround: match ? match.onNeutralGround : true,
+      isKnockout: match ? match.isKnockout : false,
+      allowExtraTime: match ? match.allowExtraTime : true,
     },
   });
 
@@ -71,31 +74,16 @@ function Page() {
   const path = usePathname();
   const router = useRouter();
   const { teams, isLoading } = useTeams();
-  const [homeTeam, setHomeTeam] = useState<Team>();
-  const [awayTeam, setAwayTeam] = useState<Team>();
   const { simulateMatch } = useSimulations();
   const { setSimulations } = useContext(MatchSimulations);
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  useEffect(() => {
-    register('homeTeam');
-    register('awayTeam');
-  }, [register]);
-
-  useEffect(() => {
-    setValue('homeTeam', homeTeam as Team);
-  }, [homeTeam, setValue]);
-
-  useEffect(() => {
-    setValue('awayTeam', awayTeam as Team);
-  }, [awayTeam, setValue]);
-
   async function onSubmit(data: FormData) {
-    const { n, homeTeam, awayTeam, ...options } = data;
+    const { n, teams, ...options } = data;
 
     const match = {
-      homeTeam: homeTeam as Team,
-      awayTeam: awayTeam as Team,
+      homeTeam: teams[0] as Team,
+      awayTeam: teams[1] as Team,
       ...options,
     };
 
@@ -122,7 +110,9 @@ function Page() {
             <Heading textAlign={'center'} size={'md'}>
               Home Team
             </Heading>
-            <TeamCard team={homeTeam} />
+            <TeamCard
+              team={watch('teams').length ? watch('teams')[0] : undefined}
+            />
           </Stack>
           <Button
             variant={'outline'}
@@ -136,7 +126,9 @@ function Page() {
             <Heading textAlign={'center'} size={'md'}>
               Away Team
             </Heading>
-            <TeamCard team={awayTeam} />
+            <TeamCard
+              team={watch('teams').length > 1 ? watch('teams')[1] : undefined}
+            />
           </Stack>
         </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -180,7 +172,7 @@ function Page() {
               </Stack>
               <Center>
                 <Button
-                  isDisabled={!homeTeam || !awayTeam}
+                  isDisabled={watch('teams').length !== 2}
                   isLoading={isSubmitting || isSubmitSuccessful}
                   type="submit"
                 >
@@ -193,10 +185,7 @@ function Page() {
       </Stack>
       <TeamsSelector
         count={2}
-        setSelectedTeams={(teams) => {
-          setHomeTeam(teams[0]);
-          setAwayTeam(teams[1]);
-        }}
+        setSelectedTeams={(teams) => setValue('teams', teams)}
         teams={teams}
         isOpen={isOpen}
         onClose={onClose}

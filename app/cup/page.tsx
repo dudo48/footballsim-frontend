@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BsPlusLg } from 'react-icons/bs';
 import * as yup from 'yup';
@@ -47,6 +47,9 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 function Page() {
+  const { simulations, setSimulations } = useContext(CupSimulations);
+  const cup = simulations.length ? simulations[0] : undefined;
+
   const {
     register,
     handleSubmit,
@@ -55,11 +58,11 @@ function Page() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      teams: [],
-      numberOfTeams: 16,
-      seeds: 4,
-      allowExtraTime: true,
+    values: {
+      teams: cup?.teams || [],
+      numberOfTeams: cup?.teams.length || 16,
+      seeds: cup?.seeds || 4,
+      allowExtraTime: cup ? cup.allowExtraTime : true,
     },
   });
 
@@ -67,22 +70,12 @@ function Page() {
   const path = usePathname();
   const router = useRouter();
   const { teams, isLoading } = useTeams();
-  const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
   const { simulateCup } = useSimulations();
-  const { setSimulations } = useContext(CupSimulations);
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
-    register('teams');
-  }, [register]);
-
-  useEffect(() => {
-    setValue('teams', selectedTeams);
-  }, [selectedTeams, setValue]);
-
-  useEffect(() => {
-    if (watch('numberOfTeams') !== selectedTeams.length) {
-      setSelectedTeams([]);
+    if (watch('numberOfTeams') !== watch('teams').length) {
+      setValue('teams', []);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch('numberOfTeams')]);
@@ -99,7 +92,7 @@ function Page() {
     }
   }
 
-  const teamsCountOptions = [1, 2, 4, 8, 16, 32, 64, 128];
+  const teamsCountOptions = [2, 4, 8, 16, 32, 64, 128];
   return (
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
@@ -109,7 +102,7 @@ function Page() {
             <TeamsTable
               showTeamsStrengthRank
               showStrengthStats
-              teams={selectedTeams}
+              teams={watch('teams')}
             />
           </Box>
           <Box flex={1}>
@@ -158,7 +151,7 @@ function Page() {
                     <Button
                       isLoading={isSubmitting || isSubmitSuccessful}
                       type="submit"
-                      isDisabled={selectedTeams.length < 2}
+                      isDisabled={watch('teams').length < 2}
                     >
                       Simulate
                     </Button>
@@ -172,7 +165,7 @@ function Page() {
       <TeamsSelector
         count={watch('numberOfTeams')}
         teams={teams}
-        setSelectedTeams={setSelectedTeams}
+        setSelectedTeams={(teams: Team[]) => setValue('teams', teams)}
         isOpen={isOpen}
         onClose={onClose}
       />
