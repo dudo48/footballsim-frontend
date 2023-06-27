@@ -47,7 +47,7 @@ function TeamsTable({
   }
 
   const headers = [
-    ...(selectTeam ? [{ title: '', px: 1 }] : []),
+    ...(selectTeam ? [{ title: '', px: 2 }] : []),
     ...(showTeamsStrengthRank
       ? [
           {

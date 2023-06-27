@@ -22,7 +22,7 @@ function TeamRow({
   return (
     <Tr>
       {selectTeam && selectedTeams && (
-        <Td px={1}>
+        <Td px={2}>
           <Checkbox
             isChecked={selectedTeams.some((t) => t.id === team.id)}
             onChange={() => selectTeam(team)}

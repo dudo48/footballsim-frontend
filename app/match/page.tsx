@@ -14,13 +14,14 @@ import {
   Heading,
   Skeleton,
   Stack,
-  Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { BsPlusLg } from 'react-icons/bs';
 import * as yup from 'yup';
 import TeamsSelector from '../../components/selectors/teams-selector';
 
@@ -74,6 +75,7 @@ function Page() {
   const [awayTeam, setAwayTeam] = useState<Team>();
   const { simulateMatch } = useSimulations();
   const { setSimulations } = useContext(MatchSimulations);
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
     register('homeTeam');
@@ -116,28 +118,26 @@ function Page() {
           flexWrap={'wrap'}
           gap={4}
         >
-          <TeamsSelector
-            setSelectedTeams={(t) => setHomeTeam(t[0])}
-            teams={teams}
-          >
+          <Stack>
             <Heading textAlign={'center'} size={'md'}>
               Home Team
             </Heading>
             <TeamCard team={homeTeam} />
-          </TeamsSelector>
-          <Box textAlign={'center'}>
-            <Heading size={'lg'}>VS</Heading>
-            <Text>Click on a team card to choose a team</Text>
-          </Box>
-          <TeamsSelector
-            setSelectedTeams={(t) => setAwayTeam(t[0])}
-            teams={teams}
+          </Stack>
+          <Button
+            variant={'outline'}
+            colorScheme={'cyan'}
+            leftIcon={<BsPlusLg />}
+            onClick={onOpen}
           >
+            Select Teams
+          </Button>
+          <Stack>
             <Heading textAlign={'center'} size={'md'}>
               Away Team
             </Heading>
             <TeamCard team={awayTeam} />
-          </TeamsSelector>
+          </Stack>
         </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
@@ -191,6 +191,16 @@ function Page() {
           </Stack>
         </form>
       </Stack>
+      <TeamsSelector
+        count={2}
+        setSelectedTeams={(teams) => {
+          setHomeTeam(teams[0]);
+          setAwayTeam(teams[1]);
+        }}
+        teams={teams}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Skeleton>
   );
 }

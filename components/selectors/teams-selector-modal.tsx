@@ -1,6 +1,7 @@
 import Team from '@/shared/interfaces/team.interface';
 import {
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 import { differenceBy, sampleSize } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -47,19 +49,27 @@ function TeamsSelectorModal({
   }
 
   return (
-    <Modal size={'3xl'} {...props} onCloseComplete={() => setSelectedTeams([])}>
+    <Modal
+      size={'3xl'}
+      {...props}
+      onCloseComplete={() => setSelectedTeams([])}
+      scrollBehavior={'inside'}
+    >
       <ModalOverlay />
       <ModalContent bg={'footballsim.700'}>
         <ModalHeader>
-          {`Select ${count} team${count > 1 ? 's' : ''} (${
-            selectedTeams.length
-          } selected).`}
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Stack>
+          <Flex
+            align={'center'}
+            justify={'space-between'}
+            pr={8}
+            flexWrap={'wrap'}
+          >
+            <Text>
+              {`Select ${count} team${count > 1 ? 's' : ''} (${
+                selectedTeams.length
+              } selected)`}
+            </Text>
             <Button
-              w={'max-content'}
               variant={'outline'}
               colorScheme={'cyan'}
               leftIcon={<BsShuffle />}
@@ -67,6 +77,11 @@ function TeamsSelectorModal({
             >
               Complete Selection Randomly
             </Button>
+          </Flex>
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack>
             <TeamsSelectorTable
               teams={teams}
               selectedTeams={selectedTeams}

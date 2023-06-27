@@ -15,6 +15,7 @@ import {
   Heading,
   Skeleton,
   Stack,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -69,6 +70,7 @@ function Page() {
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
   const { simulateCup } = useSimulations();
   const { setSimulations } = useContext(CupSimulations);
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
     register('teams');
@@ -121,19 +123,15 @@ function Page() {
                 >
                   <Flex align={'center'} justify={'space-between'}>
                     <Heading size={'md'}>Options</Heading>
-                    <TeamsSelector
-                      count={watch('numberOfTeams')}
-                      teams={teams}
-                      setSelectedTeams={setSelectedTeams}
+
+                    <Button
+                      variant={'outline'}
+                      colorScheme={'cyan'}
+                      leftIcon={<BsPlusLg />}
+                      onClick={onOpen}
                     >
-                      <Button
-                        variant={'outline'}
-                        colorScheme={'cyan'}
-                        leftIcon={<BsPlusLg />}
-                      >
-                        Select Teams
-                      </Button>
-                    </TeamsSelector>
+                      Select Teams
+                    </Button>
                   </Flex>
                   <Stack p={4}>
                     <FormSelect
@@ -171,6 +169,13 @@ function Page() {
           </Box>
         </Flex>
       </Stack>
+      <TeamsSelector
+        count={watch('numberOfTeams')}
+        teams={teams}
+        setSelectedTeams={setSelectedTeams}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Skeleton>
   );
 }
