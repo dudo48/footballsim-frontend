@@ -1,6 +1,6 @@
 'use client';
+import CupRankingsTable from '@/components/tables/cup-rankings-table';
 import MatchesTable from '@/components/tables/matches-table';
-import RankingsTable from '@/components/tables/rankings-table';
 import TeamsTable from '@/components/tables/teams-table';
 import { CupSimulations } from '@/context/cup-simulations';
 import { getCupRoundName } from '@/utils/functions';
@@ -27,7 +27,7 @@ function Page() {
   const router = useRouter();
   const [roundTab, setTabIndex] = useState(0);
   const cup = simulations.length ? simulations[0] : undefined;
-  const [showResultOnHover, setShowResultOnHover] = useBoolean(true);
+  const [showResultOnHover, setShowResultOnHover] = useBoolean(false);
 
   useEffect(() => {
     if (!simulations.length && isLoaded) {
@@ -38,9 +38,10 @@ function Page() {
     }
   }, [simulations, path, router, isLoaded]);
 
-  const standings = cup
-    ? cup.result.allStandings[roundTab + 1]
-    : { roundId: 0, table: [] };
+  const roundsViewed = cup
+    ? cup.result.rounds.filter((round) => round.id <= roundTab + 1)
+    : [];
+  const table = cup ? cup.result.allStandings[roundTab + 1].table : [];
 
   const remainingTeams = flatten(
     cup
@@ -81,9 +82,9 @@ function Page() {
                   />
                 </TabPanel>
                 <TabPanel>
-                  <RankingsTable
-                    standings={standings}
-                    deemphasizedTeams={eliminatedTeams}
+                  <CupRankingsTable
+                    standingsTable={table}
+                    rounds={roundsViewed}
                   />
                 </TabPanel>
               </TabPanels>

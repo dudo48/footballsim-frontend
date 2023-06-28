@@ -23,7 +23,6 @@ function TeamsSelectorTable({ teams, selectedTeams, setSelectedTeams }: Props) {
         selectTeam={selectTeam}
         selectedTeams={selectedTeams}
         teams={teams}
-        showStrengthStats
       />
     </Stack>
   );

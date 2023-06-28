@@ -54,15 +54,15 @@ function MatchesTable({
 
   const headers = [
     ...(showMatchesOrder
-      ? [{ title: '', sorting: 'id', px: 2, isNumeric: true }]
+      ? [{ value: '', sorting: 'id', px: 2, isNumeric: true }]
       : []),
     ...(showResultTag ? [{ title: '', sorting: 'result', px: 2 }] : []),
-    { title: 'TEAMS', sorting: 'strength', px: 4, isNumeric: false },
-    { title: 'ST', sorting: 'goals', px: 2, isNumeric: true },
+    { value: 'TEAMS', sorting: 'strength', px: 4, isNumeric: false },
+    { value: 'ST', sorting: 'goals', px: 2, isNumeric: true },
     ...(showExtraTime
-      ? [{ title: 'ET', px: 2, sorting: 'goals', isNumeric: true }]
+      ? [{ value: 'ET', px: 2, sorting: 'goals', isNumeric: true }]
       : []),
-    ...(showPenaltyShootout ? [{ title: 'PS', px: 2, isNumeric: true }] : []),
+    ...(showPenaltyShootout ? [{ value: 'PS', px: 2, isNumeric: true }] : []),
   ];
 
   return (
@@ -80,7 +80,7 @@ function MatchesTable({
                 isNumeric={h.isNumeric}
                 px={h.px}
               >
-                {h.title}
+                {h.value}
               </Th>
             ))}
           </Tr>

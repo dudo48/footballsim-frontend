@@ -99,11 +99,7 @@ function Page() {
         <Heading size={'lg'}>Cup</Heading>
         <Flex gap={2} direction={[null, 'column', 'row']}>
           <Box flex={2}>
-            <TeamsTable
-              showTeamsStrengthRank
-              showStrengthStats
-              teams={watch('teams')}
-            />
+            <TeamsTable showTeamsStrengthRank teams={watch('teams')} />
           </Box>
           <Box flex={1}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -137,7 +133,7 @@ function Page() {
                       options={teamsCountOptions.filter(
                         (n) => n <= watch('numberOfTeams')
                       )}
-                      label={'Number of seeds'}
+                      label={'Number of seeding pots'}
                       fieldHandler={register('seeds')}
                       error={errors.seeds}
                     />

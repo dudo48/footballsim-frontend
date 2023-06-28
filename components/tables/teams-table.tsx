@@ -17,7 +17,6 @@ interface Props {
   selectTeam?: (team: Team) => void;
   selectedTeams?: Team[];
   showTeamsStrengthRank?: boolean;
-  showStrengthStats?: boolean;
   deemphasizedTeams?: Team[];
 }
 
@@ -55,23 +54,23 @@ function TeamsTable({
   }
 
   const headers = [
-    ...(selectTeam ? [{ title: '', px: 2 }] : []),
+    ...(selectTeam ? [{ value: '', px: 2 }] : []),
     ...(showTeamsStrengthRank
       ? [
           {
-            title: 'R',
-            hoverTitle: 'Rank according to strength',
+            value: 'R',
+            title: 'Rank according to strength',
             sorting: 'strength',
             px: 2,
             isNumeric: true,
           },
         ]
       : []),
-    { title: 'TEAM', sorting: 'name', px: 4, isNumeric: false },
-    { title: 'ATT', sorting: 'attack', px: 2, isNumeric: true },
-    { title: 'DEF', sorting: 'defense', px: 2, isNumeric: true },
-    { title: 'ADV', sorting: 'homeAdvantage', px: 2, isNumeric: true },
-    { title: 'STR', sorting: 'strength', px: 2, isNumeric: true },
+    { value: 'TEAM', sorting: 'name', px: 4, isNumeric: false },
+    { value: 'ATT', sorting: 'attack', px: 2, isNumeric: true },
+    { value: 'DEF', sorting: 'defense', px: 2, isNumeric: true },
+    { value: 'ADV', sorting: 'homeAdvantage', px: 2, isNumeric: true },
+    { value: 'STR', sorting: 'strength', px: 2, isNumeric: true },
   ];
 
   const sortedByStrength = [...teams].sort(teamSorts['strength']).reverse();
@@ -79,7 +78,7 @@ function TeamsTable({
     <TableContainer>
       <Table>
         <TableCaption placement={'top'}>
-          Displaying {teams.length} teams.
+          Displaying {teams.length} team{teams.length === 1 ? '' : 's'}.
         </TableCaption>
         <Thead>
           <Tr>
@@ -92,9 +91,9 @@ function TeamsTable({
                 textDecor={getSortingDecoration(h.sorting)}
                 isNumeric={h.isNumeric}
                 px={h.px}
-                title={h?.hoverTitle}
+                title={h?.title}
               >
-                {h.title}
+                {h.value}
               </Th>
             ))}
           </Tr>
