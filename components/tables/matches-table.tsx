@@ -1,6 +1,15 @@
 import Match from '@/shared/interfaces/match.interface';
-import { matchSorts } from '@/shared/misc/sorting';
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { sorts } from '@/shared/misc/sorting';
+import { getSortingDecoration, updateSorting } from '@/utils/functions';
+import {
+  Table,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  useBoolean,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import MatchRow from './match-row';
 
@@ -23,44 +32,26 @@ function MatchesTable({
   showTeamsStrength,
   showResultOnHover,
 }: Props) {
-  const [sorting, setSorting] = useState('id');
-  const [isDesc, setIsDesc] = useState(false);
+  const [sort, setSort] = useState<(a: Match, b: Match) => number>(
+    () => sorts.match.id
+  );
+  const [isDesc, setIsDesc] = useBoolean(false);
 
-  const sortedMatches = [...matches].sort(matchSorts[sorting]);
+  const sortedMatches = [...matches].sort(sort);
   if (isDesc) sortedMatches.reverse();
-
-  function updateSorting(type: string) {
-    if (sorting === type) {
-      if (!isDesc) {
-        setSorting('default');
-        return;
-      }
-      setIsDesc(false);
-    } else {
-      setSorting(type);
-      setIsDesc(true);
-    }
-  }
-
-  function getSortingDecoration(type?: string) {
-    if (sorting !== type) {
-      return 'none';
-    }
-    return isDesc ? 'underline' : 'overline';
-  }
 
   const showExtraTime = matches.some((m) => m.result?.extraTime);
   const showPenaltyShootout = matches.some((m) => m.result?.penaltyShootout);
 
   const headers = [
     ...(showMatchesOrder
-      ? [{ value: '', sorting: 'id', px: 2, isNumeric: true }]
+      ? [{ value: '', sort: sorts.match.id, px: 2, isNumeric: true }]
       : []),
-    ...(showResultTag ? [{ title: '', sorting: 'result', px: 2 }] : []),
-    { value: 'TEAMS', sorting: 'strength', px: 4, isNumeric: false },
-    { value: 'ST', sorting: 'goals', px: 2, isNumeric: true },
+    ...(showResultTag ? [{ value: '', sort: sorts.match.result, px: 2 }] : []),
+    { value: 'TEAMS', sort: sorts.match.strength, px: 4, isNumeric: false },
+    { value: 'ST', sort: sorts.match.goals, px: 2, isNumeric: true },
     ...(showExtraTime
-      ? [{ value: 'ET', px: 2, sorting: 'goals', isNumeric: true }]
+      ? [{ value: 'ET', px: 2, sort: sorts.match.goals, isNumeric: true }]
       : []),
     ...(showPenaltyShootout ? [{ value: 'PS', px: 2, isNumeric: true }] : []),
   ];
@@ -73,10 +64,15 @@ function MatchesTable({
             {headers.map((h, i) => (
               <Th
                 key={i}
-                cursor={h.sorting ? 'pointer' : 'auto'}
-                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
-                userSelect={h.sorting ? 'none' : 'auto'}
-                textDecor={getSortingDecoration(h.sorting)}
+                cursor={h.sort ? 'pointer' : 'auto'}
+                onClick={
+                  h.sort
+                    ? () =>
+                        updateSorting(h.sort, sort, setSort, isDesc, setIsDesc)
+                    : undefined
+                }
+                userSelect={h.sort ? 'none' : 'auto'}
+                textDecor={getSortingDecoration(sort, isDesc, h.sort)}
                 isNumeric={h.isNumeric}
                 px={h.px}
               >

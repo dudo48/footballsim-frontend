@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Round from '@/shared/interfaces/round.interface';
+import { sorts } from '@/shared/misc/sorting';
+import { Dispatch, SetStateAction } from 'react';
 
 export function getCupRoundName(round: Round) {
   switch (round.matches.length) {
@@ -24,6 +27,37 @@ export function getCupRoundNameShort(round: Round) {
     default:
       return `R${round.matches.length * 2}`;
   }
+}
+
+// table function
+export function updateSorting(
+  value: (a: any, b: any) => number,
+  sort: (a: any, b: any) => number,
+  setSort: Dispatch<SetStateAction<(a: any, b: any) => number>>,
+  isDesc: boolean,
+  setIsDesc: Record<string, () => void>
+) {
+  if (value === sort) {
+    if (!isDesc) {
+      setSort(() => sorts.lastAdded);
+      return;
+    }
+    setIsDesc.off();
+  } else {
+    setSort(() => value);
+    setIsDesc.on();
+  }
+}
+
+export function getSortingDecoration(
+  sort: (a: any, b: any) => number,
+  isDesc: boolean,
+  value?: (a: any, b: any) => number
+) {
+  if (sort !== value) {
+    return 'none';
+  }
+  return isDesc ? 'underline' : 'overline';
 }
 
 // returns a name for the performance of a team in a cup

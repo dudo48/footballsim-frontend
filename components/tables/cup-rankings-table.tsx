@@ -1,8 +1,17 @@
 import { getRoundEliminatedAt } from '@/shared/functions/cup.functions';
 import Ranking from '@/shared/interfaces/ranking.interface';
 import Round from '@/shared/interfaces/round.interface';
-import { rankingSorts } from '@/shared/misc/sorting';
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { sorts } from '@/shared/misc/sorting';
+import { getSortingDecoration, updateSorting } from '@/utils/functions';
+import {
+  Table,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  useBoolean,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import CupRankingRow from './cup-rankings-row';
 
@@ -12,39 +21,28 @@ interface Props {
 }
 
 function CupRankingsTable({ standingsTable, rounds }: Props) {
-  const [sorting, setSorting] = useState('position');
-  const [isDesc, setIsDesc] = useState(false);
-
-  const sortedRankings = [...standingsTable].sort(rankingSorts[sorting]);
+  const [sort, setSort] = useState<(a: Ranking, b: Ranking) => number>(
+    () => sorts.ranking.position
+  );
+  const [isDesc, setIsDesc] = useBoolean(false);
+  const sortedRankings = [...standingsTable].sort(sort);
   if (isDesc) sortedRankings.reverse();
-
-  function updateSorting(type: string) {
-    if (sorting === type) {
-      if (!isDesc) {
-        setSorting('default');
-        return;
-      }
-      setIsDesc(false);
-    } else {
-      setSorting(type);
-      setIsDesc(true);
-    }
-  }
-
-  function getSortingDecoration(type?: string) {
-    if (sorting !== type) {
-      return 'none';
-    }
-    return isDesc ? 'underline' : 'overline';
-  }
+  const [customSorts] = useState({
+    teamName: (a: Ranking, b: Ranking) => sorts.team.name(a.team, b.team),
+  });
 
   const headers = [
-    { value: 'P', sorting: 'position', px: 2, isNumeric: true },
-    { value: 'TEAM', sorting: 'teamName', px: 4 },
-    { value: 'E', title: 'Round eliminated at', px: 2 },
-    { value: 'F', px: 2, sorting: 'goalsFor', isNumeric: true },
-    { value: 'A', px: 2, sorting: 'goalsAgainst', isNumeric: true },
-    { value: 'D', px: 2, sorting: 'goalsDiff', isNumeric: true },
+    { value: 'P', sort: sorts.ranking.position, px: 2, isNumeric: true },
+    { value: 'TEAM', sort: customSorts.teamName, px: 4 },
+    {
+      value: 'E',
+      px: 2,
+      sort: sorts.ranking.position,
+      title: 'Round eliminated at',
+    },
+    { value: 'F', px: 2, sort: sorts.ranking.goalsFor, isNumeric: true },
+    { value: 'A', px: 2, sort: sorts.ranking.goalsAgainst, isNumeric: true },
+    { value: 'D', px: 2, sort: sorts.ranking.goalsDiff, isNumeric: true },
   ];
 
   return (
@@ -55,10 +53,15 @@ function CupRankingsTable({ standingsTable, rounds }: Props) {
             {headers.map((h, i) => (
               <Th
                 key={i}
-                cursor={h.sorting ? 'pointer' : 'auto'}
-                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
-                userSelect={h.sorting ? 'none' : 'auto'}
-                textDecor={getSortingDecoration(h.sorting)}
+                cursor={'pointer'}
+                onClick={
+                  h.sort
+                    ? () =>
+                        updateSorting(h.sort, sort, setSort, isDesc, setIsDesc)
+                    : undefined
+                }
+                userSelect={'none'}
+                textDecor={getSortingDecoration(sort, isDesc, h.sort)}
                 isNumeric={h.isNumeric}
                 px={h.px}
                 title={h?.title}

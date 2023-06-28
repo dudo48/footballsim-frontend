@@ -1,5 +1,6 @@
 import Team from '@/shared/interfaces/team.interface';
-import { teamSorts } from '@/shared/misc/sorting';
+import { sorts } from '@/shared/misc/sorting';
+import { getSortingDecoration, updateSorting } from '@/utils/functions';
 import {
   Table,
   TableCaption,
@@ -8,6 +9,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBoolean,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import TeamRow from './team-row';
@@ -27,31 +29,12 @@ function TeamsTable({
   showTeamsStrengthRank,
   deemphasizedTeams,
 }: Props) {
-  const [sorting, setSorting] = useState('strength');
-  const [isDesc, setIsDesc] = useState(true);
-
-  const sortedTeams = [...teams].sort(teamSorts[sorting]);
+  const [sort, setSort] = useState<(a: Team, b: Team) => number>(
+    () => sorts.team.strength
+  );
+  const [isDesc, setIsDesc] = useBoolean(true);
+  const sortedTeams = [...teams].sort(sort);
   if (isDesc) sortedTeams.reverse();
-
-  function updateSorting(type: string) {
-    if (sorting === type) {
-      if (!isDesc) {
-        setSorting('default');
-        return;
-      }
-      setIsDesc(false);
-    } else {
-      setSorting(type);
-      setIsDesc(true);
-    }
-  }
-
-  function getSortingDecoration(type?: string) {
-    if (sorting !== type) {
-      return 'none';
-    }
-    return isDesc ? 'underline' : 'overline';
-  }
 
   const headers = [
     ...(selectTeam ? [{ value: '', px: 2 }] : []),
@@ -60,20 +43,20 @@ function TeamsTable({
           {
             value: 'R',
             title: 'Rank according to strength',
-            sorting: 'strength',
+            sort: sorts.team.strength,
             px: 2,
             isNumeric: true,
           },
         ]
       : []),
-    { value: 'TEAM', sorting: 'name', px: 4, isNumeric: false },
-    { value: 'ATT', sorting: 'attack', px: 2, isNumeric: true },
-    { value: 'DEF', sorting: 'defense', px: 2, isNumeric: true },
-    { value: 'ADV', sorting: 'homeAdvantage', px: 2, isNumeric: true },
-    { value: 'STR', sorting: 'strength', px: 2, isNumeric: true },
+    { value: 'TEAM', sort: sorts.team.name, px: 4, isNumeric: false },
+    { value: 'ATT', sort: sorts.team.attack, px: 2, isNumeric: true },
+    { value: 'DEF', sort: sorts.team.defense, px: 2, isNumeric: true },
+    { value: 'ADV', sort: sorts.team.homeAdvantage, px: 2, isNumeric: true },
+    { value: 'STR', sort: sorts.team.strength, px: 2, isNumeric: true },
   ];
 
-  const sortedByStrength = [...teams].sort(teamSorts['strength']).reverse();
+  const sortedByStrength = [...teams].sort(sorts.team.strength).reverse();
   return (
     <TableContainer>
       <Table>
@@ -85,13 +68,17 @@ function TeamsTable({
             {headers.map((h, i) => (
               <Th
                 key={i}
-                cursor={h.sorting ? 'pointer' : 'auto'}
-                onClick={h.sorting ? () => updateSorting(h.sorting) : undefined}
-                userSelect={h.sorting ? 'none' : 'auto'}
-                textDecor={getSortingDecoration(h.sorting)}
+                cursor={h.sort ? 'pointer' : 'auto'}
+                onClick={
+                  h.sort
+                    ? () =>
+                        updateSorting(h.sort, sort, setSort, isDesc, setIsDesc)
+                    : undefined
+                }
+                userSelect={h.sort ? 'none' : 'auto'}
+                textDecor={getSortingDecoration(sort, isDesc, h.sort)}
                 isNumeric={h.isNumeric}
                 px={h.px}
-                title={h?.title}
               >
                 {h.value}
               </Th>

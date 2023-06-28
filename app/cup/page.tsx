@@ -130,7 +130,7 @@ function Page() {
                       error={errors.numberOfTeams}
                     />
                     <FormSelect
-                      options={teamsCountOptions.filter(
+                      options={[1, ...teamsCountOptions].filter(
                         (n) => n <= watch('numberOfTeams')
                       )}
                       label={'Number of seeding pots'}

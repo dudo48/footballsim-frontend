@@ -1,28 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Flex, Select } from '@chakra-ui/react';
 import { startCase } from 'lodash';
+import { Dispatch, SetStateAction } from 'react';
 
 interface Props {
-  sorts: { [key: string]: (a: never, b: never) => number };
-  sorting: string;
-  setSorting: (value: string) => void;
+  sorts: Record<string, (a: any, b: any) => number>;
+  sort: (a: any, b: any) => number;
+  setSort: Dispatch<SetStateAction<(a: any, b: any) => number>>;
   isDesc: boolean;
-  setIsDesc: (value: boolean) => void;
+  setIsDesc: Record<string, () => void>;
 }
 
-function SelectSorting({
-  sorts,
-  sorting,
-  setSorting,
-  isDesc,
-  setIsDesc,
-}: Props) {
+function SelectSorting({ sorts, sort, setSort, isDesc, setIsDesc }: Props) {
   return (
     <Flex gap={2} align={'center'}>
       <Select
         maxW={48}
         variant={'solid'}
-        onChange={(event) => setSorting(event.target.value)}
-        value={sorting}
+        onChange={(event) => setSort(() => sorts[event.target.value])}
+        value={
+          (
+            Object.entries(sorts).find((p) => p[1] === sort) as [
+              string,
+              (a: never, b: never) => number
+            ]
+          )[0]
+        }
       >
         {Object.entries(sorts).map((p) => (
           <option key={p[0]} value={p[0]}>
@@ -33,7 +36,7 @@ function SelectSorting({
       <Select
         maxW={44}
         variant={'solid'}
-        onChange={(event) => setIsDesc(event.target.value === 'desc')}
+        onChange={() => setIsDesc.toggle()}
         value={isDesc ? 'desc' : 'asc'}
       >
         <option value={'asc'}>Ascending</option>
