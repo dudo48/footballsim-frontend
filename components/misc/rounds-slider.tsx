@@ -2,6 +2,7 @@ import Round from '@/shared/interfaces/round.interface';
 import {
   Box,
   Flex,
+  Heading,
   IconButton,
   Slider,
   SliderFilledTrack,
@@ -9,7 +10,6 @@ import {
   SliderThumb,
   SliderTrack,
   Stack,
-  Text,
 } from '@chakra-ui/react';
 import {
   BsChevronBarLeft,
@@ -22,7 +22,6 @@ interface Props {
   roundIndex: number;
   setRoundIndex: (value: number) => void;
   rounds: Round[];
-  alwaysShowMarksLabel?: boolean;
   roundNameFunction: (round: Round) => string;
 }
 
@@ -45,16 +44,18 @@ function RoundsSlider({
         >
           {rounds.map((round, i) => (
             <SliderMark key={round.id} value={i}>
-              <SliderThumb
-                bg={'footballsim.200'}
-                filter={i > roundIndex ? 'grayscale(100%)' : undefined}
-              />
+              <Stack>
+                <SliderThumb
+                  bg={'footballsim.200'}
+                  filter={i > roundIndex ? 'grayscale(100%)' : undefined}
+                />
+              </Stack>
             </SliderMark>
           ))}
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
-          <SliderThumb p={2} />
+          <SliderThumb boxSize={5} />
         </Slider>
         <Flex justify={'space-between'} align={'center'}>
           <Flex>
@@ -75,7 +76,7 @@ function RoundsSlider({
               color={'footballsim.50'}
             />
           </Flex>
-          <Text>{roundNameFunction(rounds[roundIndex])}</Text>
+          <Heading size={'md'}>{roundNameFunction(rounds[roundIndex])}</Heading>
           <Flex>
             <IconButton
               variant={'ghost'}

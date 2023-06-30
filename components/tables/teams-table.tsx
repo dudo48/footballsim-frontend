@@ -11,6 +11,7 @@ import {
   Tr,
   useBoolean,
 } from '@chakra-ui/react';
+import { differenceBy } from 'lodash';
 import { useState } from 'react';
 import TeamRow from './team-row';
 
@@ -20,6 +21,7 @@ interface Props {
   selectedTeams?: Team[];
   showTeamsStrengthRank?: boolean;
   deemphasizedTeams?: Team[];
+  hiddenTeams?: Team[];
 }
 
 function TeamsTable({
@@ -28,6 +30,7 @@ function TeamsTable({
   selectedTeams,
   showTeamsStrengthRank,
   deemphasizedTeams,
+  hiddenTeams,
 }: Props) {
   const [sort, setSort] = useState<(a: Team, b: Team) => number>(
     () => sorts.team.strength
@@ -35,6 +38,12 @@ function TeamsTable({
   const [isDesc, setIsDesc] = useBoolean(true);
   const sortedTeams = [...teams].sort(sort);
   if (isDesc) sortedTeams.reverse();
+
+  const visibleSortedTeams = differenceBy(
+    sortedTeams,
+    hiddenTeams || [],
+    (t) => t.id
+  );
 
   const headers = [
     ...(selectTeam ? [{ value: '', px: 2 }] : []),
@@ -61,7 +70,8 @@ function TeamsTable({
     <TableContainer>
       <Table>
         <TableCaption placement={'top'}>
-          Displaying {teams.length} team{teams.length === 1 ? '' : 's'}.
+          Displaying {visibleSortedTeams.length} team
+          {visibleSortedTeams.length === 1 ? '' : 's'}.
         </TableCaption>
         <Thead>
           <Tr>
@@ -86,7 +96,7 @@ function TeamsTable({
           </Tr>
         </Thead>
         <Tbody>
-          {sortedTeams.map((team) => (
+          {visibleSortedTeams.map((team) => (
             <TeamRow
               key={team.id}
               number={
