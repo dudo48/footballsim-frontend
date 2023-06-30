@@ -18,6 +18,7 @@ import {
 import { differenceBy, flatten } from 'lodash';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
+import RoundsSlider from '../../../components/misc/rounds-slider';
 import Options from './options';
 import SetOptions from './set-options';
 
@@ -25,8 +26,7 @@ function Page() {
   const { simulations, isLoaded } = useContext(CupSimulations);
   const path = usePathname();
   const router = useRouter();
-  const [roundTab, setTabIndex] = useState(0);
-  const cup = simulations.length ? simulations[0] : undefined;
+  const [roundIndex, setRoundIndex] = useState(0);
   const [showResultOnHover, setShowResultOnHover] = useBoolean(false);
 
   useEffect(() => {
@@ -38,17 +38,20 @@ function Page() {
     }
   }, [simulations, path, router, isLoaded]);
 
+  const cup = simulations.length ? simulations[0] : undefined;
   const roundsViewed = cup
-    ? cup.result.rounds.filter((round) => round.id <= roundTab + 1)
+    ? cup.result.rounds.filter((round) => round.id <= roundIndex + 1)
     : [];
-  const table = cup ? cup.result.allStandings[roundTab + 1].table : [];
+  const table = cup ? cup.result.allStandings[roundIndex + 1].table : [];
 
   const remainingTeams = flatten(
     cup
-      ? cup.result.rounds[roundTab].matches.map((m) => [m.homeTeam, m.awayTeam])
+      ? cup.result.rounds[roundIndex].matches.map((m) => [
+          m.homeTeam,
+          m.awayTeam,
+        ])
       : []
   );
-
   const eliminatedTeams = differenceBy(
     cup ? differenceBy(cup.teams, remainingTeams, (t) => t.id) : []
   );
@@ -65,6 +68,14 @@ function Page() {
               simulation={cup}
             />
           </Flex>
+        )}
+        {cup && (
+          <RoundsSlider
+            roundIndex={roundIndex}
+            setRoundIndex={setRoundIndex}
+            rounds={cup.result.rounds}
+            roundNameFunction={getCupRoundName}
+          />
         )}
         <Flex gap={2} flexWrap={'wrap-reverse'}>
           <Stack flex={1}>
@@ -90,28 +101,17 @@ function Page() {
               </TabPanels>
             </Tabs>
           </Stack>
-          <Stack flex={1}>
-            <Tabs
-              index={roundTab}
-              onChange={(i) => setTabIndex(i)}
-              shadow={'xl'}
-              isFitted
-            >
-              <TabList>
-                {simulations.length &&
-                  cup?.result?.rounds.map((round) => (
-                    <Tab key={round.id}>{getCupRoundName(round)}</Tab>
-                  ))}
-              </TabList>
+          {cup && (
+            <Stack flex={1}>
               <MatchesTable
-                matches={cup?.result.rounds[roundTab].matches || []}
+                matches={cup.result.rounds[roundIndex].matches}
                 showMatchesOrder
                 markLoser
                 showTeamsStrength
                 showResultOnHover={showResultOnHover}
               />
-            </Tabs>
-          </Stack>
+            </Stack>
+          )}
         </Flex>
       </Stack>
     </Skeleton>
