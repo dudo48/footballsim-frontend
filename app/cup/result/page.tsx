@@ -61,7 +61,7 @@ function Page() {
       <Stack spacing={4}>
         {cup && (
           <Flex gap={2}>
-            <SetOptions simulation={cup} />
+            <SetOptions cup={cup} />
             <Options
               showResultOnHover={showResultOnHover}
               setShowResultOnHover={setShowResultOnHover}

@@ -1,11 +1,13 @@
+import TeamsTable from '@/components/tables/teams-table';
 import Cup from '@/shared/interfaces/cup.interface';
 import { Box, Checkbox, Heading, Select, Stack, Text } from '@chakra-ui/react';
+import { inRange } from 'lodash';
 
 interface Props {
-  simulation: Cup;
+  cup: Cup;
 }
 
-function SetOptions({ simulation }: Props) {
+function SetOptions({ cup }: Props) {
   return (
     <Box
       flex={1}
@@ -18,13 +20,22 @@ function SetOptions({ simulation }: Props) {
       <Stack p={4}>
         <>
           <Text>Number of seeds</Text>
-          <Select isReadOnly value={simulation.seeds}>
-            <option value={simulation.seeds}>{simulation.seeds}</option>
+          <Select isReadOnly value={cup.seeds}>
+            <option value={cup.seeds}>{cup.seeds}</option>
           </Select>
         </>
-        <Checkbox isReadOnly isChecked={simulation.allowExtraTime}>
+        <Checkbox isReadOnly isChecked={cup.allowExtraTime}>
           Extra-time
         </Checkbox>
+        {inRange(cup.hosts.length, 1, cup.teams.length) && (
+          <>
+            <Text>Host teams</Text>
+            <TeamsTable
+              teams={cup.hosts.length ? cup.hosts : []}
+              showTeamsStrengthRank
+            />
+          </>
+        )}
       </Stack>
     </Box>
   );

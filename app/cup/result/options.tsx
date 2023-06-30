@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Flex,
   Heading,
   Stack,
   useToast,
@@ -45,18 +46,20 @@ function Options({ showResultOnHover, setShowResultOnHover, cup }: Props) {
       borderColor={'footballsim.500'}
       rounded={'md'}
     >
-      <Heading size={'md'}>Options</Heading>
       <Stack p={4}>
-        <Button
-          variant={'outline'}
-          colorScheme={'cyan'}
-          leftIcon={<BsArrowClockwise />}
-          title="With same options"
-          onClick={reSimulate}
-          isLoading={isReSimulating}
-        >
-          Re-simulate
-        </Button>
+        <Flex align={'center'} justify={'space-between'}>
+          <Heading size={'md'}>Options</Heading>
+          <Button
+            variant={'outline'}
+            colorScheme={'cyan'}
+            leftIcon={<BsArrowClockwise />}
+            title="With same options"
+            onClick={reSimulate}
+            isLoading={isReSimulating}
+          >
+            Re-simulate
+          </Button>
+        </Flex>
         <Checkbox
           isChecked={showResultOnHover}
           onChange={setShowResultOnHover.toggle}

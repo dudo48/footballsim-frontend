@@ -15,12 +15,13 @@ import {
   Heading,
   Skeleton,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { BsPlusLg } from 'react-icons/bs';
 import * as yup from 'yup';
@@ -33,6 +34,7 @@ const schema = yup
       .typeError('Please select an integer greater than 0.')
       .required('Please select an integer greater than 0'),
     teams: yup.array().required(),
+    hosts: yup.array().required(),
     seeds: yup
       .number()
       .positive('Please select an integer greater than 0.')
@@ -61,6 +63,7 @@ function Page() {
     values: {
       teams: cup?.teams || [],
       numberOfTeams: cup?.teams.length || 16,
+      hosts: cup?.hosts || [],
       seeds: cup?.seeds || 4,
       allowExtraTime: cup ? cup.allowExtraTime : true,
     },
@@ -72,13 +75,6 @@ function Page() {
   const { teams, isLoading } = useTeams();
   const { simulateCup } = useSimulations();
   const { isOpen, onClose, onOpen } = useDisclosure();
-
-  useEffect(() => {
-    if (watch('numberOfTeams') !== watch('teams').length) {
-      setValue('teams', []);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch('numberOfTeams')]);
 
   async function onSubmit(data: FormData) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,9 +93,20 @@ function Page() {
     <Skeleton isLoaded={!isLoading} w={'full'}>
       <Stack spacing={4}>
         <Heading size={'lg'}>Cup</Heading>
-        <Flex gap={2} direction={[null, 'column', 'row']}>
+        {watch('teams').length && (
+          <Text>
+            Select the host teams from the table using the check-box or select
+            none to play on neutral ground all matches.
+          </Text>
+        )}
+        <Flex gap={2} flexWrap={'wrap-reverse'}>
           <Box flex={2}>
-            <TeamsTable showTeamsStrengthRank teams={watch('teams')} />
+            <TeamsTable
+              setSelectedTeams={(hosts) => setValue('hosts', hosts)}
+              selectedTeams={watch('hosts')}
+              showTeamsStrengthRank
+              teams={watch('teams')}
+            />
           </Box>
           <Box flex={1}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -127,6 +134,12 @@ function Page() {
                       options={teamsCountOptions}
                       label={'Number of teams'}
                       fieldHandler={register('numberOfTeams')}
+                      onChange={(e) => {
+                        register('numberOfTeams').onChange(e);
+                        if (+e.target.value !== watch('teams').length) {
+                          setValue('teams', []);
+                        }
+                      }}
                       error={errors.numberOfTeams}
                     />
                     <FormSelect
@@ -147,7 +160,7 @@ function Page() {
                     <Button
                       isLoading={isSubmitting || isSubmitSuccessful}
                       type="submit"
-                      isDisabled={watch('teams').length < 2}
+                      isDisabled={watch('teams').length < teamsCountOptions[0]}
                     >
                       Simulate
                     </Button>
@@ -161,7 +174,10 @@ function Page() {
       <TeamsSelector
         count={watch('numberOfTeams')}
         teams={teams}
-        setSelectedTeams={(teams: Team[]) => setValue('teams', teams)}
+        setSelectedTeams={(teams: Team[]) => {
+          setValue('teams', teams);
+          setValue('hosts', []);
+        }}
         isOpen={isOpen}
         onClose={onClose}
       />

@@ -2,6 +2,7 @@ import Team from '@/shared/interfaces/team.interface';
 import { sorts } from '@/shared/misc/sorting';
 import { getSortingDecoration, updateSorting } from '@/utils/functions';
 import {
+  Checkbox,
   Table,
   TableCaption,
   TableContainer,
@@ -11,14 +12,14 @@ import {
   Tr,
   useBoolean,
 } from '@chakra-ui/react';
-import { differenceBy } from 'lodash';
+import { differenceBy, inRange } from 'lodash';
 import { useState } from 'react';
 import TeamRow from './team-row';
 
 interface Props {
   teams: Team[];
-  selectTeam?: (team: Team) => void;
   selectedTeams?: Team[];
+  setSelectedTeams?: (teams: Team[]) => void;
   showTeamsStrengthRank?: boolean;
   deemphasizedTeams?: Team[];
   hiddenTeams?: Team[];
@@ -26,7 +27,7 @@ interface Props {
 
 function TeamsTable({
   teams,
-  selectTeam,
+  setSelectedTeams,
   selectedTeams,
   showTeamsStrengthRank,
   deemphasizedTeams,
@@ -46,7 +47,6 @@ function TeamsTable({
   );
 
   const headers = [
-    ...(selectTeam ? [{ value: '', px: 2 }] : []),
     ...(showTeamsStrengthRank
       ? [
           {
@@ -65,6 +65,21 @@ function TeamsTable({
     { value: 'STR', sort: sorts.team.strength, px: 2, isNumeric: true },
   ];
 
+  function selectTeam(team: Team) {
+    if (!selectedTeams || !setSelectedTeams) return;
+    let result = selectedTeams.filter((t) => t.id !== team.id);
+    if (!(selectedTeams.length - result.length))
+      result = selectedTeams.concat(team);
+    setSelectedTeams(result);
+  }
+
+  function selectAll() {
+    if (!setSelectedTeams) return;
+    selectedTeams?.length
+      ? setSelectedTeams([])
+      : setSelectedTeams(visibleSortedTeams);
+  }
+
   const sortedByStrength = [...teams].sort(sorts.team.strength).reverse();
   return (
     <TableContainer>
@@ -75,17 +90,31 @@ function TeamsTable({
         </TableCaption>
         <Thead>
           <Tr>
+            {setSelectedTeams && (
+              <Th px={2}>
+                <Checkbox
+                  isChecked={
+                    teams.length === selectedTeams?.length && teams.length > 0
+                  }
+                  isIndeterminate={
+                    inRange(selectedTeams?.length || 0, 1, teams.length) &&
+                    teams.length > 0
+                  }
+                  onChange={selectAll}
+                />
+              </Th>
+            )}
             {headers.map((h, i) => (
               <Th
                 key={i}
-                cursor={h.sort ? 'pointer' : 'auto'}
+                cursor={'pointer'}
                 onClick={
                   h.sort
                     ? () =>
                         updateSorting(h.sort, sort, setSort, isDesc, setIsDesc)
                     : undefined
                 }
-                userSelect={h.sort ? 'none' : 'auto'}
+                userSelect={'none'}
                 textDecor={getSortingDecoration(sort, isDesc, h.sort)}
                 isNumeric={h.isNumeric}
                 px={h.px}
@@ -105,8 +134,10 @@ function TeamsTable({
                   : undefined
               }
               team={team}
-              selectTeam={selectTeam}
-              selectedTeams={selectedTeams}
+              selectTeam={
+                setSelectedTeams && selectedTeams ? selectTeam : undefined
+              }
+              isSelected={selectedTeams?.some((t) => t.id === team.id)}
               isDeemphasized={deemphasizedTeams?.some((t) => t.id === team.id)}
             />
           ))}

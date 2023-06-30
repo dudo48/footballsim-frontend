@@ -11,6 +11,7 @@ import {
   SliderTrack,
   Stack,
 } from '@chakra-ui/react';
+import { clamp } from 'lodash';
 import {
   BsChevronBarLeft,
   BsChevronBarRight,
@@ -31,7 +32,6 @@ function RoundsSlider({
   rounds,
   roundNameFunction,
 }: Props) {
-  console.log(roundIndex);
   return (
     <Box p={4} borderWidth={1} borderColor={'footballsim.500'} rounded={'md'}>
       <Stack>
@@ -42,16 +42,18 @@ function RoundsSlider({
           value={roundIndex}
           onChange={(value) => setRoundIndex(value)}
         >
-          {rounds.map((round, i) => (
-            <SliderMark key={round.id} value={i}>
-              <Stack>
-                <SliderThumb
-                  bg={'footballsim.200'}
-                  filter={i > roundIndex ? 'grayscale(100%)' : undefined}
-                />
-              </Stack>
-            </SliderMark>
-          ))}
+          {rounds.map((round, i) =>
+            i !== roundIndex ? (
+              <SliderMark key={round.id} value={i}>
+                <Stack>
+                  <SliderThumb
+                    bg={'footballsim.200'}
+                    filter={i > roundIndex ? 'grayscale(100%)' : undefined}
+                  />
+                </Stack>
+              </SliderMark>
+            ) : undefined
+          )}
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
@@ -71,7 +73,9 @@ function RoundsSlider({
               variant={'ghost'}
               aria-label="previous-round"
               icon={<BsChevronLeft />}
-              onClick={() => setRoundIndex(Math.max(roundIndex - 1, 0))}
+              onClick={() =>
+                setRoundIndex(clamp(roundIndex - 1, 0, rounds.length - 1))
+              }
               fontSize={24}
               color={'footballsim.50'}
             />
@@ -83,7 +87,7 @@ function RoundsSlider({
               aria-label="next-round"
               icon={<BsChevronRight />}
               onClick={() =>
-                setRoundIndex(Math.min(roundIndex + 1, rounds.length - 1))
+                setRoundIndex(clamp(roundIndex + 1, 0, rounds.length - 1))
               }
               fontSize={24}
               color={'footballsim.50'}

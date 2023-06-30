@@ -6,7 +6,7 @@ import TeamLi from '../misc/team-li';
 interface Props {
   team: Team;
   selectTeam?: (team: Team) => void;
-  selectedTeams?: Team[];
+  isSelected?: boolean;
   number?: number;
   isDeemphasized?: boolean;
 }
@@ -14,19 +14,16 @@ interface Props {
 function TeamRow({
   team,
   selectTeam,
-  selectedTeams,
+  isSelected,
   number,
   isDeemphasized,
 }: Props) {
   const deemphasizedOpacity = 0.25;
   return (
     <Tr>
-      {selectTeam && selectedTeams && (
+      {selectTeam && (
         <Td px={2}>
-          <Checkbox
-            isChecked={selectedTeams.some((t) => t.id === team.id)}
-            onChange={() => selectTeam(team)}
-          ></Checkbox>
+          <Checkbox onChange={() => selectTeam(team)} isChecked={isSelected} />
         </Td>
       )}
       {number && (

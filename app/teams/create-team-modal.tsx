@@ -152,7 +152,7 @@ function CreateTeamForm({ onClose }: FormProps) {
               fieldHandler={field}
               error={errors.homeAdvantage}
               min={1}
-              max={2}
+              max={100}
               step={0.1}
             />
           )}

@@ -11,10 +11,10 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { differenceBy, sampleSize } from 'lodash';
+import { differenceBy, sampleSize, take } from 'lodash';
 import { useEffect, useState } from 'react';
 import { BsShuffle } from 'react-icons/bs';
-import TeamsSelectorTable from './teams-selector-table';
+import TeamsTable from '../tables/teams-table';
 
 type Props = {
   teams: Team[];
@@ -33,8 +33,8 @@ function TeamsSelectorModal({
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
 
   useEffect(() => {
-    if (selectedTeams.length === count) {
-      setFinalSelectedTeams(selectedTeams);
+    if (selectedTeams.length >= count) {
+      setFinalSelectedTeams(take(selectedTeams, count));
       props.onClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,10 +82,10 @@ function TeamsSelectorModal({
         <ModalCloseButton />
         <ModalBody>
           <Stack>
-            <TeamsSelectorTable
-              teams={teams}
-              selectedTeams={selectedTeams}
+            <TeamsTable
               setSelectedTeams={setSelectedTeams}
+              selectedTeams={selectedTeams}
+              teams={teams}
             />
           </Stack>
         </ModalBody>
