@@ -1,11 +1,12 @@
 'use client';
 import TeamCard from '@/components/cards/team-card';
 import MatchesTable from '@/components/tables/matches-table';
+import ResultIncidenceTable from '@/components/tables/result-incidence-table';
 import { MatchSimulations } from '@/context/match-simulations';
 import { Box, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect } from 'react';
-import MatchesStatistics from './matches-statistics';
+import MatchesStatisticsTable from '../../../components/tables/matches-statistics-table';
 import Options from './options';
 
 function Page() {
@@ -55,9 +56,10 @@ function Page() {
               matches={simulations}
             />
           </Box>
-          <Box flex={1}>
-            <MatchesStatistics matches={simulations} />
-          </Box>
+          <Stack>
+            <MatchesStatisticsTable matches={simulations} markSmaller />
+            <ResultIncidenceTable markLoser matches={simulations} />
+          </Stack>
         </Flex>
       </Stack>
     </Skeleton>
