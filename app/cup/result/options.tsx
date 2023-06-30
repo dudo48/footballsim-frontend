@@ -13,30 +13,28 @@ import { useContext, useState } from 'react';
 import { BsArrowClockwise } from 'react-icons/bs';
 
 interface Props {
-  simulation: Cup;
+  cup: Cup;
   showResultOnHover: boolean;
   setShowResultOnHover: Record<string, () => void>;
 }
 
-function Options({
-  showResultOnHover,
-  setShowResultOnHover,
-  simulation,
-}: Props) {
+function Options({ showResultOnHover, setShowResultOnHover, cup }: Props) {
   const { setSimulations } = useContext(CupSimulations);
-  const [isReSimulating, setisReSimulating] = useState(false);
+  const [isReSimulating, setIsReSimulating] = useState(false);
   const { simulateCup } = useSimulations();
   const toast = useToast();
 
   async function reSimulate() {
-    setisReSimulating(true);
-    const result = await simulateCup(simulation);
+    setIsReSimulating(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { result: _, ...request } = cup;
+    const result = await simulateCup(request);
     if (!result.error) {
       setSimulations(result);
     } else {
       toast({ status: 'error', description: 'Failed to re-simulate.' });
     }
-    setisReSimulating(false);
+    setIsReSimulating(false);
   }
 
   return (

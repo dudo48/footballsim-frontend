@@ -65,7 +65,7 @@ function Page() {
             <Options
               showResultOnHover={showResultOnHover}
               setShowResultOnHover={setShowResultOnHover}
-              simulation={cup}
+              cup={cup}
             />
           </Flex>
         )}
