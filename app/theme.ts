@@ -35,20 +35,20 @@ const styles = {
 };
 
 Slider.defaultProps = {
-  min: 0.1,
+  min: 1,
   max: 10,
   step: 0.1,
 };
 
 RangeSlider.defaultProps = {
-  min: 0.1,
+  min: 1,
   max: 10,
   step: 0.1,
 };
 
 NumberInput.defaultProps = {
   allowMouseWheel: true,
-  min: 0.1,
+  min: 1,
   max: 10,
   step: 0.1,
 };

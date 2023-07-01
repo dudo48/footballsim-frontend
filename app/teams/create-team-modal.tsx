@@ -151,9 +151,7 @@ function CreateTeamForm({ onClose }: FormProps) {
               helper="The strength multiplier of the team when playing on home ground."
               fieldHandler={field}
               error={errors.homeAdvantage}
-              min={1}
-              max={100}
-              step={0.1}
+              max={2}
             />
           )}
         />
