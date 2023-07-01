@@ -16,16 +16,16 @@ import { useState } from 'react';
 import CupRankingRow from './cup-rankings-row';
 
 interface Props {
-  standingsTable: Ranking[];
+  standings: Ranking[];
   rounds: Round[];
 }
 
-function CupRankingsTable({ standingsTable, rounds }: Props) {
+function CupRankingsTable({ standings, rounds }: Props) {
   const [sort, setSort] = useState<(a: Ranking, b: Ranking) => number>(
     () => sorts.ranking.position
   );
   const [isDesc, setIsDesc] = useBoolean(false);
-  const sortedRankings = [...standingsTable].sort(sort);
+  const sortedRankings = [...standings].sort(sort);
   if (isDesc) sortedRankings.reverse();
   const [customSorts] = useState({
     teamName: (a: Ranking, b: Ranking) => sorts.team.name(a.team, b.team),

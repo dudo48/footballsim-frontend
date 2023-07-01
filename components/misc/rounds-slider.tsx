@@ -32,6 +32,9 @@ function RoundsSlider({
   rounds,
   roundNameFunction,
 }: Props) {
+  const min = 0;
+  const max = rounds.length - 1;
+
   return (
     <Box p={4} borderWidth={1} borderColor={'footballsim.500'} rounded={'md'}>
       <Stack>
@@ -73,9 +76,7 @@ function RoundsSlider({
               variant={'ghost'}
               aria-label="previous-round"
               icon={<BsChevronLeft />}
-              onClick={() =>
-                setRoundIndex(clamp(roundIndex - 1, 0, rounds.length - 1))
-              }
+              onClick={() => setRoundIndex(clamp(roundIndex - 1, min, max))}
               fontSize={24}
               color={'footballsim.50'}
             />
@@ -86,9 +87,7 @@ function RoundsSlider({
               variant={'ghost'}
               aria-label="next-round"
               icon={<BsChevronRight />}
-              onClick={() =>
-                setRoundIndex(clamp(roundIndex + 1, 0, rounds.length - 1))
-              }
+              onClick={() => setRoundIndex(clamp(roundIndex + 1, min, max))}
               fontSize={24}
               color={'footballsim.50'}
             />

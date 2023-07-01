@@ -14,15 +14,15 @@ import { useState } from 'react';
 import LeagueRankingRow from './league-rankings-row';
 
 interface Props {
-  standingsTable: Ranking[];
+  standings: Ranking[];
 }
 
-function LeagueRankingsTable({ standingsTable }: Props) {
+function LeagueRankingsTable({ standings }: Props) {
   const [sort, setSort] = useState<(a: Ranking, b: Ranking) => number>(
     () => sorts.ranking.position
   );
   const [isDesc, setIsDesc] = useBoolean(false);
-  const sortedRankings = [...standingsTable].sort(sort);
+  const sortedRankings = [...standings].sort(sort);
   if (isDesc) sortedRankings.reverse();
 
   const headers = [

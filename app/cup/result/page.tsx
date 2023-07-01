@@ -15,7 +15,7 @@ import {
   Tabs,
   useBoolean,
 } from '@chakra-ui/react';
-import { differenceBy, flatten } from 'lodash';
+import { differenceBy, flatten, tail } from 'lodash';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import RoundsSlider from '../../../components/misc/rounds-slider';
@@ -39,18 +39,12 @@ function Page() {
   }, [simulations, path, router, isLoaded]);
 
   const cup = simulations.length ? simulations[0] : undefined;
-  const roundsViewed = cup
-    ? cup.result.rounds.filter((round) => round.id <= roundIndex + 1)
-    : [];
-  const table = cup ? cup.result.allStandings[roundIndex + 1].table : [];
+  const rounds = cup ? tail(cup.result.rounds) : [];
+  const roundsViewed = cup ? rounds.filter((_, i) => i <= roundIndex + 1) : [];
+  const standings = cup ? rounds[roundIndex].standings : [];
 
   const remainingTeams = flatten(
-    cup
-      ? cup.result.rounds[roundIndex].matches.map((m) => [
-          m.homeTeam,
-          m.awayTeam,
-        ])
-      : []
+    cup ? rounds[roundIndex].matches.map((m) => [m.homeTeam, m.awayTeam]) : []
   );
   const eliminatedTeams = differenceBy(
     cup ? differenceBy(cup.teams, remainingTeams, (t) => t.id) : []
@@ -73,7 +67,7 @@ function Page() {
           <RoundsSlider
             roundIndex={roundIndex}
             setRoundIndex={setRoundIndex}
-            rounds={cup.result.rounds}
+            rounds={rounds}
             roundNameFunction={getCupRoundName}
           />
         )}
@@ -94,7 +88,7 @@ function Page() {
                 </TabPanel>
                 <TabPanel>
                   <CupRankingsTable
-                    standingsTable={table}
+                    standings={standings}
                     rounds={roundsViewed}
                   />
                 </TabPanel>
@@ -104,7 +98,7 @@ function Page() {
           {cup && (
             <Stack flex={1}>
               <MatchesTable
-                matches={cup.result.rounds[roundIndex].matches}
+                matches={rounds[roundIndex].matches}
                 showMatchesOrder
                 markLoser
                 showTeamsStrength
